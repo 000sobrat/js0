@@ -509,9 +509,9 @@ public class UI_API {
                 if (user == null) {
                     return null;
                 }
-                user.getProperties().put("email", email);
-                user.getProperties().put("name", user.getName());
-                user.getProperties().put("roles", user.getRoles());
+                //user.getProperties().put("email", email);
+                //user.getProperties().put("name", user.getName());
+                //user.getProperties().put("roles", user.getRoles());
             }
         }
         return u;
