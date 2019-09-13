@@ -1,0 +1,102 @@
+table.calendar { 
+	border-collapse: collapse; 
+	border: 0.5px solid #ddd;
+}
+
+tr.calendar_date_row { 
+	background-image: linear-gradient(to right bottom, rgba(200,200,200,0), rgba(200,200,200,5));
+        border-bottom: 1px solid black;
+}
+
+th.calendar_date { 
+        font-family: Monospace;
+	font-size: 10pt;
+        font-weight: 100;
+	padding-left: 5px; 
+	padding-right: 5px; 
+        text-align: center;
+	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+}
+
+th.calendar_time {
+        font-family: Monospace;
+	font-size: 10pt;
+        font-weight: 500;
+        text-align: right;
+        vertical-align: top;
+	padding-left: 5px; 
+	padding-right: 5px; 
+	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+}
+
+th.calendar_time_00 {
+	font-size: 10pt;
+        font-weight: 100;
+}
+
+th.calendar_time_30 {
+	font-size: 10pt;
+}
+
+tr.calendar_time { 
+	height: 35px; 
+	min-height: 35px; 
+	max-height: 35 px; 
+}
+
+tr.calendar_time_00 { 
+	background-image: linear-gradient(to top, rgba(200,200,200,0), rgba(200,200,200,5))
+}
+tr.calendar_time_30 { 
+	background-image: linear-gradient(to bottom, rgba(200,200,200,0), rgba(200,200,200,5))
+}
+
+
+td.calendar_cell {
+        vertical-align: top;
+	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+}
+
+div.calendar_cell {
+	position: absolute; 
+	border: solid black 0.5px; 
+	border-radius: 4.5px; padding-left: 4px; padding-right: 2px;
+	background-color: rgba(100,200,150,250);
+}
+
+div.calendar_cell_participant {
+	background-color: rgba(150,200,200,250);
+}
+
+div.calendar_cell_full {
+	background-color: rgba(250,200,200,250);
+}
+
+
+fieldset.calendar_cell {
+	position: absolute; 
+	border: solid black 0.5px;
+	border-radius: 4.5px; padding-left: 4px; padding-right: 2px;
+	background-color: rgba(100,200,150,250);
+        box-shadow: rgba(0,0,0,0.25) 0px 2px 9px;
+}
+
+fieldset.calendar_cell_participant {
+	background-color: rgba(150,200,200,250);
+}
+
+fieldset.calendar_cell_full {
+	background-color: rgba(250,200,200,250);
+}
+
+legend.calendar_cell {
+        padding-top: 0.1px;
+        padding-bottom: 0.1px;
+        padding-left: 4px;
+        padding-right: 2px;
+        background-color: rgb(80,80,80);
+        color: white;
+        border-radius: 3px;
+}
+
+div.filter_sel {display: none;}

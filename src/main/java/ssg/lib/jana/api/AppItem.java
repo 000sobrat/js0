@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ssg.lib.js;
+package ssg.lib.jana.api;
+
+import java.io.Serializable;
 
 /**
  *
  * @author sesidoro
  */
-public class App {
-
-    public static final void main(String... args) throws Exception {
-        ssg.lib.jana.App.main(args);
-    }
+public interface AppItem extends Serializable, Cloneable {
+    String getId();
+    void setId(String id);
 }

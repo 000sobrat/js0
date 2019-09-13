@@ -1,0 +1,21 @@
+{
+  "short_name": "Jana Club",
+  "name": "Jana Club Demo",
+  "icons": [
+    {
+      "src": "/app/favicon.png",
+      "type": "image/png",
+      "sizes": "21x21"
+    },
+    {
+      "src": "/app/favicon.png",
+      "type": "image/png",
+      "sizes": "21x21"
+    }
+  ],
+  "start_url": "/app/index.html",
+  "background_color": "#3367D6",
+  "display": "standalone",
+  "scope": "/app",
+  "theme_color": "#3367D6"
+}

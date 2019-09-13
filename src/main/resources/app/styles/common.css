@@ -1,0 +1,120 @@
+* {font-family: Monospace}
+body {background-color: rgba(230,250,230,50); vertical-align: top;}
+table { border-collapse: collapse; border-color: rgb(150,200,200);}
+
+table.menu {border-width:  1px; border-color: black;}
+tr.menu {
+    /*    background-image: linear-gradient(
+              to top, 
+              rgba(200,100,200,0),
+              rgba(200,100,200,0),
+              rgba(200,100,200,5)
+              )
+    */
+}
+td.menu-item {width: 25%; text-align: center; 
+              background-image: linear-gradient(
+                  to bottom right, 
+                  rgba(100,100,100,50),
+                  rgba(200,200,200,0),
+                  rgba(200,200,200,0),
+                  rgba(200,200,200,0), 
+                  rgba(100,100,100,50)
+                  )
+}
+
+td.menu_active {border: solid 1px;}
+a.menu-item {
+    font-size: 14pt; 
+    font-weight: 700; 
+    text-decoration: none; 
+    background-image: radial-gradient(
+        circle, 
+        rgba(200,100,200,150),
+        rgba(200,200,200,0)
+        )
+}
+
+
+table.pane { /*height: 100%;*/}
+tr.pane_1 {}
+tr.pane_2 {}
+tr.pane_3 {}
+td.pane_menu {vertical-align: top; }
+td.panea {vertical-align: top; }
+td.pane_na {vertical-align: top; }
+td.pane_ca {vertical-align: top; }
+td.pane_xa {vertical-align: top; }
+
+
+
+table.tail {}
+tr.tail {
+    height: 50px; 
+    min-height: 50px; 
+    max-height: 50px;
+    background-image: linear-gradient(
+        to bottom right, 
+        rgba(100,100,100,50),
+        rgba(200,200,200,0),
+        rgba(200,200,200,0),
+        rgba(200,200,200,0), 
+        rgba(100,100,100,50)
+        )
+}
+td.tail {
+    text-align: center;
+    background-image: linear-gradient(
+        to top right, 
+        rgba(100,100,100,50),
+        rgba(200,200,200,0),
+        rgba(200,200,200,0),
+        rgba(100,100,100,50)
+        )
+}
+
+
+
+
+a.menu_main {font-size: 14pt;font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(100,200,200,150),rgba(200,200,200,0))}
+a.menu_a {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(100,100,200,150),rgba(200,200,200,0))}
+a.menu_b {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(200,100,200,150),rgba(200,200,200,0))}
+a.menu_c {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(200,200,100,150),rgba(200,200,200,0))}
+a.menu_d {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(100,200,100,150),rgba(200,200,200,0))}
+a.menu_e {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(200,100,100,150),rgba(200,200,200,0))}
+
+table.filter {    
+    width: 100%;
+}
+tr.filter {}
+td.filter {
+    white-space: nowrap;
+    padding-left: 5px; 
+    padding-right: 15px; 
+    background-image: linear-gradient(to top left, rgba(200,200,200,0),rgba(200,200,200,5));
+}
+td.filter_active {
+    white-space: nowrap;
+    padding-left: 15px; 
+    padding-right: 5px; 
+    background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
+}
+
+fieldset.filter {
+    border-radius: 0px;
+    padding: 5px;
+}
+legend.filter {
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+}
+
+a.filter {
+    white-space: nowrap;
+    background-image: linear-gradient(to top left, rgba(200,200,200,0),rgba(200,200,200,5));
+}
+a.filter_active {
+    white-space: nowrap;
+    background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
+}

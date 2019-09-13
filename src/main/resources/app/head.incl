@@ -1,0 +1,44 @@
+<link rel="manifest" href="/app/manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+
+
+<link rel="stylesheet" type="text/css" href="/app/styles/common.css" media="screen">
+
+<script type="text/javascript" src="/app/scripts/jquery.js"></script>
+<script type="text/javascript" src="/app/api?js"></script>
+
+<script type="text/javascript">
+// <!--
+
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// user
+////////////////////////////////////////////////////////////////////////////////
+var userId="${user.email}";
+var userRoles="${user.roles}";
+
+function isValidUser() {
+   if(!userId || userId.length>1 && userId[0]=='$' && userId[1]=='{') {
+     return false;
+   } else {
+     return true;
+   }
+}
+
+function userHasRole(role) {
+   if(isValidUser() && userRoles && role && userRoles.includes(role)) {
+     return true;
+   } else {
+     return true;
+   }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////// shared helper functions
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+// -->
+</script>

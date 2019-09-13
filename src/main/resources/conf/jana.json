@@ -1,0 +1,3498 @@
+{
+  "users":{
+    "jana@kuntajana.fi":"Jana",
+    "dancer@kuntajana.fi":"Dance trainer",
+    "b-dancer@kuntajana.fi":"Break Dance trainer",
+    "a@a.com":"A A A",
+    "b@a.com":"B B B",
+    "c@a.com":"C C C",
+    "d@a.b.c.d.e.f.g.h.com":"D D D D",
+    "e@a.com":"Евгений",
+    "000sobrat@gmail.com":"Sobrat 000"
+  },
+  "pws":{
+    "a@a.com":"aaa",
+    "b@a.com":"bbb",
+    "d@a.b.c.d.e.f.g.h.com":"ddd",
+    "000sobrat@gmail.com":"000"
+  },
+  "roles":{
+    "jana@kuntajana.fi":[
+      "admin",
+      "trainer"
+    ],
+    "dancer@kuntajana.fi":[
+      "trainer"
+    ],
+    "b-dancer@kuntajana.fi":[
+      "trainer"
+    ],
+    "a@a.com":[
+      "admin",
+      "trainer"
+    ],
+    "b@a.com":[
+      "trainer"
+    ],
+    "d@a.b.c.d.e.f.g.h.com":[
+      "admin"
+    ],
+    "000sobrat@gmail.com":[
+      "admin"
+    ]
+  }
+}{
+  "trainers":{
+    "jana@kuntajana.fi":{
+      "name":"Jana",
+      "id":"jana@kuntajana.fi",
+      "email":"jana@kuntajana.fi"
+    },
+    "dancer@kuntajana.fi":{
+      "name":"Dance trainer",
+      "id":"dancer@kuntajana.fi",
+      "email":"dancer@kuntajana.fi"
+    },
+    "b-dancer@kuntajana.fi":{
+      "name":"Break Dance trainer",
+      "id":"b-dancer@kuntajana.fi",
+      "email":"b-dancer@kuntajana.fi"
+    }
+  },
+  "prices":{
+    "766e27b6-dc77-4107-9fa8-6b8637885e41":{
+      "single":{
+        "timeLimit":0,
+        "notes":null,
+        "price":15.0,
+        "count":1
+      },
+      "course":null,
+      "id":"766e27b6-dc77-4107-9fa8-6b8637885e41",
+      "category":"Спорт",
+      "first":{
+        "timeLimit":null,
+        "notes":null,
+        "price":10.0,
+        "count":1
+      },
+      "room":null,
+      "abonements":[
+        {
+          "timeLimit":4838400000,
+          "notes":null,
+          "price":100.0,
+          "count":10
+        },
+        {
+          "timeLimit":9676800000,
+          "notes":null,
+          "price":120.0,
+          "count":10
+        }
+      ]
+    },
+    "f2056361-453a-479f-8911-79ebe7fa0902":{
+      "single":{
+        "timeLimit":0,
+        "notes":null,
+        "price":15.0,
+        "count":1
+      },
+      "course":null,
+      "id":"f2056361-453a-479f-8911-79ebe7fa0902",
+      "category":"Танцы",
+      "first":{
+        "timeLimit":null,
+        "notes":null,
+        "price":10.0,
+        "count":1
+      },
+      "room":null,
+      "abonements":[
+        {
+          "timeLimit":2419200000,
+          "notes":"4 раза 1 раз в неделю",
+          "price":40.0,
+          "count":4
+        },
+        {
+          "timeLimit":2419200000,
+          "notes":"8 раз в месяц -80е",
+          "price":80.0,
+          "count":8
+        }
+      ]
+    }
+  },
+  "categories":{
+    "Спорт":{
+      "name":"Спорт",
+      "id":"Спорт",
+      "pricing":"766e27b6-dc77-4107-9fa8-6b8637885e41"
+    },
+    "Танцы":{
+      "name":"Танцы",
+      "id":"Танцы",
+      "pricing":"f2056361-453a-479f-8911-79ebe7fa0902"
+    }
+  },
+  "courses":{
+    "Pilates":{
+      "name":"Pilates",
+      "description":null,
+      "id":"Pilates",
+      "category":"Спорт",
+      "pricing":null
+    },
+    "Fly Yoga":{
+      "name":"Fly Yoga",
+      "description":null,
+      "id":"Fly Yoga",
+      "category":"Спорт",
+      "pricing":null
+    },
+    "Stretching":{
+      "name":"Stretching",
+      "description":null,
+      "id":"Stretching",
+      "category":"Спорт",
+      "pricing":null
+    },
+    "Koreagrafia ballet":{
+      "name":"Koreagrafia ballet",
+      "description":null,
+      "id":"Koreagrafia ballet",
+      "category":"Спорт",
+      "pricing":null
+    },
+    "Tabatta intensiv":{
+      "name":"Tabatta intensiv",
+      "description":null,
+      "id":"Tabatta intensiv",
+      "category":"Спорт",
+      "pricing":null
+    },
+    "Fly Dance":{
+      "name":"Fly Dance",
+      "description":null,
+      "id":"Fly Dance",
+      "category":"Танцы",
+      "pricing":null
+    },
+    "Strip Dance":{
+      "name":"Strip Dance",
+      "description":null,
+      "id":"Strip Dance",
+      "category":"Танцы",
+      "pricing":null
+    },
+    "Break Dance, дети":{
+      "name":"Break Dance, дети",
+      "description":null,
+      "id":"Break Dance, дети",
+      "category":"Танцы",
+      "pricing":null
+    }
+  },
+  "groups":{
+    "Pilates":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Pilates",
+      "course":"Pilates",
+      "maxSize":10,
+      "id":"Pilates",
+      "shortName":"Plt",
+      "pricing":null
+    },
+    "Koreografia ballet":{
+      "trainer":"dancer@kuntajana.fi",
+      "name":"Koreografia ballet",
+      "course":"Koreagrafia ballet",
+      "maxSize":10,
+      "id":"Koreografia ballet",
+      "shortName":"Kor",
+      "pricing":null
+    },
+    "Pilates basik":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Pilates basik",
+      "course":"Pilates",
+      "maxSize":10,
+      "id":"Pilates basik",
+      "shortName":"Plt(b)",
+      "pricing":null
+    },
+    "Stretching Split":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Stretching Split",
+      "course":"Stretching",
+      "maxSize":10,
+      "id":"Stretching Split",
+      "shortName":"Str",
+      "pricing":null
+    },
+    "Fly Dance acro 14+":{
+      "trainer":"dancer@kuntajana.fi",
+      "name":"Fly Dance acro 14+",
+      "course":"Fly Dance",
+      "maxSize":10,
+      "id":"Fly Dance acro 14+",
+      "shortName":"FD 14+",
+      "pricing":null
+    },
+    "Fly Jooga basik":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Fly Jooga basik",
+      "course":"Fly Yoga",
+      "maxSize":10,
+      "id":"Fly Jooga basik",
+      "shortName":"FY(b)",
+      "pricing":null
+    },
+    "Frame-Up":{
+      "trainer":"dancer@kuntajana.fi",
+      "name":"Frame-Up",
+      "course":"Strip Dance",
+      "maxSize":10,
+      "id":"Frame-Up",
+      "shortName":"FrUp",
+      "pricing":null
+    },
+    "Tabatta":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Tabatta",
+      "course":"Tabatta intensiv",
+      "maxSize":10,
+      "id":"Tabatta",
+      "shortName":"Tab",
+      "pricing":null
+    },
+    "Pilates intensive":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Pilates intensive",
+      "course":"Pilates",
+      "maxSize":10,
+      "id":"Pilates intensive",
+      "shortName":"Plt(i)",
+      "pricing":null
+    },
+    "Fly Jooga jatko":{
+      "trainer":"jana@kuntajana.fi",
+      "name":"Fly Jooga jatko",
+      "course":"Fly Yoga",
+      "maxSize":10,
+      "id":"Fly Jooga jatko",
+      "shortName":"FY(adv)",
+      "pricing":null
+    },
+    "Break dance 7+":{
+      "trainer":"b-dancer@kuntajana.fi",
+      "name":"Break dance 7+",
+      "course":"Break Dance, дети",
+      "maxSize":10,
+      "id":"Break dance 7+",
+      "shortName":"Brd 7+",
+      "pricing":null
+    }
+  },
+  "courseTrainers":{
+    "Pilates":[
+      "jana@kuntajana.fi"
+    ],
+    "Fly Yoga":[
+      "jana@kuntajana.fi"
+    ],
+    "Stretching":[
+      "jana@kuntajana.fi"
+    ],
+    "Tabatta intensiv":[
+      "jana@kuntajana.fi"
+    ],
+    "Koreagrafia ballet":[
+      "dancer@kuntajana.fi"
+    ],
+    "Fly Dance":[
+      "dancer@kuntajana.fi"
+    ],
+    "Strip Dance":[
+      "dancer@kuntajana.fi"
+    ],
+    "Break Dance, дети":[
+      "b-dancer@kuntajana.fi"
+    ]
+  },
+  "courseParticipants":{
+    "a@a.com":"trusted",
+    "b@a.com":"trusted",
+    "c@a.com":"trusted",
+    "d@a.b.c.d.e.f.g.h.com":"forbidden",
+    "e@a.com":"verifying"
+  }
+}{
+  "rooms":[
+    {
+      "address":"Kuparitie 1, Pohjois-Haaga",
+      "name":"Kuparitie 1",
+      "maxSize":15,
+      "id":"Kuparitie 1"
+    },
+    {
+      "address":"Vesala...",
+      "name":"Vesala",
+      "maxSize":10,
+      "id":"Vesala"
+    }
+  ],
+  "events":{
+    "5556be5a-9ca7-4701-aa9d-5ce2fca5def3":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1567432800000,
+      "end":1567443600000,
+      "id":"5556be5a-9ca7-4701-aa9d-5ce2fca5def3",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "e6c83c39-8ce8-416e-acfb-4a73f9c98351":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1568037600000,
+      "end":1568048400000,
+      "id":"e6c83c39-8ce8-416e-acfb-4a73f9c98351",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "498c0c5b-8f15-43c2-842e-778ea9e77655":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1568642400000,
+      "end":1568653200000,
+      "id":"498c0c5b-8f15-43c2-842e-778ea9e77655",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "e753aeb7-8bb9-472a-8495-f180e3c1fdbe":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1569247200000,
+      "end":1569258000000,
+      "id":"e753aeb7-8bb9-472a-8495-f180e3c1fdbe",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "b2a35bcf-f273-4859-a5c9-03d0073cb918":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1569852000000,
+      "end":1569862800000,
+      "id":"b2a35bcf-f273-4859-a5c9-03d0073cb918",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "d0125724-a8ea-44f6-a30c-cd42d697d974":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1570456800000,
+      "end":1570467600000,
+      "id":"d0125724-a8ea-44f6-a30c-cd42d697d974",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "887f66d5-5097-415b-a15d-6d3454a31496":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1571061600000,
+      "end":1571072400000,
+      "id":"887f66d5-5097-415b-a15d-6d3454a31496",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "107ae558-ba70-491a-a910-cf4e377176a9":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1571666400000,
+      "end":1571677200000,
+      "id":"107ae558-ba70-491a-a910-cf4e377176a9",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "7d073f29-185a-4f5e-9375-4f51a752e99b":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1572274800000,
+      "end":1572285600000,
+      "id":"7d073f29-185a-4f5e-9375-4f51a752e99b",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "25e77090-6acf-4049-8e25-b28f91f9f73a":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1572879600000,
+      "end":1572890400000,
+      "id":"25e77090-6acf-4049-8e25-b28f91f9f73a",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "963fbb64-c8e0-4100-b681-b85f670900e1":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1573484400000,
+      "end":1573495200000,
+      "id":"963fbb64-c8e0-4100-b681-b85f670900e1",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "d981fd3d-dbc1-495b-8476-f4543ca5a4de":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1574089200000,
+      "end":1574100000000,
+      "id":"d981fd3d-dbc1-495b-8476-f4543ca5a4de",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "7c2121cd-86dc-4ce5-99e9-35484ecd7bad":{
+      "duration":10800000,
+      "name":"Аренда",
+      "start":1574694000000,
+      "end":1574704800000,
+      "id":"7c2121cd-86dc-4ce5-99e9-35484ecd7bad",
+      "room":null,
+      "participants":{},
+      "status":null
+    },
+    "6b825edd-8703-436d-959e-d8e2582e19b3":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1567495800000,
+      "end":1567499400000,
+      "id":"6b825edd-8703-436d-959e-d8e2582e19b3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a828bfa6-22eb-409f-a56e-b33c3fcceab2":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568100600000,
+      "end":1568104200000,
+      "id":"a828bfa6-22eb-409f-a56e-b33c3fcceab2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "14b62ddd-535a-4cf6-91d9-3a28cd0f2796":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568705400000,
+      "end":1568709000000,
+      "id":"14b62ddd-535a-4cf6-91d9-3a28cd0f2796",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a557d363-dc99-4ed0-a835-ab7bd5d2e7f3":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569310200000,
+      "end":1569313800000,
+      "id":"a557d363-dc99-4ed0-a835-ab7bd5d2e7f3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8d2ba375-9a64-40bd-ad53-72307be1e5a8":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569915000000,
+      "end":1569918600000,
+      "id":"8d2ba375-9a64-40bd-ad53-72307be1e5a8",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "fd8b30c7-9cf4-4c76-bb86-9dd1bd167752":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570519800000,
+      "end":1570523400000,
+      "id":"fd8b30c7-9cf4-4c76-bb86-9dd1bd167752",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "73e7bed2-1af5-4e20-844f-97f3e21745fa":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571124600000,
+      "end":1571128200000,
+      "id":"73e7bed2-1af5-4e20-844f-97f3e21745fa",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f4565607-3934-43a7-96ef-6e09a9fa20d6":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571729400000,
+      "end":1571733000000,
+      "id":"f4565607-3934-43a7-96ef-6e09a9fa20d6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "afb4adc2-592c-43c4-a2b4-c0a9ca1ee61e":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572337800000,
+      "end":1572341400000,
+      "id":"afb4adc2-592c-43c4-a2b4-c0a9ca1ee61e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c8ef8beb-a766-4031-9d46-e6fe7e9b8b68":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572942600000,
+      "end":1572946200000,
+      "id":"c8ef8beb-a766-4031-9d46-e6fe7e9b8b68",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "de6fb573-ce7d-4f52-b180-750f419b95fc":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573547400000,
+      "end":1573551000000,
+      "id":"de6fb573-ce7d-4f52-b180-750f419b95fc",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c91e628c-956a-483f-9163-ea4687fae2e4":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574152200000,
+      "end":1574155800000,
+      "id":"c91e628c-956a-483f-9163-ea4687fae2e4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0b4c76a5-346a-4c1e-8fb2-f7365e7234c5":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574757000000,
+      "end":1574760600000,
+      "id":"0b4c76a5-346a-4c1e-8fb2-f7365e7234c5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a109c8c3-e2ae-4eb4-a9be-7c7b025e9bef":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1567519200000,
+      "end":1567522800000,
+      "id":"a109c8c3-e2ae-4eb4-a9be-7c7b025e9bef",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8e4d4ab8-5655-4e84-922a-b80e1798e7fa":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1568124000000,
+      "end":1568127600000,
+      "id":"8e4d4ab8-5655-4e84-922a-b80e1798e7fa",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9ee2c6ac-42bd-4137-87c8-8a3d9ca08a69":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1568728800000,
+      "end":1568732400000,
+      "id":"9ee2c6ac-42bd-4137-87c8-8a3d9ca08a69",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "19a86efd-9e11-496b-9294-bc13a4806392":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1569333600000,
+      "end":1569337200000,
+      "id":"19a86efd-9e11-496b-9294-bc13a4806392",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a42fae5f-d40c-420f-a177-29dfb83f38aa":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1569938400000,
+      "end":1569942000000,
+      "id":"a42fae5f-d40c-420f-a177-29dfb83f38aa",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "244ce669-63cb-496a-ba3a-626dd96c0bd4":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1570543200000,
+      "end":1570546800000,
+      "id":"244ce669-63cb-496a-ba3a-626dd96c0bd4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "72a0a9ac-54c8-4eb6-8a51-1c6804d22358":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1571148000000,
+      "end":1571151600000,
+      "id":"72a0a9ac-54c8-4eb6-8a51-1c6804d22358",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "46e64ee0-91d2-4919-8c3d-4ddd6641622c":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1571752800000,
+      "end":1571756400000,
+      "id":"46e64ee0-91d2-4919-8c3d-4ddd6641622c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "2abfbb37-34e3-4650-bb08-69a996b13c03":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1572361200000,
+      "end":1572364800000,
+      "id":"2abfbb37-34e3-4650-bb08-69a996b13c03",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8777e91c-75c5-4c09-9b63-a7a44fd8e69f":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1572966000000,
+      "end":1572969600000,
+      "id":"8777e91c-75c5-4c09-9b63-a7a44fd8e69f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "93afab90-8e36-42d2-84d8-708cc7709208":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1573570800000,
+      "end":1573574400000,
+      "id":"93afab90-8e36-42d2-84d8-708cc7709208",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b2be4e0f-be52-4d36-83c8-f6a46deba90e":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1574175600000,
+      "end":1574179200000,
+      "id":"b2be4e0f-be52-4d36-83c8-f6a46deba90e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "36e41b50-abad-4331-9990-4eb2106538eb":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1574780400000,
+      "end":1574784000000,
+      "id":"36e41b50-abad-4331-9990-4eb2106538eb",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f1494685-05b3-4ae2-985a-381fff339ae4":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1567523700000,
+      "end":1567527300000,
+      "id":"f1494685-05b3-4ae2-985a-381fff339ae4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "15440cc0-10d1-4821-bf90-218a954e0658":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1568128500000,
+      "end":1568132100000,
+      "id":"15440cc0-10d1-4821-bf90-218a954e0658",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "dc71af04-db13-407e-804f-256bde155773":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1568733300000,
+      "end":1568736900000,
+      "id":"dc71af04-db13-407e-804f-256bde155773",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c8fdad54-b44c-448b-a6f8-582723a03982":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1569338100000,
+      "end":1569341700000,
+      "id":"c8fdad54-b44c-448b-a6f8-582723a03982",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "35a8de98-5f49-4dcd-b2a7-cc1e39c02448":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1569942900000,
+      "end":1569946500000,
+      "id":"35a8de98-5f49-4dcd-b2a7-cc1e39c02448",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5a901952-39fc-4cfb-9d03-07855468fbe7":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1570547700000,
+      "end":1570551300000,
+      "id":"5a901952-39fc-4cfb-9d03-07855468fbe7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "bb1c91ab-67d9-452e-80ab-79690f46317a":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1571152500000,
+      "end":1571156100000,
+      "id":"bb1c91ab-67d9-452e-80ab-79690f46317a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ed575aec-e2f0-4365-9f99-36862503c070":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1571757300000,
+      "end":1571760900000,
+      "id":"ed575aec-e2f0-4365-9f99-36862503c070",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c6804245-8913-4b6d-a40d-38cafbf9364a":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1572365700000,
+      "end":1572369300000,
+      "id":"c6804245-8913-4b6d-a40d-38cafbf9364a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ba6a08b6-fe5b-4528-939b-24a003a4c442":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1572970500000,
+      "end":1572974100000,
+      "id":"ba6a08b6-fe5b-4528-939b-24a003a4c442",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4dc91854-405f-4849-9ca1-dcc0814285c9":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1573575300000,
+      "end":1573578900000,
+      "id":"4dc91854-405f-4849-9ca1-dcc0814285c9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c96bc2ee-f3d1-47fc-a06b-a6d3d31196b4":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1574180100000,
+      "end":1574183700000,
+      "id":"c96bc2ee-f3d1-47fc-a06b-a6d3d31196b4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "158c3b06-eeb5-451f-9bbc-30e3f2efe633":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1574784900000,
+      "end":1574788500000,
+      "id":"158c3b06-eeb5-451f-9bbc-30e3f2efe633",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3c2731be-19eb-41a0-8f9a-fb9ba0d71da7":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1567528200000,
+      "end":1567532700000,
+      "id":"3c2731be-19eb-41a0-8f9a-fb9ba0d71da7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7ef98c9a-e928-4067-8c0c-a6ab00d6def7":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1568133000000,
+      "end":1568137500000,
+      "id":"7ef98c9a-e928-4067-8c0c-a6ab00d6def7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "81c0e9fb-0a5e-41c9-b623-b9947a42c6ce":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1568737800000,
+      "end":1568742300000,
+      "id":"81c0e9fb-0a5e-41c9-b623-b9947a42c6ce",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "1828d4b8-11d3-4bc0-9d28-eed4fbc12781":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1569342600000,
+      "end":1569347100000,
+      "id":"1828d4b8-11d3-4bc0-9d28-eed4fbc12781",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b6f3771d-bc88-4e9a-8763-e368d429ab39":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1569947400000,
+      "end":1569951900000,
+      "id":"b6f3771d-bc88-4e9a-8763-e368d429ab39",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7f179102-190e-417f-a2e8-b59850ab857f":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1570552200000,
+      "end":1570556700000,
+      "id":"7f179102-190e-417f-a2e8-b59850ab857f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "cb247eb5-27f5-4fd1-815f-e914ab87dd5a":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1571157000000,
+      "end":1571161500000,
+      "id":"cb247eb5-27f5-4fd1-815f-e914ab87dd5a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "866e820f-a10c-4be3-83b8-93057d52bc32":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1571761800000,
+      "end":1571766300000,
+      "id":"866e820f-a10c-4be3-83b8-93057d52bc32",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ab24b334-87ab-4f28-9648-b2e4e1919e89":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1572370200000,
+      "end":1572374700000,
+      "id":"ab24b334-87ab-4f28-9648-b2e4e1919e89",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "43eca659-4e61-48de-b2e6-0b7ea3c736ac":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1572975000000,
+      "end":1572979500000,
+      "id":"43eca659-4e61-48de-b2e6-0b7ea3c736ac",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d2ed118a-1881-4d0a-9e79-3b4c16c0b8e2":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1573579800000,
+      "end":1573584300000,
+      "id":"d2ed118a-1881-4d0a-9e79-3b4c16c0b8e2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "42dcf8d4-3feb-4dcf-8be8-c818398db7f9":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1574184600000,
+      "end":1574189100000,
+      "id":"42dcf8d4-3feb-4dcf-8be8-c818398db7f9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "68c094fd-3be0-4027-a316-543cbdb55bd5":{
+      "duration":4500000,
+      "name":"Stretching Split",
+      "start":1574789400000,
+      "end":1574793900000,
+      "id":"68c094fd-3be0-4027-a316-543cbdb55bd5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "1831003a-03b5-4ff9-a005-13818180c51f":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1567605600000,
+      "end":1567609200000,
+      "id":"1831003a-03b5-4ff9-a005-13818180c51f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c741c2ba-4fce-446a-ba38-191f41c7ffeb":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1568210400000,
+      "end":1568214000000,
+      "id":"c741c2ba-4fce-446a-ba38-191f41c7ffeb",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f13e96f8-c2e6-45ac-9aa5-f85549bdaa69":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1568815200000,
+      "end":1568818800000,
+      "id":"f13e96f8-c2e6-45ac-9aa5-f85549bdaa69",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3a2675fb-4a9e-4275-93be-7627a2745546":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1569420000000,
+      "end":1569423600000,
+      "id":"3a2675fb-4a9e-4275-93be-7627a2745546",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "838d1cb6-fccd-4da4-aeb8-e329c6516265":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1570024800000,
+      "end":1570028400000,
+      "id":"838d1cb6-fccd-4da4-aeb8-e329c6516265",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "34394bdc-9c66-4d52-b4ff-980de67229a2":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1570629600000,
+      "end":1570633200000,
+      "id":"34394bdc-9c66-4d52-b4ff-980de67229a2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "48cbdcb5-d3ed-4f90-be97-d13d4e596eca":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1571234400000,
+      "end":1571238000000,
+      "id":"48cbdcb5-d3ed-4f90-be97-d13d4e596eca",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d37d066a-f7c2-46cb-850f-0bfbcedb4270":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1571839200000,
+      "end":1571842800000,
+      "id":"d37d066a-f7c2-46cb-850f-0bfbcedb4270",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e4d53223-1c10-46d3-9f5d-26d5e9b4c3b7":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1572447600000,
+      "end":1572451200000,
+      "id":"e4d53223-1c10-46d3-9f5d-26d5e9b4c3b7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8eb4d1d2-3a28-42a1-8d99-d1d0c7339394":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1573052400000,
+      "end":1573056000000,
+      "id":"8eb4d1d2-3a28-42a1-8d99-d1d0c7339394",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7aa9a7e9-d24f-4236-a1dc-d13dc119e3df":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1573657200000,
+      "end":1573660800000,
+      "id":"7aa9a7e9-d24f-4236-a1dc-d13dc119e3df",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "98ff2e12-9455-4009-97e2-23a66283cf8b":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1574262000000,
+      "end":1574265600000,
+      "id":"98ff2e12-9455-4009-97e2-23a66283cf8b",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7f527a0d-6893-4db5-98c3-51fb8a69afa7":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1574866800000,
+      "end":1574870400000,
+      "id":"7f527a0d-6893-4db5-98c3-51fb8a69afa7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9c9fc917-f18d-4285-8f3e-75849c8a94a0":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1567610100000,
+      "end":1567613700000,
+      "id":"9c9fc917-f18d-4285-8f3e-75849c8a94a0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "dfb4dba7-6e26-4f99-a140-a5bd7ddc7f83":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1568214900000,
+      "end":1568218500000,
+      "id":"dfb4dba7-6e26-4f99-a140-a5bd7ddc7f83",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a86240b1-54d1-48f3-a99b-ae2c23954a7b":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1568819700000,
+      "end":1568823300000,
+      "id":"a86240b1-54d1-48f3-a99b-ae2c23954a7b",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e5adccaa-ce11-4d0b-bf11-36ef03eaa89b":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1569424500000,
+      "end":1569428100000,
+      "id":"e5adccaa-ce11-4d0b-bf11-36ef03eaa89b",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ad299faf-7d47-4380-9a01-b7ae68d517e2":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1570029300000,
+      "end":1570032900000,
+      "id":"ad299faf-7d47-4380-9a01-b7ae68d517e2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "714f74f7-eff3-4395-8e14-804384a325d3":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1570634100000,
+      "end":1570637700000,
+      "id":"714f74f7-eff3-4395-8e14-804384a325d3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f97206e1-8c93-4d10-9138-3e24e36fcf8c":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1571238900000,
+      "end":1571242500000,
+      "id":"f97206e1-8c93-4d10-9138-3e24e36fcf8c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7754746b-903e-4020-8ab7-cc9c50b56f41":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1571843700000,
+      "end":1571847300000,
+      "id":"7754746b-903e-4020-8ab7-cc9c50b56f41",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "66cda4bf-b9f1-4cae-b9d3-1f34cf38261c":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1572452100000,
+      "end":1572455700000,
+      "id":"66cda4bf-b9f1-4cae-b9d3-1f34cf38261c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e4c43f74-b9e9-4d3d-a421-aebee3aaee75":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1573056900000,
+      "end":1573060500000,
+      "id":"e4c43f74-b9e9-4d3d-a421-aebee3aaee75",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "588f3264-d72f-436d-87b9-32a2a48de13b":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1573661700000,
+      "end":1573665300000,
+      "id":"588f3264-d72f-436d-87b9-32a2a48de13b",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b6cae1a9-e387-4e2e-aab3-ac4ec2a200b0":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1574266500000,
+      "end":1574270100000,
+      "id":"b6cae1a9-e387-4e2e-aab3-ac4ec2a200b0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "713d6df5-4bd0-4bdf-8823-8997baa34be0":{
+      "duration":3600000,
+      "name":"Fly Jooga basik",
+      "start":1574871300000,
+      "end":1574874900000,
+      "id":"713d6df5-4bd0-4bdf-8823-8997baa34be0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8a61fbf4-0770-4fe7-ab2a-4329451e4663":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1567614600000,
+      "end":1567618200000,
+      "id":"8a61fbf4-0770-4fe7-ab2a-4329451e4663",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "1be22a96-3465-46b8-b148-ef6ac92a8665":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1568219400000,
+      "end":1568223000000,
+      "id":"1be22a96-3465-46b8-b148-ef6ac92a8665",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "bf2f7309-ca5e-4970-bae7-e02c5be91cdb":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1568824200000,
+      "end":1568827800000,
+      "id":"bf2f7309-ca5e-4970-bae7-e02c5be91cdb",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "dc03ff38-3c0f-4112-abdc-03cb5ac52ed0":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1569429000000,
+      "end":1569432600000,
+      "id":"dc03ff38-3c0f-4112-abdc-03cb5ac52ed0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3612a9aa-3960-4374-96d7-63e2190b8137":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1570033800000,
+      "end":1570037400000,
+      "id":"3612a9aa-3960-4374-96d7-63e2190b8137",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "452d3c7a-8f5f-48f6-8f1e-d33b9d212f58":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1570638600000,
+      "end":1570642200000,
+      "id":"452d3c7a-8f5f-48f6-8f1e-d33b9d212f58",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "926f1912-22fc-4c2a-b3ca-f4d4d423b592":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1571243400000,
+      "end":1571247000000,
+      "id":"926f1912-22fc-4c2a-b3ca-f4d4d423b592",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8755f7c4-4ba8-4e1b-b1dd-eb3c65528547":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1571848200000,
+      "end":1571851800000,
+      "id":"8755f7c4-4ba8-4e1b-b1dd-eb3c65528547",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "112e7a02-2f19-4e75-b75a-9cd72b6337d2":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1572456600000,
+      "end":1572460200000,
+      "id":"112e7a02-2f19-4e75-b75a-9cd72b6337d2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5b095f64-944c-4613-9e13-5d4a5ef158ec":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1573061400000,
+      "end":1573065000000,
+      "id":"5b095f64-944c-4613-9e13-5d4a5ef158ec",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4963d4af-e6a3-4aad-b8f7-5ee58bf42608":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1573666200000,
+      "end":1573669800000,
+      "id":"4963d4af-e6a3-4aad-b8f7-5ee58bf42608",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b718f460-f098-4eed-8c16-7452ddb40184":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1574271000000,
+      "end":1574274600000,
+      "id":"b718f460-f098-4eed-8c16-7452ddb40184",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0a5eee32-0f0e-49c7-a41d-23cf5068d4cc":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1574875800000,
+      "end":1574879400000,
+      "id":"0a5eee32-0f0e-49c7-a41d-23cf5068d4cc",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "6212d3f8-a3ed-4493-9143-dda9a5d07869":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1567614600000,
+      "end":1567618200000,
+      "id":"6212d3f8-a3ed-4493-9143-dda9a5d07869",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "0bddf623-5233-4e03-99b6-83f0b834a421":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1568219400000,
+      "end":1568223000000,
+      "id":"0bddf623-5233-4e03-99b6-83f0b834a421",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "fb4f5be0-e01f-4262-b106-87c611d154a8":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1568824200000,
+      "end":1568827800000,
+      "id":"fb4f5be0-e01f-4262-b106-87c611d154a8",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "04e3d761-abe7-432a-8d45-d29a5b7f2d3d":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1569429000000,
+      "end":1569432600000,
+      "id":"04e3d761-abe7-432a-8d45-d29a5b7f2d3d",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "bcec5935-f818-4b03-8383-a76d0257d345":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1570033800000,
+      "end":1570037400000,
+      "id":"bcec5935-f818-4b03-8383-a76d0257d345",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "046deac9-e850-459e-b047-7f345cba30fd":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1570638600000,
+      "end":1570642200000,
+      "id":"046deac9-e850-459e-b047-7f345cba30fd",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "9f545b51-6b85-47d5-a177-495704a4d7ae":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1571243400000,
+      "end":1571247000000,
+      "id":"9f545b51-6b85-47d5-a177-495704a4d7ae",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "a0d09a44-f6e2-4662-aa82-1f4bf1cdb4a7":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1571848200000,
+      "end":1571851800000,
+      "id":"a0d09a44-f6e2-4662-aa82-1f4bf1cdb4a7",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "123cb57b-8a69-4f65-882a-c1d5921e3221":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1572456600000,
+      "end":1572460200000,
+      "id":"123cb57b-8a69-4f65-882a-c1d5921e3221",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "5ec00671-2105-4c4e-a0d8-1c1a33892f43":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1573061400000,
+      "end":1573065000000,
+      "id":"5ec00671-2105-4c4e-a0d8-1c1a33892f43",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "ab68746f-2092-4cee-9fc9-9a9e582c0a48":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1573666200000,
+      "end":1573669800000,
+      "id":"ab68746f-2092-4cee-9fc9-9a9e582c0a48",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "1711b5b3-f7a5-488e-954a-84a3d91075b0":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1574271000000,
+      "end":1574274600000,
+      "id":"1711b5b3-f7a5-488e-954a-84a3d91075b0",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "96fc4c29-281e-4dcd-b600-7e4a160d5060":{
+      "duration":3600000,
+      "name":"Pilates basik",
+      "start":1574875800000,
+      "end":1574879400000,
+      "id":"96fc4c29-281e-4dcd-b600-7e4a160d5060",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "a17a3ef1-a289-4ba4-b713-898ca03b0654":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1567668600000,
+      "end":1567672200000,
+      "id":"a17a3ef1-a289-4ba4-b713-898ca03b0654",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d03468c6-bf1e-4dbc-a8c4-6eaae22ba632":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568273400000,
+      "end":1568277000000,
+      "id":"d03468c6-bf1e-4dbc-a8c4-6eaae22ba632",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "2fe187ee-5d6b-431a-a921-5f176c575ef6":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568878200000,
+      "end":1568881800000,
+      "id":"2fe187ee-5d6b-431a-a921-5f176c575ef6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0e6ed06a-5164-497c-ace6-c7f7b06183d8":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569483000000,
+      "end":1569486600000,
+      "id":"0e6ed06a-5164-497c-ace6-c7f7b06183d8",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ca8ec0a8-35f0-4241-9aab-cffe1fe81e4d":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570087800000,
+      "end":1570091400000,
+      "id":"ca8ec0a8-35f0-4241-9aab-cffe1fe81e4d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "2b35d810-cf68-45c1-b8e4-8f6f9473323f":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570692600000,
+      "end":1570696200000,
+      "id":"2b35d810-cf68-45c1-b8e4-8f6f9473323f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ffe0c865-9da0-4bdf-b140-4900ad9d7994":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571297400000,
+      "end":1571301000000,
+      "id":"ffe0c865-9da0-4bdf-b140-4900ad9d7994",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "248f3b5d-53d3-4c63-99bf-6612d6177da7":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571902200000,
+      "end":1571905800000,
+      "id":"248f3b5d-53d3-4c63-99bf-6612d6177da7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5604f1e1-9aa1-4f9d-ad12-fcddfda09ca7":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572510600000,
+      "end":1572514200000,
+      "id":"5604f1e1-9aa1-4f9d-ad12-fcddfda09ca7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f2568ea3-c950-4731-9c4b-7789eeb771a2":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573115400000,
+      "end":1573119000000,
+      "id":"f2568ea3-c950-4731-9c4b-7789eeb771a2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a1f2553e-2c11-4a65-932e-ea218feb082a":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573720200000,
+      "end":1573723800000,
+      "id":"a1f2553e-2c11-4a65-932e-ea218feb082a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d8ce1d21-18df-4194-aba0-ad5636d98623":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574325000000,
+      "end":1574328600000,
+      "id":"d8ce1d21-18df-4194-aba0-ad5636d98623",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9668e875-3c94-4590-a722-aa88ebefdee1":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574929800000,
+      "end":1574933400000,
+      "id":"9668e875-3c94-4590-a722-aa88ebefdee1",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4e356806-f127-46fc-8289-09da0965b2aa":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1567692000000,
+      "end":1567695600000,
+      "id":"4e356806-f127-46fc-8289-09da0965b2aa",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "692115d7-3ee7-4b97-b47e-819f2e2fcdb0":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1568296800000,
+      "end":1568300400000,
+      "id":"692115d7-3ee7-4b97-b47e-819f2e2fcdb0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "71b25e0b-2339-4f23-93b7-dc18beed31bd":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1568901600000,
+      "end":1568905200000,
+      "id":"71b25e0b-2339-4f23-93b7-dc18beed31bd",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "fd5d0a87-5cf1-4e6b-8278-167194546011":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1569506400000,
+      "end":1569510000000,
+      "id":"fd5d0a87-5cf1-4e6b-8278-167194546011",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7770cde6-7a1a-415a-a37d-384757c129e9":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1570111200000,
+      "end":1570114800000,
+      "id":"7770cde6-7a1a-415a-a37d-384757c129e9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "949ce871-491e-4a7d-bd33-cbd0ff861bde":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1570716000000,
+      "end":1570719600000,
+      "id":"949ce871-491e-4a7d-bd33-cbd0ff861bde",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "28c46be0-e3d8-454d-a3bd-054b7305ffc5":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1571320800000,
+      "end":1571324400000,
+      "id":"28c46be0-e3d8-454d-a3bd-054b7305ffc5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d7271140-9ff7-4475-af77-3702729f0422":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1571925600000,
+      "end":1571929200000,
+      "id":"d7271140-9ff7-4475-af77-3702729f0422",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f3501e04-b632-4f5a-8a2d-dee61416285e":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1572534000000,
+      "end":1572537600000,
+      "id":"f3501e04-b632-4f5a-8a2d-dee61416285e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9f8b350c-f151-4ca8-b9c0-ea853d67a325":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1573138800000,
+      "end":1573142400000,
+      "id":"9f8b350c-f151-4ca8-b9c0-ea853d67a325",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f9caee21-dae5-498d-b30f-b62ed2451a4a":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1573743600000,
+      "end":1573747200000,
+      "id":"f9caee21-dae5-498d-b30f-b62ed2451a4a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "187a7f7b-f1a2-4164-b73d-a5cdd9d019ff":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1574348400000,
+      "end":1574352000000,
+      "id":"187a7f7b-f1a2-4164-b73d-a5cdd9d019ff",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "68fc4611-74f4-4071-825a-5d6dd4b8def0":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1574953200000,
+      "end":1574956800000,
+      "id":"68fc4611-74f4-4071-825a-5d6dd4b8def0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5830d5bc-3c1b-4a51-acbb-c6348379e5ac":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1567696500000,
+      "end":1567700100000,
+      "id":"5830d5bc-3c1b-4a51-acbb-c6348379e5ac",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9aed3878-1e6b-4257-8f6b-8a713cff637a":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1568301300000,
+      "end":1568304900000,
+      "id":"9aed3878-1e6b-4257-8f6b-8a713cff637a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3b69a17f-175e-4517-b558-792a182fb40d":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1568906100000,
+      "end":1568909700000,
+      "id":"3b69a17f-175e-4517-b558-792a182fb40d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8ee2c7f7-d1e6-472e-b516-07f00284bfc9":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1569510900000,
+      "end":1569514500000,
+      "id":"8ee2c7f7-d1e6-472e-b516-07f00284bfc9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "809c46b5-35ff-4025-a40d-4b843d435d20":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1570115700000,
+      "end":1570119300000,
+      "id":"809c46b5-35ff-4025-a40d-4b843d435d20",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e8dc48dd-89ab-41f7-963d-fb011f433b84":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1570720500000,
+      "end":1570724100000,
+      "id":"e8dc48dd-89ab-41f7-963d-fb011f433b84",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "eb7adb11-4875-43a1-bb14-abac69c6b9a3":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1571325300000,
+      "end":1571328900000,
+      "id":"eb7adb11-4875-43a1-bb14-abac69c6b9a3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "53b63ba7-df03-4993-bd69-f1cf048f8200":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1571930100000,
+      "end":1571933700000,
+      "id":"53b63ba7-df03-4993-bd69-f1cf048f8200",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "28470aaf-eea7-4323-a851-cd14621c05c7":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1572538500000,
+      "end":1572542100000,
+      "id":"28470aaf-eea7-4323-a851-cd14621c05c7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f5187ef2-d87e-4157-956d-18a7c492c11e":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1573143300000,
+      "end":1573146900000,
+      "id":"f5187ef2-d87e-4157-956d-18a7c492c11e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4dc8ffad-3e0b-48d7-b742-2d8ea66ef95c":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1573748100000,
+      "end":1573751700000,
+      "id":"4dc8ffad-3e0b-48d7-b742-2d8ea66ef95c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5cbb4374-7feb-4b96-96bd-ec9b7f687fce":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1574352900000,
+      "end":1574356500000,
+      "id":"5cbb4374-7feb-4b96-96bd-ec9b7f687fce",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "67ebab52-ba56-431a-9a28-84f2ef5744f9":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1574957700000,
+      "end":1574961300000,
+      "id":"67ebab52-ba56-431a-9a28-84f2ef5744f9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b97c0264-e806-401a-bd85-b363796462cf":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1567701000000,
+      "end":1567704600000,
+      "id":"b97c0264-e806-401a-bd85-b363796462cf",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f721e079-397e-489d-9e5e-0d0863202c4f":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1568305800000,
+      "end":1568309400000,
+      "id":"f721e079-397e-489d-9e5e-0d0863202c4f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "53e78a43-81eb-4429-9eb6-3f197cbc1d1e":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1568910600000,
+      "end":1568914200000,
+      "id":"53e78a43-81eb-4429-9eb6-3f197cbc1d1e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e30fe281-2b29-4d0d-82c8-8a3250f961c7":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1569515400000,
+      "end":1569519000000,
+      "id":"e30fe281-2b29-4d0d-82c8-8a3250f961c7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "028efa25-b125-48fa-971e-4b70a3b94416":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1570120200000,
+      "end":1570123800000,
+      "id":"028efa25-b125-48fa-971e-4b70a3b94416",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "529f68ba-c408-412f-bdd5-f3730ae33b22":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1570725000000,
+      "end":1570728600000,
+      "id":"529f68ba-c408-412f-bdd5-f3730ae33b22",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b5a2ee85-775b-41d9-aa2b-0d396577dbca":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1571329800000,
+      "end":1571333400000,
+      "id":"b5a2ee85-775b-41d9-aa2b-0d396577dbca",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c16398f5-96f0-4e47-9507-783c2e69b23e":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1571934600000,
+      "end":1571938200000,
+      "id":"c16398f5-96f0-4e47-9507-783c2e69b23e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "cc45a996-aa74-46dc-a34b-15a5239eab84":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1572543000000,
+      "end":1572546600000,
+      "id":"cc45a996-aa74-46dc-a34b-15a5239eab84",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "1c28de4f-6999-40d6-907a-02666fa70daa":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1573147800000,
+      "end":1573151400000,
+      "id":"1c28de4f-6999-40d6-907a-02666fa70daa",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "655b159d-0f0e-4e41-acf8-aed0a3537255":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1573752600000,
+      "end":1573756200000,
+      "id":"655b159d-0f0e-4e41-acf8-aed0a3537255",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9bbfa9e6-70a0-4786-81e5-fdcfe75bcaf1":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1574357400000,
+      "end":1574361000000,
+      "id":"9bbfa9e6-70a0-4786-81e5-fdcfe75bcaf1",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3733932c-8981-4f4e-a75f-03e3e47089c7":{
+      "duration":3600000,
+      "name":"Stretching Split",
+      "start":1574962200000,
+      "end":1574965800000,
+      "id":"3733932c-8981-4f4e-a75f-03e3e47089c7",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "880093e3-f5c6-4800-b453-237e4745428d":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1567778400000,
+      "end":1567782000000,
+      "id":"880093e3-f5c6-4800-b453-237e4745428d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e2b5b068-32fb-4ccc-a739-c3e5154ff507":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1568383200000,
+      "end":1568386800000,
+      "id":"e2b5b068-32fb-4ccc-a739-c3e5154ff507",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4c07048a-cde4-4cfb-8af6-86e6fc1bc6ba":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1568988000000,
+      "end":1568991600000,
+      "id":"4c07048a-cde4-4cfb-8af6-86e6fc1bc6ba",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5522c39c-11ed-44c9-b5c0-d95640b4fc15":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1569592800000,
+      "end":1569596400000,
+      "id":"5522c39c-11ed-44c9-b5c0-d95640b4fc15",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "49b0fa84-11d0-4739-aba3-681fd54d3ccb":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1570197600000,
+      "end":1570201200000,
+      "id":"49b0fa84-11d0-4739-aba3-681fd54d3ccb",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "558310ae-9ed0-4f8b-a7bd-b5a56ccbc528":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1570802400000,
+      "end":1570806000000,
+      "id":"558310ae-9ed0-4f8b-a7bd-b5a56ccbc528",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "53f92aba-11d9-42bb-be62-15ccde10fe49":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1571407200000,
+      "end":1571410800000,
+      "id":"53f92aba-11d9-42bb-be62-15ccde10fe49",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "947c2cab-1305-44f4-9cc1-28e3dc3fcac6":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1572012000000,
+      "end":1572015600000,
+      "id":"947c2cab-1305-44f4-9cc1-28e3dc3fcac6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8fc75eea-6f49-4aa9-ae62-18e2fa86148d":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1572620400000,
+      "end":1572624000000,
+      "id":"8fc75eea-6f49-4aa9-ae62-18e2fa86148d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "cfa3e1f9-6c35-40af-bdc6-468b9881aa11":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1573225200000,
+      "end":1573228800000,
+      "id":"cfa3e1f9-6c35-40af-bdc6-468b9881aa11",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "26f79f1c-b8d0-45a3-853e-db970c471499":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1573830000000,
+      "end":1573833600000,
+      "id":"26f79f1c-b8d0-45a3-853e-db970c471499",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "bb63a058-696e-4072-8cb8-ec1e48feff80":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1574434800000,
+      "end":1574438400000,
+      "id":"bb63a058-696e-4072-8cb8-ec1e48feff80",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "76394830-fc3a-4ece-bc6c-284be5210bfe":{
+      "duration":3600000,
+      "name":"Fly Dance acro 14+",
+      "start":1575039600000,
+      "end":1575043200000,
+      "id":"76394830-fc3a-4ece-bc6c-284be5210bfe",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7a1ac7bf-b243-470c-8c55-db9df4625325":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1567782900000,
+      "end":1567786500000,
+      "id":"7a1ac7bf-b243-470c-8c55-db9df4625325",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8a8ef4db-d996-4ddc-9a0a-4e7ad9c31676":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1568387700000,
+      "end":1568391300000,
+      "id":"8a8ef4db-d996-4ddc-9a0a-4e7ad9c31676",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "56736e31-b4cb-4a0d-a9e8-ecac2b7b8354":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1568992500000,
+      "end":1568996100000,
+      "id":"56736e31-b4cb-4a0d-a9e8-ecac2b7b8354",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0dfdec30-a4a6-4410-9b63-0d0222c78835":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1569597300000,
+      "end":1569600900000,
+      "id":"0dfdec30-a4a6-4410-9b63-0d0222c78835",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e19be621-e833-49f5-af5d-9b28f525daa2":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1570202100000,
+      "end":1570205700000,
+      "id":"e19be621-e833-49f5-af5d-9b28f525daa2",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d667e568-1f14-43fe-91e5-6eac27e126e3":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1570806900000,
+      "end":1570810500000,
+      "id":"d667e568-1f14-43fe-91e5-6eac27e126e3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "02d7049f-7990-4b6e-a9c0-3078a0712aac":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1571411700000,
+      "end":1571415300000,
+      "id":"02d7049f-7990-4b6e-a9c0-3078a0712aac",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ea00647e-dc04-451f-8d37-32e72820e414":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1572016500000,
+      "end":1572020100000,
+      "id":"ea00647e-dc04-451f-8d37-32e72820e414",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f8b3f90e-35cc-4aa1-be97-6ed957641f68":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1572624900000,
+      "end":1572628500000,
+      "id":"f8b3f90e-35cc-4aa1-be97-6ed957641f68",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e2a41957-cfc5-4e42-9142-9bb317f99020":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1573229700000,
+      "end":1573233300000,
+      "id":"e2a41957-cfc5-4e42-9142-9bb317f99020",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "bc25dad7-1f66-4a9e-aded-73b3023a3c72":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1573834500000,
+      "end":1573838100000,
+      "id":"bc25dad7-1f66-4a9e-aded-73b3023a3c72",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "503b0d80-bece-4f65-9893-ca422ef77db0":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1574439300000,
+      "end":1574442900000,
+      "id":"503b0d80-bece-4f65-9893-ca422ef77db0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "54da66cd-11b6-478b-ad53-2029b319431c":{
+      "duration":3600000,
+      "name":"Fly Jooga jatko",
+      "start":1575044100000,
+      "end":1575047700000,
+      "id":"54da66cd-11b6-478b-ad53-2029b319431c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "cc960347-834c-440b-a5ca-5462eedd1bf3":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1567787400000,
+      "end":1567791000000,
+      "id":"cc960347-834c-440b-a5ca-5462eedd1bf3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "77f323c5-a547-4326-bafd-bfb83596165e":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1568392200000,
+      "end":1568395800000,
+      "id":"77f323c5-a547-4326-bafd-bfb83596165e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e6e3fc47-8da2-45e6-9b3c-6a55bb602d4e":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1568997000000,
+      "end":1569000600000,
+      "id":"e6e3fc47-8da2-45e6-9b3c-6a55bb602d4e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8802ecba-d93d-4960-b7c1-243668822ec5":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1569601800000,
+      "end":1569605400000,
+      "id":"8802ecba-d93d-4960-b7c1-243668822ec5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "95a81c26-1dc5-4044-bc9f-c45df8a6497a":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1570206600000,
+      "end":1570210200000,
+      "id":"95a81c26-1dc5-4044-bc9f-c45df8a6497a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d5fe9267-f4f9-4e98-a745-b883a964b1ad":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1570811400000,
+      "end":1570815000000,
+      "id":"d5fe9267-f4f9-4e98-a745-b883a964b1ad",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "971500bf-7acc-47de-8926-ccf8951c9a76":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1571416200000,
+      "end":1571419800000,
+      "id":"971500bf-7acc-47de-8926-ccf8951c9a76",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5384b932-8e78-4050-b414-d1180062f2b4":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1572021000000,
+      "end":1572024600000,
+      "id":"5384b932-8e78-4050-b414-d1180062f2b4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7b40785f-df6a-4fa5-be47-499f405c7331":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1572629400000,
+      "end":1572633000000,
+      "id":"7b40785f-df6a-4fa5-be47-499f405c7331",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "04e9deaa-07fe-4bec-86c8-b89b0f135f16":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1573234200000,
+      "end":1573237800000,
+      "id":"04e9deaa-07fe-4bec-86c8-b89b0f135f16",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5adb8a11-5bc5-41f4-a1ad-79ba8f39c8d0":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1573839000000,
+      "end":1573842600000,
+      "id":"5adb8a11-5bc5-41f4-a1ad-79ba8f39c8d0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e7820175-92d9-4191-b845-0a2a2fea6808":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1574443800000,
+      "end":1574447400000,
+      "id":"e7820175-92d9-4191-b845-0a2a2fea6808",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3176c1af-3e28-4802-bccd-c4e8186b4e0d":{
+      "duration":3600000,
+      "name":"Frame-Up",
+      "start":1575048600000,
+      "end":1575052200000,
+      "id":"3176c1af-3e28-4802-bccd-c4e8186b4e0d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e88f0627-7f3d-469d-adf2-a4ab50684e23":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1567787400000,
+      "end":1567791000000,
+      "id":"e88f0627-7f3d-469d-adf2-a4ab50684e23",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "67017629-af16-4c9a-95cd-2521ce304e23":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568392200000,
+      "end":1568395800000,
+      "id":"67017629-af16-4c9a-95cd-2521ce304e23",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "d452b943-5db1-4cd6-94d9-badf9c5faeb2":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568997000000,
+      "end":1569000600000,
+      "id":"d452b943-5db1-4cd6-94d9-badf9c5faeb2",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "42efd192-72e5-4894-b481-558e9cca85ae":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569601800000,
+      "end":1569605400000,
+      "id":"42efd192-72e5-4894-b481-558e9cca85ae",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "f650ffe7-7df5-4ef1-a7dd-2f0e60b019a3":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570206600000,
+      "end":1570210200000,
+      "id":"f650ffe7-7df5-4ef1-a7dd-2f0e60b019a3",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "e8e3f623-fff3-4938-b7cd-214bf2ffd195":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570811400000,
+      "end":1570815000000,
+      "id":"e8e3f623-fff3-4938-b7cd-214bf2ffd195",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "f0652d86-0776-4c56-80d4-5cb986a3ae81":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571416200000,
+      "end":1571419800000,
+      "id":"f0652d86-0776-4c56-80d4-5cb986a3ae81",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "1c41e9e0-6e13-4466-afb2-a027a32846be":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572021000000,
+      "end":1572024600000,
+      "id":"1c41e9e0-6e13-4466-afb2-a027a32846be",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "0785271d-f0c2-46f7-8ddf-9b11aeca1a94":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572629400000,
+      "end":1572633000000,
+      "id":"0785271d-f0c2-46f7-8ddf-9b11aeca1a94",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "4d23e171-1a79-40d2-8166-88347000738f":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573234200000,
+      "end":1573237800000,
+      "id":"4d23e171-1a79-40d2-8166-88347000738f",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "27b48428-1971-40db-9646-26d783ce3662":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573839000000,
+      "end":1573842600000,
+      "id":"27b48428-1971-40db-9646-26d783ce3662",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "8dee390d-ffdb-4685-bbde-dae51773f32a":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574443800000,
+      "end":1574447400000,
+      "id":"8dee390d-ffdb-4685-bbde-dae51773f32a",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "e1c39301-6210-4e62-ab9d-ed1f67e86f36":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1575048600000,
+      "end":1575052200000,
+      "id":"e1c39301-6210-4e62-ab9d-ed1f67e86f36",
+      "room":"Vesala",
+      "participants":{},
+      "status":null
+    },
+    "e6009575-25d3-4cdf-90b6-e1c526eac84a":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1567843200000,
+      "end":1567846800000,
+      "id":"e6009575-25d3-4cdf-90b6-e1c526eac84a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "106a9bf3-fa21-496c-86aa-d811269462b0":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1568448000000,
+      "end":1568451600000,
+      "id":"106a9bf3-fa21-496c-86aa-d811269462b0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7121472c-5955-4ad1-a7a1-fa85563b4987":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1569052800000,
+      "end":1569056400000,
+      "id":"7121472c-5955-4ad1-a7a1-fa85563b4987",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9e883a66-4ff1-4993-892c-f4e36ffa6698":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1569657600000,
+      "end":1569661200000,
+      "id":"9e883a66-4ff1-4993-892c-f4e36ffa6698",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "20fc3e43-bc3b-4539-8681-085043978ab0":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1570262400000,
+      "end":1570266000000,
+      "id":"20fc3e43-bc3b-4539-8681-085043978ab0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0509bdad-b0ea-446f-b0ed-69ce94f5d9c3":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1570867200000,
+      "end":1570870800000,
+      "id":"0509bdad-b0ea-446f-b0ed-69ce94f5d9c3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "aa70d4c9-6428-4587-b57b-e3d858db6487":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1571472000000,
+      "end":1571475600000,
+      "id":"aa70d4c9-6428-4587-b57b-e3d858db6487",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c9352c35-e51c-415d-80d4-cf7f8c166705":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1572076800000,
+      "end":1572080400000,
+      "id":"c9352c35-e51c-415d-80d4-cf7f8c166705",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "2f3887ec-645a-4f1d-812f-961de0cd2116":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1572685200000,
+      "end":1572688800000,
+      "id":"2f3887ec-645a-4f1d-812f-961de0cd2116",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "6ea58247-a1b2-4181-869d-d24e78a4aa2d":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1573290000000,
+      "end":1573293600000,
+      "id":"6ea58247-a1b2-4181-869d-d24e78a4aa2d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "460c3515-b425-43c5-a756-5f277a5ece08":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1573894800000,
+      "end":1573898400000,
+      "id":"460c3515-b425-43c5-a756-5f277a5ece08",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "cdb0834a-0a4d-4b5e-a53a-d9c44b4c56c9":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1574499600000,
+      "end":1574503200000,
+      "id":"cdb0834a-0a4d-4b5e-a53a-d9c44b4c56c9",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e6772e1f-0812-48f7-b76d-b437cf4336a6":{
+      "duration":3600000,
+      "name":"Tabatta",
+      "start":1575104400000,
+      "end":1575108000000,
+      "id":"e6772e1f-0812-48f7-b76d-b437cf4336a6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "48178ad4-442c-43c9-a043-0b3c0ce30218":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1567847700000,
+      "end":1567851300000,
+      "id":"48178ad4-442c-43c9-a043-0b3c0ce30218",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "128a17e0-cef3-477a-9058-e9f533a6920f":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1568452500000,
+      "end":1568456100000,
+      "id":"128a17e0-cef3-477a-9058-e9f533a6920f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "097a4efc-25d9-4558-ab8f-0d15a27d21c4":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1569057300000,
+      "end":1569060900000,
+      "id":"097a4efc-25d9-4558-ab8f-0d15a27d21c4",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "5bef84a0-076e-4b9e-954d-f7f4e7266eff":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1569662100000,
+      "end":1569665700000,
+      "id":"5bef84a0-076e-4b9e-954d-f7f4e7266eff",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "79cdf810-9eb5-4445-95c3-ac03d73b131b":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1570266900000,
+      "end":1570270500000,
+      "id":"79cdf810-9eb5-4445-95c3-ac03d73b131b",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "e283dbf6-9f6f-45fd-a677-0485f0989315":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1570871700000,
+      "end":1570875300000,
+      "id":"e283dbf6-9f6f-45fd-a677-0485f0989315",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "713aaf38-baa1-408e-9663-cc71e22ced3e":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1571476500000,
+      "end":1571480100000,
+      "id":"713aaf38-baa1-408e-9663-cc71e22ced3e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "33bf0687-1937-4369-8a77-71a295776abf":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1572081300000,
+      "end":1572084900000,
+      "id":"33bf0687-1937-4369-8a77-71a295776abf",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ac29928c-168c-4c98-a84f-c178be1d0391":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1572689700000,
+      "end":1572693300000,
+      "id":"ac29928c-168c-4c98-a84f-c178be1d0391",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0a587987-fadb-401f-9361-35a7215ad6dd":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1573294500000,
+      "end":1573298100000,
+      "id":"0a587987-fadb-401f-9361-35a7215ad6dd",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9c8774d7-7834-4f2c-a7c0-e141acf1b110":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1573899300000,
+      "end":1573902900000,
+      "id":"9c8774d7-7834-4f2c-a7c0-e141acf1b110",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b1f69dd7-3a55-477e-a567-9468947fc914":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1574504100000,
+      "end":1574507700000,
+      "id":"b1f69dd7-3a55-477e-a567-9468947fc914",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9710b2e9-636e-4a35-96cc-cfcec585e28a":{
+      "duration":3600000,
+      "name":"Pilates intensive",
+      "start":1575108900000,
+      "end":1575112500000,
+      "id":"9710b2e9-636e-4a35-96cc-cfcec585e28a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "50463110-f4b1-413c-a3cb-e7ac26cf045f":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1567324800000,
+      "end":1567328400000,
+      "id":"50463110-f4b1-413c-a3cb-e7ac26cf045f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "bbd8457f-43da-4f5a-bbdd-28205251248f":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1567929600000,
+      "end":1567933200000,
+      "id":"bbd8457f-43da-4f5a-bbdd-28205251248f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "88278fdf-ddd8-429c-a3a1-27184bc98db3":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1568534400000,
+      "end":1568538000000,
+      "id":"88278fdf-ddd8-429c-a3a1-27184bc98db3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "39b2e7a8-0b24-4a37-970c-d6058aded5cd":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569139200000,
+      "end":1569142800000,
+      "id":"39b2e7a8-0b24-4a37-970c-d6058aded5cd",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b9cdcf8a-4d97-4a59-9be2-0af4a630274a":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1569744000000,
+      "end":1569747600000,
+      "id":"b9cdcf8a-4d97-4a59-9be2-0af4a630274a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "967e9597-dd48-4c9e-81fd-8ca1b33dd472":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570348800000,
+      "end":1570352400000,
+      "id":"967e9597-dd48-4c9e-81fd-8ca1b33dd472",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a7622799-56f0-42ee-8b57-7b9b7525db4c":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1570953600000,
+      "end":1570957200000,
+      "id":"a7622799-56f0-42ee-8b57-7b9b7525db4c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4d282324-eff9-44cf-9633-3f959fdf1a07":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1571558400000,
+      "end":1571562000000,
+      "id":"4d282324-eff9-44cf-9633-3f959fdf1a07",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "705033b9-f275-425f-88dc-cfeabe8fd80c":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572166800000,
+      "end":1572170400000,
+      "id":"705033b9-f275-425f-88dc-cfeabe8fd80c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "dc03265b-f802-49bb-9613-b2b4735ca1da":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1572771600000,
+      "end":1572775200000,
+      "id":"dc03265b-f802-49bb-9613-b2b4735ca1da",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4ca6b78d-991b-454b-aee3-961a8d8e366d":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573376400000,
+      "end":1573380000000,
+      "id":"4ca6b78d-991b-454b-aee3-961a8d8e366d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "9326fe10-33f9-4a7f-b5b9-794c88708282":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1573981200000,
+      "end":1573984800000,
+      "id":"9326fe10-33f9-4a7f-b5b9-794c88708282",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "3f2b7220-2e8b-42ea-88d2-a38697de614f":{
+      "duration":3600000,
+      "name":"Pilates",
+      "start":1574586000000,
+      "end":1574589600000,
+      "id":"3f2b7220-2e8b-42ea-88d2-a38697de614f",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "30a54c9b-5a7c-49cf-91b3-b188c8dbdeac":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1567329300000,
+      "end":1567332900000,
+      "id":"30a54c9b-5a7c-49cf-91b3-b188c8dbdeac",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "dad1e6de-134b-4300-b9bb-4282c8b6434d":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1567934100000,
+      "end":1567937700000,
+      "id":"dad1e6de-134b-4300-b9bb-4282c8b6434d",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "8d98e82c-326f-40e0-858b-73d695749f56":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1568538900000,
+      "end":1568542500000,
+      "id":"8d98e82c-326f-40e0-858b-73d695749f56",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "d6716736-29d3-4d69-9bcd-8f983b99fde6":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1569143700000,
+      "end":1569147300000,
+      "id":"d6716736-29d3-4d69-9bcd-8f983b99fde6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0d566eaa-a125-4246-9aa5-762a110581a6":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1569748500000,
+      "end":1569752100000,
+      "id":"0d566eaa-a125-4246-9aa5-762a110581a6",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "117124aa-ec5d-46fd-a7ae-77529d3785cf":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1570353300000,
+      "end":1570356900000,
+      "id":"117124aa-ec5d-46fd-a7ae-77529d3785cf",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4930e150-1423-455b-b8c4-5272e61c3e42":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1570958100000,
+      "end":1570961700000,
+      "id":"4930e150-1423-455b-b8c4-5272e61c3e42",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "4b6e247a-2682-44f0-ab3b-d1ce951dc33c":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1571562900000,
+      "end":1571566500000,
+      "id":"4b6e247a-2682-44f0-ab3b-d1ce951dc33c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "6c9e11d5-314d-4925-838b-a9f71a4a90d3":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1572171300000,
+      "end":1572174900000,
+      "id":"6c9e11d5-314d-4925-838b-a9f71a4a90d3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "2875c6e2-181b-4dc5-b1d0-091c66fa0376":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1572776100000,
+      "end":1572779700000,
+      "id":"2875c6e2-181b-4dc5-b1d0-091c66fa0376",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "c56b4556-4796-4c45-b8aa-a12919ebd11e":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1573380900000,
+      "end":1573384500000,
+      "id":"c56b4556-4796-4c45-b8aa-a12919ebd11e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7313447a-e6a8-4ac8-9f22-a3e9ce91f4ac":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1573985700000,
+      "end":1573989300000,
+      "id":"7313447a-e6a8-4ac8-9f22-a3e9ce91f4ac",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "78f20dfb-c54f-401f-aefa-16782ec0060c":{
+      "duration":3600000,
+      "name":"Koreografia ballet",
+      "start":1574590500000,
+      "end":1574594100000,
+      "id":"78f20dfb-c54f-401f-aefa-16782ec0060c",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0f6e850d-db97-4cec-a32a-5196f3f64fb0":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1567344600000,
+      "end":1567349100000,
+      "id":"0f6e850d-db97-4cec-a32a-5196f3f64fb0",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "91c769be-49c9-4672-8548-51248b63fb95":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1567949400000,
+      "end":1567953900000,
+      "id":"91c769be-49c9-4672-8548-51248b63fb95",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "b63ce496-7829-4e66-949b-244b21d673e5":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1568554200000,
+      "end":1568558700000,
+      "id":"b63ce496-7829-4e66-949b-244b21d673e5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "266ad445-8a67-4896-93e8-2bb02709d2b5":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1569159000000,
+      "end":1569163500000,
+      "id":"266ad445-8a67-4896-93e8-2bb02709d2b5",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "acbbc0c8-756c-424e-804f-16abc9ca927a":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1569763800000,
+      "end":1569768300000,
+      "id":"acbbc0c8-756c-424e-804f-16abc9ca927a",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "22d3efb1-75de-4285-8c0a-295defadaeca":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1570368600000,
+      "end":1570373100000,
+      "id":"22d3efb1-75de-4285-8c0a-295defadaeca",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "0ebe37c8-67f4-4f95-999b-fbc90417268e":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1570973400000,
+      "end":1570977900000,
+      "id":"0ebe37c8-67f4-4f95-999b-fbc90417268e",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "f43d992a-fd77-4a67-a156-28047fc65a06":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1571578200000,
+      "end":1571582700000,
+      "id":"f43d992a-fd77-4a67-a156-28047fc65a06",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "7b4dedee-5cb0-4846-a8dd-a265d718b511":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1572186600000,
+      "end":1572191100000,
+      "id":"7b4dedee-5cb0-4846-a8dd-a265d718b511",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "12de7a06-b0b3-40e8-aa9d-335fd4485fb3":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1572791400000,
+      "end":1572795900000,
+      "id":"12de7a06-b0b3-40e8-aa9d-335fd4485fb3",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "a0a7cbc6-37d5-4ced-9bd7-50a1f4393399":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1573396200000,
+      "end":1573400700000,
+      "id":"a0a7cbc6-37d5-4ced-9bd7-50a1f4393399",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "897ac875-efb0-445a-94ab-1ab0a0135696":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1574001000000,
+      "end":1574005500000,
+      "id":"897ac875-efb0-445a-94ab-1ab0a0135696",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    },
+    "ad9c131b-7e4c-44eb-8758-b91b540e7826":{
+      "duration":4500000,
+      "name":"Break dance 7+",
+      "start":1574605800000,
+      "end":1574610300000,
+      "id":"ad9c131b-7e4c-44eb-8758-b91b540e7826",
+      "room":"Kuparitie 1",
+      "participants":{},
+      "status":null
+    }
+  },
+  "eventPlanners":{
+    "88ac56d2-c087-434d-b38b-3177755f5633":{
+      "duration":10800000,
+      "weekDays":[
+        2
+      ],
+      "name":"Аренда",
+      "start":61200000,
+      "from":1567285200000,
+      "id":"88ac56d2-c087-434d-b38b-3177755f5633",
+      "to":1575151199999,
+      "room":null,
+      "participants":null
+    },
+    "f1af4e48-aac1-4456-b045-296d00f38a35":{
+      "duration":3600000,
+      "weekDays":[
+        3
+      ],
+      "name":"Pilates",
+      "start":37800000,
+      "from":1567285200000,
+      "id":"f1af4e48-aac1-4456-b045-296d00f38a35",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "46f0eac5-30aa-41f4-911c-b0488ba28711":{
+      "duration":3600000,
+      "weekDays":[
+        3
+      ],
+      "name":"Koreografia ballet",
+      "start":61200000,
+      "from":1567285200000,
+      "id":"46f0eac5-30aa-41f4-911c-b0488ba28711",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "c58c3bf7-c3ea-448f-95bf-c0c951eb258e":{
+      "duration":3600000,
+      "weekDays":[
+        3
+      ],
+      "name":"Pilates basik",
+      "start":65700000,
+      "from":1567285200000,
+      "id":"c58c3bf7-c3ea-448f-95bf-c0c951eb258e",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "2d196332-b308-4eba-ad78-d454bb6908d8":{
+      "duration":4500000,
+      "weekDays":[
+        3
+      ],
+      "name":"Stretching Split",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"2d196332-b308-4eba-ad78-d454bb6908d8",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "b5a8480b-9fa4-428a-b840-446a5e0ab23a":{
+      "duration":3600000,
+      "weekDays":[
+        4
+      ],
+      "name":"Fly Dance acro 14+",
+      "start":61200000,
+      "from":1567285200000,
+      "id":"b5a8480b-9fa4-428a-b840-446a5e0ab23a",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "e7332a0f-833d-441e-b33b-aeeb729402d4":{
+      "duration":3600000,
+      "weekDays":[
+        4
+      ],
+      "name":"Fly Jooga basik",
+      "start":65700000,
+      "from":1567285200000,
+      "id":"e7332a0f-833d-441e-b33b-aeeb729402d4",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "303fda0b-16ce-4a7b-b0b4-b3f02d1d909d":{
+      "duration":3600000,
+      "weekDays":[
+        4
+      ],
+      "name":"Frame-Up",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"303fda0b-16ce-4a7b-b0b4-b3f02d1d909d",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "8ffefb0f-ad21-4a92-96d5-408d5ac8982d":{
+      "duration":3600000,
+      "weekDays":[
+        4
+      ],
+      "name":"Pilates basik",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"8ffefb0f-ad21-4a92-96d5-408d5ac8982d",
+      "to":1575151199999,
+      "room":"Vesala",
+      "participants":null
+    },
+    "b879ebdb-35c8-4617-96d9-d0bc3d304ff0":{
+      "duration":3600000,
+      "weekDays":[
+        5
+      ],
+      "name":"Pilates",
+      "start":37800000,
+      "from":1567285200000,
+      "id":"b879ebdb-35c8-4617-96d9-d0bc3d304ff0",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "15e2878b-80a2-458b-8fa4-83c01ad70c43":{
+      "duration":3600000,
+      "weekDays":[
+        5
+      ],
+      "name":"Tabatta",
+      "start":61200000,
+      "from":1567285200000,
+      "id":"15e2878b-80a2-458b-8fa4-83c01ad70c43",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "95a6cc24-204d-4b49-bdce-33e045fb2efd":{
+      "duration":3600000,
+      "weekDays":[
+        5
+      ],
+      "name":"Pilates intensive",
+      "start":65700000,
+      "from":1567285200000,
+      "id":"95a6cc24-204d-4b49-bdce-33e045fb2efd",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "aa54c435-ebc1-40c8-bb9e-80bdac6ea3f4":{
+      "duration":3600000,
+      "weekDays":[
+        5
+      ],
+      "name":"Stretching Split",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"aa54c435-ebc1-40c8-bb9e-80bdac6ea3f4",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "2dbb51c4-b576-4cbd-87e6-980113626aed":{
+      "duration":3600000,
+      "weekDays":[
+        6
+      ],
+      "name":"Fly Dance acro 14+",
+      "start":61200000,
+      "from":1567285200000,
+      "id":"2dbb51c4-b576-4cbd-87e6-980113626aed",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "8a1f64f6-3b97-4447-9f15-93541beeb79d":{
+      "duration":3600000,
+      "weekDays":[
+        6
+      ],
+      "name":"Fly Jooga jatko",
+      "start":65700000,
+      "from":1567285200000,
+      "id":"8a1f64f6-3b97-4447-9f15-93541beeb79d",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "42aed877-c9d6-4f02-a3a7-81f116a52d01":{
+      "duration":3600000,
+      "weekDays":[
+        6
+      ],
+      "name":"Frame-Up",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"42aed877-c9d6-4f02-a3a7-81f116a52d01",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "67a74a76-f5a5-4ec7-b06e-671372a7d280":{
+      "duration":3600000,
+      "weekDays":[
+        6
+      ],
+      "name":"Pilates",
+      "start":70200000,
+      "from":1567285200000,
+      "id":"67a74a76-f5a5-4ec7-b06e-671372a7d280",
+      "to":1575151199999,
+      "room":"Vesala",
+      "participants":null
+    },
+    "448fb1c4-4afb-4a19-822e-484c0e8b333e":{
+      "duration":3600000,
+      "weekDays":[
+        7
+      ],
+      "name":"Tabatta",
+      "start":39600000,
+      "from":1567285200000,
+      "id":"448fb1c4-4afb-4a19-822e-484c0e8b333e",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "919d5f04-081d-43d8-a7bb-5dc047c2c460":{
+      "duration":3600000,
+      "weekDays":[
+        7
+      ],
+      "name":"Pilates intensive",
+      "start":44100000,
+      "from":1567285200000,
+      "id":"919d5f04-081d-43d8-a7bb-5dc047c2c460",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "a41e5210-5ea1-4f6e-89c2-40d37b273120":{
+      "duration":3600000,
+      "weekDays":[
+        1
+      ],
+      "name":"Pilates",
+      "start":39600000,
+      "from":1567285200000,
+      "id":"a41e5210-5ea1-4f6e-89c2-40d37b273120",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "b70c73f9-efc3-4fd8-977e-852e938ee076":{
+      "duration":3600000,
+      "weekDays":[
+        1
+      ],
+      "name":"Koreografia ballet",
+      "start":44100000,
+      "from":1567285200000,
+      "id":"b70c73f9-efc3-4fd8-977e-852e938ee076",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    },
+    "d412ce37-c712-487c-b852-5334ec82b918":{
+      "duration":4500000,
+      "weekDays":[
+        1
+      ],
+      "name":"Break dance 7+",
+      "start":59400000,
+      "from":1567285200000,
+      "id":"d412ce37-c712-487c-b852-5334ec82b918",
+      "to":1575151199999,
+      "room":"Kuparitie 1",
+      "participants":null
+    }
+  },
+  "exclusions":{}
+}

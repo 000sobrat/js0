@@ -1,0 +1,112 @@
+<html><head>
+
+${include /app/head.incl}
+
+<link rel="stylesheet" type="text/css" href="/app/styles/calendar.css" media="screen">
+<script type="text/javascript" src="/app/scripts/calendar.js"></script>
+
+<script>
+
+var events;
+var eventsFilter;
+
+function buildFilters() {
+  var s="";
+  s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not my}");
+  s+=buildMonthsFilter("#{Month}",);
+  s+=buildWeeksFilter("#{Week}","#{Now}");
+  s+=buildRoomsFilter("#{Rooms}","#{ALL}");
+  s+=buildTrainersFilter("#{Trainers}","#{ALL}");
+  s+=buildCoursesFilter("#{Courses}","#{ALL}");
+  s+=buildGroupsFilter("#{Groups}","#{ALL}");
+  return s;
+}
+
+
+function loadBasket() {
+   REST_api.getEventsInBasket(function (url, data) {
+                    //debugRR(url, data);
+
+                    if (data.result) {
+			events=data.result;
+                        renderEvents();
+                    }
+                });
+}
+
+function removeFromBasket(tsId) {
+   REST_api.removeEventsFromBasket(tsId,function (url, data) {
+                    //debugRR(url, data);
+
+                    if (data.result) {
+                        loadBasket();
+                    }
+                });
+}
+
+
+  function renderEvents() {
+  if(events) {
+     new Calendar({
+        locale:'ru',
+        compact: true,
+        renderCellEntryActions: function(id,entry){
+            var s="&nbsp;&nbsp;";
+            s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
+            s+="<img src='images/ball_red_gradient.png' alt='add' width='12px'>";
+            s+="</a>";
+            return s;
+          },
+  renderCellEntry: function(id, entry, dMin, dMax) {
+    var s="";
+    var trMax=1;//entry.group.training.maxSize;
+    var trAct=1;//Object.keys(entry.trainees).length;
+    var cst=(trAct<trMax)? (trAct>0)? (trAct>3) ?"calendar_cell_full" :"calendar_cell_participant":"":"calendar_cell_full";
+    s+="<fieldset  id='"+id+"' class='calendar_cell "+cst+"' tMin='"+dMin.getTime()+"' tMax='"+dMax.getTime()+"'>";
+    s+="<legend class='calendar_cell'>";
+    s+="<font size=-2>";
+    s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
+    s+="</font>";
+    s+="</legend>";
+    s+=entry.name+"  <font size=-1><br/>"+entry.trainer+"</font>";
+    s+=this.renderCellEntryActions(id,entry);
+    s+="</fieldset>";
+    return s;
+  },
+  adjustableElements: function() {
+     return document.getElementsByTagName("fieldset");
+  }
+        }
+        ).render('content',events);
+  }
+  }
+
+  function toDateYMD(val) {
+     if("number"==typeof(val)) val=new Date(val);
+     else if("string"==typeof(val)) val=new Date(val);
+     return ""
+           +val.getFullYear()
+           +"-"
+           +((val.getMonth()<9) ? "0" : "")+(val.getMonth()+1)
+           +"-"
+           +((val.getDate()<10) ? "0"+val.getDate() : val.getDate());
+  }
+
+  function toTimeHM(val) {
+     if("number"==typeof(val)) val=new Date(val);
+     else if("string"==typeof(val)) val=new Date(val);
+     return ""
+           +((val.getHours()<10) ? "0"+val.getHours() : val.getHours())
+           +":"
+           +((val.getMinutes()<10) ? "0"+val.getMinutes() : val.getMinutes());
+  }
+
+document.addEventListener('DOMContentLoaded', function() { loadBasket();}, false);
+    
+</script>
+
+</head><body>
+
+${include /app/pane.incl}
+
+</body></html>

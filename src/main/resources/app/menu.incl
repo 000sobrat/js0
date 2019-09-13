@@ -1,0 +1,73 @@
+<script>
+  function showLoginForm() {
+     var s="<table border='0'>";
+     s+="<tr><td align='right'>#{User_name}</td><td align='left'><input type='text' id='login_name'></input></td></tr>";
+     s+="<tr><td align='right'>#{Password}</td><td align='left'><input type='password' id='login_key'></input></td></tr>";
+     s+="<tr><td align='center' colspan='2'><input type='button' value='Login' onclick='doLogin(); '></input></td></tr>";
+     s+="</table>";
+    var el=document.getElementById("loginForm");
+    el.innerHTML=s;
+    el.style.display='block';
+  }
+
+  function doLogin() { 
+    REST_api.login(
+      'form',
+      document.getElementById('login_name').value, 
+      document.getElementById('login_key').value, 
+      false, 
+      function(url,data) { 
+        if("OK"==data.result)
+          location.reload(); 
+        else 
+          alert(data);
+      }
+    );
+  }
+
+  function doLogout() { 
+    REST_api.logout(
+      function(url,data) { 
+        location.reload(); 
+      }
+    );
+  }
+
+document.addEventListener('DOMContentLoaded', function() {
+    if(isValidUser()) {
+       var el=document.getElementById('userInfo');
+       el.innerHTML=userId+"<br/><a onclick='doLogout();'>#{Logout}</a>";
+    } else {
+       var el=document.getElementById('userInfo');
+       el.innerHTML="<a onclick='showLoginForm();'>#{Login}...</a>";
+    }
+}, false);
+  
+</script>
+
+<table class='menu' width='100%' border='0'>
+  <tr class='login'>
+    <td class='login' colspan='4'>
+      <table width='100%' border='0'>
+        <tr><td width='20%' align='left'>.
+        </td><div id='loginForm' style='display: none; position:fixed; width:100%; border: solid black 1px; background: magenta' align='center'>.</div><td>
+        </td><td width='20%' align='right'><div id='userInfo'></div>
+        </td></tr>
+      </table>
+    <td>
+  </tr>
+  <tr class='menu'>
+    <td class='menu-item'>
+      <a class='menu-item' href='index.html'>Main</a>
+    </td>
+    <td class='menu-item'>
+      <a class='menu-item' href='schedule.html'>Schedule</a>
+    </td>
+    <td class='menu-item'>
+      <a class='menu-item' href='basket.html'>Basket</a>
+    </td>
+    <td class='menu-item'>
+      <a class='menu-item' href='contacts.html'>Contacts</a>
+    </td>
+  </tr>
+</table>
