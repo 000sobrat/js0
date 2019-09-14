@@ -431,7 +431,7 @@ public class DataTools {
                 
                 for (Object[] oo : new Object[][]{
                     //
-                    {"Аренда", "арендатор", TimeTools.timeHM(17, 00), TimeTools.timeHM(3, 00), new int[]{Calendar.MONDAY}},
+                    {"Аренда", rA, TimeTools.timeHM(17, 00), TimeTools.timeHM(3, 00), new int[]{Calendar.MONDAY}},
                     //
                     {gPilates, rA, TimeTools.timeHM(10, 30), TimeTools.timeHM(1, 0), new int[]{Calendar.TUESDAY}},
                     {gKoreografia, rA, TimeTools.timeHM(17, 00), TimeTools.timeHM(1, 0), new int[]{Calendar.TUESDAY}},

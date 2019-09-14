@@ -17,6 +17,7 @@ var eventsMeta;
 function buildFilters() {
   var s="";
   //s+="<table><tr><td valign='top'>";
+  s+=buildListSwitch("#{List}","#{notList}");
   s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not_my}");
   s+=buildMonthsFilter("#{Month}",);
   s+=buildWeeksFilter("#{Week}","#{Now}");
@@ -29,6 +30,21 @@ function buildFilters() {
   s+=buildCoursesFilter("#{Courses}","#{ALL}");
   //s+="<tr></tr></table>";
   return s;
+}
+
+function buildListSwitch(asList, notList) {
+   var s="";
+   var active=eventsFilter.mode=="list";
+   s+="<table><tr>";
+   s+="<td>";
+   s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
+   s+="</td>";
+   s+="<td>.</td>";
+   s+="<td>";
+   s+=(!active) ? "<a class='filter_active'>"+notList+"</a>" : "<a class='filter' onclick='eventsFilter.mode=eventsFilter.lastMode; eventsFilter.lastMode=null; renderEvents(); renderFilter();'>"+notList+"</a>";
+   s+="</td>";
+   s+="</tr></table>";
+   return s;
 }
 
 
@@ -247,20 +263,30 @@ function renderBasket() {
           },
   renderCellEntry: function(id, entry, dMin, dMax) {
     var s="";
-    var trMax=1;//entry.group.training.maxSize;
-    var trAct=1;//Object.keys(entry.trainees).length;
-    var cst=(trAct<trMax)? (trAct>0)? (trAct>3) ?"calendar_cell_full" :"calendar_cell_participant":"":"calendar_cell_full";
+    var trMax=entry.maxSize;//entry.group.training.maxSize;
+    var trAct=entry.size;//Object.keys(entry.trainees).length;
+    var cst=(trAct<trMax)? (trAct>0)? (trAct>=trMax) ?"calendar_cell_full" :"calendar_cell_participant":"":"calendar_cell_full";
     s+="<fieldset  id='"+id+"' class='calendar_cell "+cst+"' tMin='"+dMin.getTime()+"' tMax='"+dMax.getTime()+"'>";
     s+="<legend class='calendar_cell'>";
     s+="<font size=-2>";
     s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
     s+="</font>";
     s+="</legend>";
-            s+="<a onclick='addToBasket(\""+entry.id+"\")';>";
-            s+="<img src='images/ball_blue_gradient.png' alt='add' width='12px'>";
-            s+="</a>";
+    if(entry.myState) {
+        s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
+        s+="<img src='images/ball_red_gradient.png' alt='remove' width='12px'>";
+        s+="</a>";
+    } else {
+        s+="<a onclick='addToBasket(\""+entry.id+"\")';>";
+        s+="<img src='images/ball_blue_gradient.png' alt='add' width='12px'>";
+        s+="</a>";
+    }
     s+="&nbsp;"+((entry.shortName) ? entry.shortName: entry.name);
     s+="&nbsp;<font size=-1>"+entry.confSize+"/"+entry.maxSize+"</font>";
+    if(entry.myState) {
+       var ss=entry.myState.split("_");
+       s+="<br/>"+ss[0];
+    }
     //s+="  <font size=-1><br/>"+entry.trainer+"</font>";
     s+=this.renderCellEntryActions(id,entry);
     s+="</fieldset>";
@@ -272,7 +298,9 @@ function renderBasket() {
         }
         );
         
-        if(eventsFilter && "month"==eventsFilter.mode)
+        if(eventsFilter && "list"==eventsFilter.mode)
+        calendar.renderList('content',events);
+        else if(eventsFilter && "month"==eventsFilter.mode)
         calendar.renderMonth('content',events);
         else
         calendar.render('content',events);

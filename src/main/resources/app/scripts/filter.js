@@ -122,9 +122,9 @@ function buildMonthsFilter(title) {
            setFilter: function(k) {
               if(k) {
                 var v=this.data[k];
-                return "eventsFilter.mode=\"month\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
+                return "if(eventsFilter.mode!=\"list\") eventsFilter.mode=\"month\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
               } else {
-                return "eventsFilter.from=null; eventsFilter.to=null;";
+                return "if(eventsFilter.mode==\"month\") eventsFilter.from=null; eventsFilter.to=null;";
               }
            },
            keys: function() {

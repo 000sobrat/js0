@@ -295,6 +295,66 @@ var calendar = {
       el.innerHTML=s;
   },
 
+  renderList: function(element,events) {
+      var el=document.getElementById(element);
+      el.ess=new Object();
+
+      var minD=null;
+      var maxD=null;
+
+           for(var i in events) {
+              var event=events[i];
+
+              var sd=this.toDateYMD(event.start);//  event.start.substring(0,event.start.indexOf('T'));
+              var ed=(event.end) ? this.toDateYMD(event.end) : null; // (event.end) ? event.end.substring(0,event.end.indexOf('T')) : null;
+
+              if(!minD || sd<minD) minD=sd;
+              if(event.end)
+              if(!maxD || ed>maxD) maxD=ed;
+
+           }
+
+      minD=new Date(minD);
+      maxD=new Date(maxD);
+
+
+        var s="<pre>";
+        var d=minD;
+        var dnI=0;
+        while(d<=maxD) {
+           var dS=this.toDateYMD(d);
+
+           var dMin=new Date(d);
+           var dMax=new Date(dMin);
+           dMax = new Date(dMax.setDate(dMin.getDate()+1)-1);
+
+           var es=this.find(events,dMin,dMax);
+
+           if(es) {
+             s+="\n<div>"+dS+"</div>";
+             for(var i in es) {
+               var entry=es[i];
+               s+="  ";
+               s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
+               s+=" "+entry.confSize+"/"+entry.size+"/"+entry.maxSize;
+               s+="  "+entry.name;
+               if(entry.participants) {
+                  for(var pk in entry.participants) {
+                     var p=entry.participants[pk];
+                     s+="\n      "+pk+" "+p;
+                  }
+               }
+               s+="\n";
+             }
+           }
+
+           d.setDate(d.getDate()+1);
+        }
+
+    s+="</pre>";
+    el.innerHTML=s;
+  },
+
   toWeekDay: function (val) {
      if("number"==typeof(val)) val=new Date(val);
      else if("string"==typeof(val)) val=new Date(val);
@@ -352,6 +412,15 @@ var calendar = {
            +((val.getMinutes()<10) ? "0"+val.getMinutes() : val.getMinutes());
   },
 
+  toDurHM: function(val) {
+     if(val) {
+        var n=this.toNumeric(val);
+        var t=n % 1000*60*60*24;
+        var m = t % 1000*60;
+        var h = t / 1000 / 60 / 60;
+        return ((h>9)? h : "0"+h)+":"+((m>9) ? m : "0"+m);
+     }
+  },
   toNumeric: function (val) {
      if("number"==typeof(val)) return val;
      val=""+val;
