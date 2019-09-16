@@ -275,10 +275,10 @@ public class DataTools {
             trC.setEmail("b-dancer@kuntajana.fi");
             trC.setName("Break Dance trainer");
 
-            IconInfo iYoga = new IconInfo("yoga", "icons8-йога-90.png");
-            IconInfo iPilates = new IconInfo("pilates", "icons8-пилатес-90.png");
-            IconInfo iDance = new IconInfo("dance", "icons8-танцы-90_2.png");
-            IconInfo iBallet = new IconInfo("ballet", "icons8-балерина-90.png");
+            IconInfo iYoga = new IconInfo("yoga", "icons8-yoga-90.png");
+            IconInfo iPilates = new IconInfo("pilates", "icons8-pilates-90.png");
+            IconInfo iDance = new IconInfo("dance", "icons8-dance-90_2.png");
+            IconInfo iBallet = new IconInfo("ballet", "icons8-ballerina-90.png");
 
             for (IconInfo ii : new IconInfo[]{
                 iYoga, iPilates, iDance, iBallet

@@ -225,9 +225,9 @@ var calendar = {
          s+="<tr class='calendar_weekday_row'>";
          s+="<th class='calendar_weekday'>";
          s+="<th align='center' valign='middle'>";
-         if(this.toPrev) s+="<img src='images/icons8-шеврон-влево-90.png' width='20px' onclick='"+this.toPrev+"'>";
+         if(this.toPrev) s+="<img src='images/icons8-shevrone-left-90.png' width='20px' onclick='"+this.toPrev+"'>";
          s+=this.toDateYM(minD);
-         if(this.toNext) s+="<img src='images/icons8-шеврон-вправо-90.png' width='20px' onclick='"+this.toNext+"'>";
+         if(this.toNext) s+="<img src='images/icons8-shevrone-right-90.png' width='20px' onclick='"+this.toNext+"'>";
          s+="</th>";
 
 

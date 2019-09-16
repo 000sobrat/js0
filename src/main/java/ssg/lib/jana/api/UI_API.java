@@ -643,12 +643,12 @@ public class UI_API {
     
     
     
-    @XMethod(name = "names")
+    //@XMethod(name = "names")
     public String[] getPropertyNames() {
         return ((Collection<String>) Collections.list(System.getProperties().propertyNames())).toArray(new String[System.getProperties().size()]);
     }
 
-    @XMethod(name = "names")
+    //@XMethod(name = "names")
     public String[] getPropertyNames(@XParameter(name = "mask") String mask) {
         String[] ns = getPropertyNames();
         int c = 0;
@@ -678,12 +678,12 @@ public class UI_API {
         }
     }
 
-    @XMethod(name = "property")
+    //@XMethod(name = "property")
     public String getProperty(@XParameter(name = "name") String name) {
         return System.getProperty(name);
     }
     
-    @XMethod(name = "properties")
+    //@XMethod(name = "properties")
     public String[][] getProperties(@XParameter(name = "mask") String mask, @XParameter(name = "valueMask", optional = true) String valueMask, @XParameter(name = "skipEmpties", optional = true) Boolean skipEmpties) {
         String[] ns = getPropertyNames(mask);
         if (skipEmpties == null) {

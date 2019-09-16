@@ -321,18 +321,18 @@ function renderBasket() {
     
     if(entry.course) {
     if(entry.myState) {
-        s+="<img src='images/icons8-минус-144.png' alt='remove' width='"+iconSize+"'>";
+        s+="<img src='images/icons8-minus-144.png' alt='remove' width='"+iconSize+"'>";
     } else {
-        s+="<img src='images/icons8-плюс-144.png' alt='add' width='"+iconSize+"'>";
+        s+="<img src='images/icons8-plus-144.png' alt='add' width='"+iconSize+"'>";
     }
     
     if(eventsInBasket && eventsInBasket[entry.id]) {
         //s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
-        //s+="<img src='images/icons8-вернуть-покупку-90.png' alt='remove' width='"+iconSize+"'>";
+        //s+="<img src='images/icons8-unbuy-90.png' alt='remove' width='"+iconSize+"'>";
         //s+="</a>";
     } else {
         s+="<a onclick='addToBasket(\""+entry.id+"\")';>";
-        s+="<img src='images/icons8-купить-90.png' alt='add' width='"+iconSize+"'>";
+        s+="<img src='images/icons8-buy-90.png' alt='add' width='"+iconSize+"'>";
         s+="</a>";
     }
     }
