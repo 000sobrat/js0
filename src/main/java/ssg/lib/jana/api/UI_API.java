@@ -6,6 +6,7 @@
 package ssg.lib.jana.api;
 
 import java.io.IOException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -597,6 +598,43 @@ public class UI_API {
             return null;
         }
         return user;
+    }
+
+    @XMethod(name = "checkResources")
+    public List<String> getResources(HttpRequest req,
+            @XParameter(name = "prefix", optional = true) String prefix,
+            @XParameter(name = "anywhere", optional = true) String anywhere,
+            @XParameter(name = "suffix", optional = true) String suffix
+    ) throws IOException {
+        if (prefix != null && prefix.isEmpty()) {
+            prefix = null;
+        }
+        if (anywhere != null && anywhere.isEmpty()) {
+            anywhere = null;
+        }
+        if (suffix != null && suffix.isEmpty()) {
+            suffix = null;
+        }
+        List<String> r = new RL((URLClassLoader) getClass().getClassLoader()).print(null);
+        if (prefix != null || anywhere != null || suffix != null) {
+            Iterator<String> it = r.iterator();
+            while (it.hasNext()) {
+                String s = it.next();
+                if (prefix != null && !s.startsWith(prefix)) {
+                    it.remove();
+                    continue;
+                }
+                if (suffix != null && !s.endsWith(suffix)) {
+                    it.remove();
+                    continue;
+                }
+                if (anywhere != null && !s.contains(anywhere)) {
+                    it.remove();
+                    continue;
+                }
+            }
+        }
+        return r;
     }
 
     public TE toTE(TimeEvent te, String myEmail, boolean admin) {
