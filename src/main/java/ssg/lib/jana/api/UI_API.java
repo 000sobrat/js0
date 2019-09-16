@@ -615,7 +615,7 @@ public class UI_API {
         if (suffix != null && suffix.isEmpty()) {
             suffix = null;
         }
-        List<String> r = new RL((URLClassLoader) getClass().getClassLoader()).print(null);
+        List<String> r = new RL(getClass().getClassLoader()).print(null);
         if (prefix != null || anywhere != null || suffix != null) {
             Iterator<String> it = r.iterator();
             while (it.hasNext()) {

@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -22,19 +24,24 @@ import java.util.jar.JarFile;
  */
 public class RL {
 
-    private URLClassLoader classLoader;
+    private ClassLoader classLoader;
 
-    RL(URLClassLoader classLoader) {
+    RL(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
     public List<String> print(List<String> list) {
-        if(list==null) list=new ArrayList<>();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         try {
-            URL[] urls = classLoader.getURLs();
+
+            List<URL> urls = (classLoader instanceof URLClassLoader)
+                    ? Arrays.asList(((URLClassLoader) classLoader).getURLs())
+                    : Collections.list(classLoader.getResources(""));
 
             for (URL url : urls) {
-                printUrl(url,list);
+                printUrl(url, list);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,9 +53,9 @@ public class RL {
         File file = new File(url.toURI());
 
         if (file.isDirectory()) {
-            printDirContent(file,list);
+            printDirContent(file, list);
         } else {
-            printJarContent(new JarFile(file),list);
+            printJarContent(new JarFile(file), list);
         }
     }
 
@@ -62,7 +69,7 @@ public class RL {
     private void printDirContent(File dir, List<String> list) throws IOException {
         String[] children = dir.list();
         for (String aChildren : children) {
-            visitAllDirsAndFiles(new File(dir, aChildren),list);
+            visitAllDirsAndFiles(new File(dir, aChildren), list);
         }
     }
 
@@ -75,8 +82,10 @@ public class RL {
     }
 
     public static void main(String... args) throws Exception {
-        RL rl=new RL((URLClassLoader)RL.class.getClassLoader());
-        List<String> list=rl.print(null);
-        for(String s:list) System.out.println(s);
+        RL rl = new RL(RL.class.getClassLoader());
+        List<String> list = rl.print(null);
+        for (String s : list) {
+            System.out.println(s);
+        }
     }
 }
