@@ -38,7 +38,22 @@ public class RL {
 
             List<URL> urls = (classLoader instanceof URLClassLoader)
                     ? Arrays.asList(((URLClassLoader) classLoader).getURLs())
-                    : Collections.list(classLoader.getResources(""));
+                    : (classLoader!=null) 
+                    ? Collections.list(classLoader.getResources(""))
+                    : null;
+
+            if (urls == null || urls.isEmpty()) {
+                urls = new ArrayList();
+                String[] paths = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
+                for (String p : paths) {
+                    try {
+                        File f = new File(p);
+                        URL u = f.toURI().toURL();
+                        urls.add(u);
+                    } catch (Throwable th) {
+                    }
+                }
+            }
 
             for (URL url : urls) {
                 printUrl(url, list);
@@ -82,7 +97,7 @@ public class RL {
     }
 
     public static void main(String... args) throws Exception {
-        RL rl = new RL(RL.class.getClassLoader());
+        RL rl = new RL(null);//RL.class.getClassLoader());
         List<String> list = rl.print(null);
         for (String s : list) {
             System.out.println(s);
