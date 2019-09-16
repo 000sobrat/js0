@@ -8,7 +8,10 @@ package ssg.lib.jana.api;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -637,6 +640,78 @@ public class UI_API {
         return r;
     }
 
+    
+    
+    
+    @XMethod(name = "names")
+    public String[] getPropertyNames() {
+        return ((Collection<String>) Collections.list(System.getProperties().propertyNames())).toArray(new String[System.getProperties().size()]);
+    }
+
+    @XMethod(name = "names")
+    public String[] getPropertyNames(@XParameter(name = "mask") String mask) {
+        String[] ns = getPropertyNames();
+        int c = 0;
+        for (int i = 0; i < ns.length; i++) {
+            if (mask != null && !ns[i].contains(mask)) {
+                ns[i] = null;
+            } else {
+                c++;
+            }
+        }
+        if (c < ns.length) {
+            if (c == 0) {
+                return new String[0];
+            }
+            int off = 0;
+            for (int i = 0; i < ns.length; i++) {
+                if (ns[i] == null) {
+                } else {
+                    ns[off++] = ns[i];
+                }
+            }
+        }
+        if (c < ns.length) {
+            return Arrays.copyOf(ns, c);
+        } else {
+            return ns;
+        }
+    }
+
+    @XMethod(name = "property")
+    public String getProperty(@XParameter(name = "name") String name) {
+        return System.getProperty(name);
+    }
+    
+    @XMethod(name = "properties")
+    public String[][] getProperties(@XParameter(name = "mask") String mask, @XParameter(name = "valueMask", optional = true) String valueMask, @XParameter(name = "skipEmpties", optional = true) Boolean skipEmpties) {
+        String[] ns = getPropertyNames(mask);
+        if (skipEmpties == null) {
+            skipEmpties = false;
+        }
+        if (ns.length > 0) {
+            String[][] result = new String[ns.length][2];
+            int off = 0;
+            for (int i = 0; i < result.length; i++) {
+                String v = System.getProperty(ns[i]);
+                if (v != null && valueMask != null && !v.contains(valueMask)) {
+                    v = null;
+                }
+                if (v == null && skipEmpties) {
+                    continue;
+                }
+                result[off][0] = ns[i];
+                result[off++][1] = v;
+            }
+            if (off < result.length) {
+                result = Arrays.copyOf(result, off);
+            }
+            return result;
+        } else {
+            return new String[0][0];
+        }
+    }
+    
     public TE toTE(TimeEvent te, String myEmail, boolean admin) {
         TE t = new TE(te);
         Group g = training.groups.get(te.getName());
