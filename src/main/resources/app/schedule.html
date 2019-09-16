@@ -14,21 +14,27 @@ var eventsInBasket; // planned/selected events
 var eventsMeta;
 
 
-function buildFilters() {
+function buildFilters(asTable) {
   var s="";
-  //s+="<table><tr><td valign='top'>";
+  if(asTable)s+="<table><tr><td valign='top'>";
   s+=buildListSwitch("#{List}","#{notList}");
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not_my}");
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildMonthsFilter("#{Month}",);
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildWeeksFilter("#{Week}","#{Now}");
-  //s+="</td><td valign='top'>";
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildGroupsFilter("#{Groups}","#{ALL}");
-  //s+="</td><td valign='top'>";
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildRoomsFilter("#{Rooms}","#{ALL}");
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildTrainersFilter("#{Trainers}","#{ALL}");
-  s+="</td><td valign='top'>";
+  if(asTable)s+="</td><td valign='top'>";
   s+=buildCoursesFilter("#{Courses}","#{ALL}");
-  //s+="<tr></tr></table>";
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildCategoriesFilter("#{Categories}","#{ALL}");
+  if(asTable)s+="<tr></tr></table>";
   return s;
 }
 
@@ -51,7 +57,7 @@ function buildListSwitch(asList, notList) {
 // initial filter
      if(!eventsFilter) {
         eventsFilter=new Object();
-        var pns=["room","name","from","to","status","trainer","participant","course","group"];
+        var pns=["room","name","from","to","status","trainer","participant","category","course","group"];
 
         var qu = new URL(window.location.href);
         for(var i in pns) {
@@ -95,7 +101,7 @@ function toggleVisibility(elementName) {
 function renderFilter() {
      var s="";
 
-     s+=buildFilters();
+     s+=buildFilters(true);
 
      // get visibility of any existing filter group
      var gv={
@@ -104,6 +110,7 @@ function renderFilter() {
        week: false,
        room: false,
        trainer: false,
+       category: false,
        course: false,
        group: false
      };
@@ -115,14 +122,18 @@ function renderFilter() {
            gv[v]=true;
         }else {
            // default hidden:
-           if("my"==v || "month"==v || "room"==v || "course"==v || "trainer"==v){
+           if("my"==v || "month"==v || "room"==v || "category"==v || "course"==v || "trainer"==v){
              gv[v]=true;
            }
         }
      }
      
+     for(var v in gv) {
+       gv[v]=true;
+     }
      
-     var div=document.getElementById('navigation');
+     var div=document.getElementById('pane_right');
+     div=document.getElementById('pane_top');
      div.innerHTML=s;
 
      for(var v in gv) {
@@ -143,6 +154,7 @@ function loadBasket() {
                     if (data.result) {
 			eventsInBasket=data.result;
                         renderBasket();
+                        renderEvents();
                     }
                 });
 }
@@ -167,7 +179,7 @@ function removeFromBasket(tsId) {
                 });
 }
 
-function applyForBasket(tsId) {
+function applyForBasket(tsId, action) {
    var email=userId;
    if(!email) {
       var el=document.getElementById('temp_email');
@@ -183,11 +195,19 @@ function applyForBasket(tsId) {
         email=el.value;
       }
    }
-   REST_api.applyForGroups(email,function (url, data) {
+   REST_api.applyForGroups(email, action, function (url, data) {
                     //debugRR(url, data);
 
                     if (data.result) {
                         loadBasket();
+                        for(var i in data.result) {
+                           if('added'==data.result[i] || 
+                              'cancelled'==data.result[i] ||
+                              'confirmed'==data.result[i]) {
+                              loadEvents();
+                              break;
+                           }
+                        }
                     }
                 });
 }
@@ -196,7 +216,10 @@ function renderBasket() {
   if(eventsInBasket) {
      var s="<table class='calendar_basket'>";
      if(eventsInBasket) {
-       s+="<caption><a onclick='applyForBasket();'>#{Apply}</a></caption>";
+       s+="<caption>";
+       s+="<a class='basket_action' onclick='applyForBasket(null,\"apply\");'>#{Apply}</a>"
+       s+="<br/><a class='basket_action' onclick='applyForBasket(null,\"remove\");'>#{Remove}</a>"
+       s+="</caption>";
      }
      for(var i in eventsInBasket) {
        var entry=eventsInBasket[i];
@@ -221,7 +244,7 @@ function renderBasket() {
        }
      }
      
-     var div=document.getElementById('extra');
+     var div=document.getElementById('pane_right');
      div.innerHTML=s;
   }
 }
@@ -239,6 +262,7 @@ function renderBasket() {
        eventsFilter.status,
        eventsFilter.trainer,
        eventsFilter.participant,
+       eventsFilter.category,
        eventsFilter.course,
        eventsFilter.group,
        function(url,data) {
@@ -253,15 +277,34 @@ function renderBasket() {
      );
   }
 
+  function toPrevPeriod() {
+     if(eventsFilter.prev || eventsFilter.prev==0) {
+        eventsFilter.from=eventsFilter.prev[1];
+        eventsFilter.to=eventsFilter.prev[2];
+        renderFilter();
+     }
+  }
+  
+  function toNextPeriod() {
+     if(eventsFilter.next) {
+        eventsFilter.from=eventsFilter.next[1];
+        eventsFilter.to=eventsFilter.next[2];
+        renderFilter();
+     }
+  }
+  
   function renderEvents() {
   if(events) {
      var calendar = new Calendar({
         locale:'ru',
+        toPrev: (eventsFilter.prev) ? "toPrevPeriod(); loadEvents(); " : null,
+        toNext: (eventsFilter.next) ? "toNextPeriod(); loadEvents();" : null,
         renderCellEntryActions: function(id,entry){
             var s="";
             return s;
           },
   renderCellEntry: function(id, entry, dMin, dMax) {
+  var iconSize="24px";
     var s="";
     var trMax=entry.maxSize;//entry.group.training.maxSize;
     var trAct=entry.size;//Object.keys(entry.trainees).length;
@@ -272,16 +315,29 @@ function renderBasket() {
     s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
     s+="</font>";
     s+="</legend>";
+    if(entry.icon) {
+      s+="<img src='images/"+entry.icon+"' alt='remove' width='"+iconSize+"'>";
+    }
+    
+    if(entry.course) {
     if(entry.myState) {
-        s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
-        s+="<img src='images/ball_red_gradient.png' alt='remove' width='12px'>";
-        s+="</a>";
+        s+="<img src='images/icons8-минус-144.png' alt='remove' width='"+iconSize+"'>";
+    } else {
+        s+="<img src='images/icons8-плюс-144.png' alt='add' width='"+iconSize+"'>";
+    }
+    
+    if(eventsInBasket && eventsInBasket[entry.id]) {
+        //s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
+        //s+="<img src='images/icons8-вернуть-покупку-90.png' alt='remove' width='"+iconSize+"'>";
+        //s+="</a>";
     } else {
         s+="<a onclick='addToBasket(\""+entry.id+"\")';>";
-        s+="<img src='images/ball_blue_gradient.png' alt='add' width='12px'>";
+        s+="<img src='images/icons8-купить-90.png' alt='add' width='"+iconSize+"'>";
         s+="</a>";
     }
-    s+="&nbsp;"+((entry.shortName) ? entry.shortName: entry.name);
+    }
+    
+    s+="<br/>"+((entry.shortName) ? entry.shortName: entry.name);
     s+="&nbsp;<font size=-1>"+entry.confSize+"/"+entry.maxSize+"</font>";
     if(entry.myState) {
        var ss=entry.myState.split("_");
@@ -299,11 +355,11 @@ function renderBasket() {
         );
         
         if(eventsFilter && "list"==eventsFilter.mode)
-        calendar.renderList('content',events);
+        calendar.renderList('pane_content',events);
         else if(eventsFilter && "month"==eventsFilter.mode)
-        calendar.renderMonth('content',events);
+        calendar.renderMonth('pane_content',events);
         else
-        calendar.render('content',events);
+        calendar.render('pane_content',events);
     }
   }
 

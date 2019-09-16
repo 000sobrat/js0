@@ -21,7 +21,10 @@ import ssg.lib.http.rest.annotations.XParameter;
 import ssg.lib.http.rest.annotations.XType;
 import ssg.lib.jana.api.ScheduleAPI.Room;
 import ssg.lib.jana.api.ScheduleAPI.TimeEvent;
+import ssg.lib.jana.api.TrainingAPI.Category;
+import ssg.lib.jana.api.TrainingAPI.Course;
 import ssg.lib.jana.api.TrainingAPI.Group;
+import ssg.lib.jana.api.TrainingAPI.IconInfo;
 import ssg.lib.jana.api.TrainingAPI.Trainer;
 import ssg.lib.jana.tools.TimeTools;
 
@@ -43,6 +46,12 @@ public class UI_API {
         pending, // trainee confirmation is needed/expected
         cancelled, // trainee cancelled participation in training
         attended // trainee attended the training
+    }
+
+    public static enum ACTION {
+        apply,
+        remove,
+        confirm
     }
 
     ScheduleAPI schedule = new ScheduleAPI();
@@ -68,13 +77,15 @@ public class UI_API {
             @XParameter(name = "to", optional = true) Long to
     ) throws IOException {
         Map<String, Object> r = new LinkedHashMap<>();
-        Map<String, String> rg = new LinkedHashMap<>();
-        List<String> rc = new ArrayList<>();
+        Map<String, String[]> rg = new LinkedHashMap<>();
+        Map<String, String[]> rc = new LinkedHashMap<>();
+        Map<String, String[]> rcc = new LinkedHashMap<>();
         Map<String, String> rt = new LinkedHashMap<>();
         Map<String, String> rm = new LinkedHashMap<>();
 
         r.put("groups", rg);
         r.put("courses", rc);
+        r.put("categories", rcc);
         r.put("trainers", rt);
         r.put("rooms", rm);
 
@@ -105,7 +116,8 @@ public class UI_API {
             Group g = training.groups.get(t.getName());
 
             if (g != null && !rg.containsKey(t.getName())) {
-                rg.put(t.getName(), g.getShortName());
+                IconInfo icon = training.findIcon(null, null, g);
+                rg.put(t.getName(), new String[]{g.getShortName(), icon != null ? icon.getIcon(null) : null});
             }
 
             if (g != null && g.getTrainer() != null && !rt.containsKey(g.getTrainer())) {
@@ -116,8 +128,20 @@ public class UI_API {
             }
             if (g != null) {
                 String c = g.getCourse();
-                if (c != null && training.courses.containsKey(c) && !rc.contains(c)) {
-                    rc.add(c);
+                if (c != null && training.courses.containsKey(c)) {
+                    Course crs = training.courses.get(c);
+                    if (!rc.containsKey(c)) {
+                        IconInfo icon = training.findIcon(null, crs, null);
+                        rc.put(c, new String[]{c, icon != null ? icon.getIcon(null) : null});
+                    }
+
+                    if (crs.getCategory() != null && training.categories.containsKey(crs.getCategory())) {
+                        Category cat = training.categories.get(crs.getCategory());
+                        if (!rcc.containsKey(cat.getId())) {
+                            IconInfo icon = training.findIcon(cat, null, null);
+                            rcc.put(cat.getId(), new String[]{cat.getId(), icon != null ? icon.getIcon(null) : null});
+                        }
+                    }
                 }
             }
         }
@@ -149,6 +173,7 @@ public class UI_API {
             @XParameter(name = "status", optional = true) String status,
             @XParameter(name = "trainer", optional = true) String trainer,
             @XParameter(name = "participant", optional = true) String participant,
+            @XParameter(name = "category", optional = true) String category,
             @XParameter(name = "course", optional = true) String course,
             @XParameter(name = "group", optional = true) String group
     ) throws IOException {
@@ -169,6 +194,9 @@ public class UI_API {
         if (participant != null && participant.isEmpty()) {
             participant = null;
         }
+        if (category != null && category.isEmpty()) {
+            category = null;
+        }
         if (course != null && course.isEmpty()) {
             course = null;
         }
@@ -180,7 +208,7 @@ public class UI_API {
         List<TimeEvent> rs = schedule.findEvent(room, from, to, status, name);
 
         // training-specific filtering, if needed
-        if (!rs.isEmpty() && (trainer != null || participant != null || course != null || group != null)) {
+        if (!rs.isEmpty() && (trainer != null || participant != null || course != null || category != null || group != null)) {
             Iterator<TimeEvent> it = rs.iterator();
             String notParticipant = null;
             if (participant != null && participant.startsWith("!")) {
@@ -218,6 +246,17 @@ public class UI_API {
                         continue;
                     }
                 }
+                if (category != null) {
+                    if (gs == null || gs.size() != 1) {
+                        it.remove();
+                        continue;
+                    }
+                    Course crs = training.courses.get(gs.get(0).getCourse());
+                    if (crs == null || !category.equals(crs.getCategory())) {
+                        it.remove();
+                        continue;
+                    }
+                }
             }
         }
 
@@ -239,16 +278,16 @@ public class UI_API {
     ) throws IOException {
         boolean r = false;
         if (eventIDs != null) {
-            List<TimeEvent> basket = (List) req.getHttpSession().getProperties().get("eventsBasket");
+            Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
             for (String eventId : eventIDs) {
                 TimeEvent ts = schedule.getEvent(eventId, null, null, null);
                 if (ts != null) {
                     if (basket == null) {
-                        basket = new ArrayList<TimeEvent>();
+                        basket = new LinkedHashMap<>();
                         req.getHttpSession().getProperties().put("eventsBasket", basket);
                     }
-                    if (!basket.contains(ts)) {
-                        basket.add(ts);
+                    if (!basket.containsKey(ts.getId())) {
+                        basket.put(ts.getId(), ts);
                         r = true;
                     }
                 }
@@ -263,12 +302,12 @@ public class UI_API {
     ) throws IOException {
         boolean r = false;
         if (eventIDs != null) {
-            List<TimeEvent> basket = (List) req.getHttpSession().getProperties().get("eventsBasket");
+            Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
             if (basket != null) {
                 for (String eventId : eventIDs) {
                     TimeEvent ts = schedule.getEvent(eventId, null, null, null);
-                    if (ts != null && basket.contains(ts)) {
-                        basket.remove(ts);
+                    if (ts != null && basket.containsKey(ts.getId())) {
+                        basket.remove(ts.getId());
                         r = true;
                     }
                 }
@@ -278,17 +317,17 @@ public class UI_API {
     }
 
     @XMethod(name = "getEventsInBasket")
-    public List<TE> getEventsInBasket(HttpRequest req) throws IOException {
-        List<TimeEvent> tes = (List) req.getHttpSession().getProperties().get("eventsBasket");
+    public Map<String, TE> getEventsInBasket(HttpRequest req) throws IOException {
+        Map<String, TimeEvent> tes = (Map) req.getHttpSession().getProperties().get("eventsBasket");
         if (tes != null) {
             HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
             String email = (user != null) ? user.getName() : null;
             boolean admin = (user != null && user.getRoles() != null && user.getRoles().contains("admin"));
-            List<TE> r = new ArrayList<>();
-            for (TimeEvent te : tes) {
+            Map<String, TE> r = new LinkedHashMap<>();
+            for (TimeEvent te : tes.values()) {
                 TE t = toTE(te, email, admin);
                 if (t != null) {
-                    r.add(t);
+                    r.put(te.getId(), t);
                 }
             }
             return r;
@@ -299,9 +338,11 @@ public class UI_API {
 
     @XMethod(name = "applyForGroups")
     public TRAINEE_STATUS[] applyForGroups(HttpRequest req,
-            @XParameter(name = "email", optional = true) String email) throws IOException {
+            @XParameter(name = "email", optional = true) String email,
+            @XParameter(name = "action", optional = true) ACTION action
+    ) throws IOException {
 
-        List<TimeEvent> basket = (List) req.getHttpSession().getProperties().get("eventsBasket");
+        Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
 
         TRAINEE_STATUS[] r = new TRAINEE_STATUS[basket != null ? basket.size() : 0];
 
@@ -316,8 +357,9 @@ public class UI_API {
             return r;
         }
 
-        for (int i = 0; i < basket.size(); i++) {
-            TimeEvent ts = basket.get(i);
+        int off = 0;
+        for (TimeEvent ts : basket.values()) {
+            int i = off++;
             if (ts == null) {
                 r[i] = TRAINEE_STATUS.no_target;
                 continue;
@@ -325,20 +367,45 @@ public class UI_API {
 
             Room room = schedule.getRoom(ts.getRoom(), null);
             Group group = training.groups.get(ts.getName());
+            if (group == null) {
+                r[i] = TRAINEE_STATUS.no_target;
+                continue;
+            }
 
             int max = Math.min(room.getMaxSize(), group.getMaxSize());
 
-            if (ts.getParticipants().size() < max) {
+            if (ts.getParticipants().size() < max || action != ACTION.apply) {
                 if (ts.getParticipants().containsKey(email)) {
-                    r[i] = TRAINEE_STATUS.skipped_duplicate;
+                    switch (action) {
+                        case apply:
+                            r[i] = TRAINEE_STATUS.skipped_duplicate;
+                            break;
+                        case remove:
+                            ts.getParticipants().remove(email);
+                            r[i] = TRAINEE_STATUS.cancelled;
+                            break;
+                        case confirm:
+                            if (!"confirmed".equals(ts.getParticipants().get(email))) {
+                                ts.getParticipants().put(email, "confirmed");
+                                r[i] = TRAINEE_STATUS.confirmed;
+                            } else {
+                                r[i] = TRAINEE_STATUS.pending; // TODO: add status 'ignored'?
+                            }
+                            break;
+                    }
                 } else {
-                    //ts.getParticipants().put(u, (user != null) ? "confirmed" : "" + TrainingAPI.PSTATE.verifying);
-                    ts.getParticipants().put(u, (u0 != null && user != null) ? "confirmed" : "" + TrainingAPI.PSTATE.verifying + "_" + Math.round(Math.random() * 200000) + "_" + Math.round(Math.random() * 200000));
-                    r[i] = TRAINEE_STATUS.added;
-//                    if (um.emailAgent() != null) {
-//                        System.out.println("TODO: send e-mail to " + u + " for confirmation...");
-//                        // TODO: send email...
-//                    }
+                    switch (action) {
+                        case apply:
+                            ts.getParticipants().put(u, (u0 != null && user != null) ? "confirmed" : "" + TrainingAPI.PSTATE.verifying + "_" + Math.round(Math.random() * 200000) + "_" + Math.round(Math.random() * 200000));
+                            r[i] = TRAINEE_STATUS.added;
+                            break;
+                        case remove:
+                            r[i] = TRAINEE_STATUS.no_applier;
+                            break;
+                        case confirm:
+                            r[i] = TRAINEE_STATUS.no_applier;
+                            break;
+                    }
                 }
             } else {
                 r[i] = TRAINEE_STATUS.no_space_in_target;
@@ -540,6 +607,11 @@ public class UI_API {
             t.trainer = g.getTrainer();
             t.shortName = g.getShortName();
             t.maxSize = g.getMaxSize();
+
+            IconInfo ii = training.findIcon(null, null, g);
+            if (ii != null) {
+                t.icon = ii.getIcon(null);
+            }
         }
         if (te.getParticipants() != null) {
             t.size = te.getParticipants().size();
@@ -566,6 +638,7 @@ public class UI_API {
     }
 
     public static class TE {
+
         public String id;
         public String name;
         public String shortName;
@@ -581,6 +654,7 @@ public class UI_API {
         public int size;
         public int maxSize;
         public int confSize;
+        public String icon;
 
         public TE() {
         }

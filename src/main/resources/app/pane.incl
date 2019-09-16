@@ -4,23 +4,23 @@
 </td></tr>
 <tr class='pane_2' id='pane_na_top_row'><td class="pane_na" colspan="3">
   <!-- navigation area: top -->
-  <div id="navigation_top"></div>
+  <div id="pane_top"></div>
 </td></tr>
 <tr class='pane_2'>
 <td width="5%" class='pane_na'>
   <!-- navigation area: left -->
-  <div id="navigation"></div>
+  <div id="pane_left"></div>
 </td>
 <td class='pane_ca'>
   <!-- content area -->
-  <div id="content"></div>
+  <div id="pane_content"></div>
 </td>
 <td width="5%" class='pane_xa'>
   <!-- extra navigation area -->
-  <div id="extra"></div>
+  <div id="pane_right"></div>
 </td>
 </tr>
-<tr class='pane_3'><td colspan="3">
+<tr class='pane_bottom'><td colspan="3">
   ${include /app/tail.incl}
 </td></tr>
 </table>

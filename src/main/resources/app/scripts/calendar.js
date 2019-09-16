@@ -3,6 +3,8 @@ function Calendar(conf) {
 var calendar = {
   locale: "fi", // date/time locale setting
   compact: false, // if compact=true, empty days are skipped from table(s)
+  toPrev: null,
+  toNext: null,
 
   find: function (events, from, to) {
      var a=new Array();
@@ -23,7 +25,7 @@ var calendar = {
   render: function (element, events) {
       var el=document.getElementById(element);
       el.ess=new Object();
-
+      el.conf=this;
       var minD=null;
       var minT=null;
       var maxD=null;
@@ -58,7 +60,12 @@ var calendar = {
       var s="<table border=1 class='calendar'>";
       // date headers
       {
-         s+="<tr class='calendar_date_row'><th/>";
+         s+="<tr class='calendar_date_row'>";
+         s+="<th align='center' valign='middle'>";
+         if(this.toPrev) s+="<img src='images/icons8-шеврон-влево-90.png' width='20px' onclick='"+this.toPrev+"'>";
+         s+="-";
+         if(this.toNext) s+="<img src='images/icons8-шеврон-вправо-90.png' width='20px' onclick='"+this.toNext+"'>";
+         s+="</th>";
          var d=new Date(minD);
          while(d<=maxD) {
             var dMin=new Date(d);
@@ -217,7 +224,13 @@ var calendar = {
       {
          s+="<tr class='calendar_weekday_row'>";
          s+="<th class='calendar_weekday'>";
+         s+="<th align='center' valign='middle'>";
+         if(this.toPrev) s+="<img src='images/icons8-шеврон-влево-90.png' width='20px' onclick='"+this.toPrev+"'>";
          s+=this.toDateYM(minD);
+         if(this.toNext) s+="<img src='images/icons8-шеврон-вправо-90.png' width='20px' onclick='"+this.toNext+"'>";
+         s+="</th>";
+
+
          s+="</th>";
          var d=new Date('2019-09-02');
          var dEnd=new Date('2019-09-08');
@@ -330,7 +343,7 @@ var calendar = {
 
            var es=this.find(events,dMin,dMax);
 
-           if(es) {
+           if(es && es.length>0) {
              s+="\n<div>"+dS+"</div>";
              for(var i in es) {
                var entry=es[i];
@@ -359,6 +372,12 @@ var calendar = {
      if("number"==typeof(val)) val=new Date(val);
      else if("string"==typeof(val)) val=new Date(val);
      return val.toLocaleDateString(this.locale, { weekday: 'short' }); 
+  },
+
+  toWeek: function (val) {
+     if("number"==typeof(val)) val=new Date(val);
+     else if("string"==typeof(val)) val=new Date(val);
+     return val.toLocaleDateString(this.locale, { week: 'short' }); 
   },
 
   toMonth: function (val) {

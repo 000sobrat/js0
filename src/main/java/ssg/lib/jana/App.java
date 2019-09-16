@@ -17,6 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Locale;
 import ssg.lib.common.TaskExecutor;
+import ssg.lib.common.buffers.ByteBufferPipeReplacement;
 import ssg.lib.di.DI;
 import ssg.lib.http.HttpApplication;
 import ssg.lib.http.HttpSession;
@@ -43,6 +44,7 @@ import ssg.lib.service.Repository;
  * @author sesidoro
  */
 public class App extends CS {
+    //ByteBufferPipeReplacement.GDEBUG=true;
 
     // SSL support
     SSLSupport sslSupport;

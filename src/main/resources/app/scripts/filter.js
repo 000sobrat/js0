@@ -15,7 +15,9 @@ function buildFilterGroup(conf) {
        if(conf.valueOf(null)) {
          a=conf.isActive(null);
          s+="<tr class='filter'><td class='"+cl+(a ? "_active": "")+"'";
-         s+=" onclick='"+conf.setFilter(null)+" loadEvents(); renderFilter();'>";
+         s+=" onclick='"+conf.setFilter(null)+" loadEvents(); renderFilter();'";
+         if(conf.columns) s+=" colspan='"+conf.columns+"'";
+         s+=">";
          s+=conf.valueOf(null);
          s+="</td></tr>";
          if(a) si+=conf.valueOf(null)+" ";
@@ -114,7 +116,16 @@ function buildMonthsFilter(title) {
            isActive: function(k) {
               if(k) {
                 var v=this.data[k];
-                return v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                var b = v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                if(b) {
+                   try{
+                     eventsFilter.prev=this.data[new Number(k)-1];
+                   }catch(e){ eventsFilter.prev=null;}
+                   try{
+                     eventsFilter.next=this.data[new Number(k)+1];
+                   }catch(e){ eventsFilter.next=null;}
+                }
+                return b;
               } else {
                 return false;
               }
@@ -150,7 +161,16 @@ function buildWeeksFilter(title,_now_) {
            isActive: function(k) {
               if(k) {
                 var v=this.data[k];
-                return v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                var b = v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                if(b) {
+                   try{
+                     eventsFilter.prev=this.data[new Number(k)-1];
+                   }catch(e){ eventsFilter.prev=null;}
+                   try{
+                     eventsFilter.next=this.data[new Number(k)+1];
+                   }catch(e){ eventsFilter.next=null;}
+                }
+                return b;
               } else {
                 var v=this.dataNow;
                 return v[1]==eventsFilter.from && v[2]==eventsFilter.to;
@@ -239,6 +259,43 @@ function buildTrainersFilter(title,all) {
 }
      
 // build course selector
+function buildCategoriesFilter(title,all) {
+        return buildFilterGroup({
+           title:title,
+           id:"category",
+           data: eventsMeta.categories,
+           isActive: function(k) {
+              if(k) {
+                var v=this.data[k];
+                return k==eventsFilter.category;
+              } else {
+                return null==eventsFilter.category;
+              }
+           },
+           setFilter: function(k) {
+              if(k) {
+                return "eventsFilter.category=\""+k+"\";";
+              } else {
+                return "eventsFilter.category=null;";
+              }
+           },
+           keys: function() {
+              return this.data;
+           },
+           valueOf: function(k) {
+              var icon="";
+              var v=this.data[k];
+              if(k && v[1]) {
+                icon="<img width=\"16\" src=\"images/"+v[1]+"\">&nbsp;";
+                v=v[0];
+              } else if(k) v=v[0];
+              //return (k) ? ""+icon+k+"&nbsp;<sup>"+v+"</sup>" : all;
+              return (k) ? ""+icon+k : all;
+           }}
+        );
+}
+
+// build course selector
 function buildCoursesFilter(title,all) {
         return buildFilterGroup({
            title:title,
@@ -246,21 +303,15 @@ function buildCoursesFilter(title,all) {
            data: eventsMeta.courses,
            isActive: function(k) {
               if(k) {
-                var a=false;
-                for(var i in this.data) {
-                  if(k==this.data[i]) {
-                    a=true;
-                    break;
-                  }
-                }
-                return eventsFilter.course == this.data[k];
+                var v=this.data[k];
+                return k==eventsFilter.course;
               } else {
                 return null==eventsFilter.course;
               }
            },
            setFilter: function(k) {
               if(k) {
-                return "eventsFilter.course=\""+this.data[k]+"\";";
+                return "eventsFilter.course=\""+k+"\";";
               } else {
                 return "eventsFilter.course=null;";
               }
@@ -269,8 +320,14 @@ function buildCoursesFilter(title,all) {
               return this.data;
            },
            valueOf: function(k) {
+              var icon="";
               var v=this.data[k];
-              return (k) ? v : all;
+              if(k && v[1]) {
+                icon="<img width=\"16\" src=\"images/"+v[1]+"\">&nbsp;";
+                v=v[0];
+              } else if(k) v=v[0];
+              //return (k) ? ""+icon+k+"&nbsp;<sup>"+v+"</sup>" : all;
+              return (k) ? ""+icon+k : all;
            }}
         );
 }
@@ -300,8 +357,13 @@ function buildGroupsFilter(title,all) {
               return this.data;
            },
            valueOf: function(k) {
+              var icon="";
               var v=this.data[k];
-              return (k) ? ""+k+"&nbsp;<sup>"+v+"</sup>" : all;
+              if(k && v[1]) {
+                icon="<img width=\"16\" src=\"images/"+v[1]+"\">&nbsp;";
+                v=v[0];
+              } else if(k) v=v[0];
+              return (k) ? ""+icon+k+"&nbsp;<sup>"+v+"</sup>" : all;
            }}
         );
 }

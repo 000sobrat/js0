@@ -15,7 +15,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -27,6 +26,7 @@ import ssg.lib.jana.api.ScheduleAPI.TimeEventPlanner;
 import ssg.lib.jana.api.TrainingAPI.Category;
 import ssg.lib.jana.api.TrainingAPI.Course;
 import ssg.lib.jana.api.TrainingAPI.Group;
+import ssg.lib.jana.api.TrainingAPI.IconInfo;
 import ssg.lib.jana.api.TrainingAPI.PSTATE;
 import ssg.lib.jana.api.TrainingAPI.Pricing;
 import ssg.lib.jana.api.TrainingAPI.Pricing.PriceItem;
@@ -56,7 +56,7 @@ public class DataTools {
         r.pwds.put(prefix + "b@a.com", "bbb");
         r.pwds.put(prefix + "d@a.b.c.d.e.f.g.h.com", "ddd");
         r.pwds.put(prefix + "000sobrat@gmail.com", "000");
-        r.addUserRoles(prefix + "a@a.com", "admin","trainer");
+        r.addUserRoles(prefix + "a@a.com", "admin", "trainer");
         r.addUserRoles(prefix + "b@a.com", "trainer");
         r.addUserRoles(prefix + "d@a.b.c.d.e.f.g.h.com", "admin");
         r.addUserRoles(prefix + "000sobrat@gmail.com", "admin");
@@ -275,8 +275,19 @@ public class DataTools {
             trC.setEmail("b-dancer@kuntajana.fi");
             trC.setName("Break Dance trainer");
 
-            Category sport = new Category("Спорт", null);
-            Category dance = new Category("Танцы", null);
+            IconInfo iYoga = new IconInfo("yoga", "icons8-йога-90.png");
+            IconInfo iPilates = new IconInfo("pilates", "icons8-пилатес-90.png");
+            IconInfo iDance = new IconInfo("dance", "icons8-танцы-90_2.png");
+            IconInfo iBallet = new IconInfo("ballet", "icons8-балерина-90.png");
+
+            for (IconInfo ii : new IconInfo[]{
+                iYoga, iPilates, iDance, iBallet
+            }) {
+                training.icons.put(ii.getId(), ii);
+            }
+
+            Category sport = new Category("Спорт", null, iYoga.getId());
+            Category dance = new Category("Танцы", null, iDance.getId());
 
             Pricing priceSport = new Pricing(
                     sport.getId(), // String category,
@@ -302,10 +313,10 @@ public class DataTools {
             sport.setPricing(priceSport.getId());
             dance.setPricing(priceDance.getId());
 
-            Course csport1 = new Course(sport.getId(), "Pilates", null, null);
+            Course csport1 = new Course(sport.getId(), "Pilates", null, null, iPilates.getId());
             Course csport2 = new Course(sport.getId(), "Fly Yoga", null, null);
             Course csport3 = new Course(sport.getId(), "Stretching", null, null);
-            Course csport4 = new Course(sport.getId(), "Koreagrafia ballet", null, null);
+            Course csport4 = new Course(sport.getId(), "Koreagrafia ballet", null, null, iBallet.getId());
             Course csport5 = new Course(sport.getId(), "Tabatta intensiv", null, null);
 
             Course cdance1 = new Course(dance.getId(), "Fly Dance", null, null);
@@ -375,7 +386,6 @@ public class DataTools {
 //                );
 //                training.groups.put(g.getId(), g);
 //            }
-
             for (Course c : new Course[]{csport1, csport2, csport3, csport5}) {
                 training.courseTrainers.put(c, Collections.singletonList(trA));
             }
@@ -410,11 +420,11 @@ public class DataTools {
 
             // add group-based event planners:
             {
-                long[] season=TimeTools.rangeOf(null, TimeTools.SEASON.autumn);
+                long[] season = TimeTools.rangeOf(null, TimeTools.SEASON.autumn);
                 long from = season[0];
                 long to = season[1];
 
-/*                
+                /*                
                 gPilates,
                 gKoreografia,
                 gPilatesBasic,
@@ -427,8 +437,7 @@ public class DataTools {
                 gPilatesIntensive,
                 gFlyYogaAdv,
                 gBreakDance
-*/                
-                
+                 */
                 for (Object[] oo : new Object[][]{
                     //
                     {"Аренда", rA, TimeTools.timeHM(17, 00), TimeTools.timeHM(3, 00), new int[]{Calendar.MONDAY}},
@@ -470,7 +479,7 @@ public class DataTools {
                             from,// Long from,
                             to,// Long to,
                             (oo[1] instanceof Room) ? ((Room) oo[1]).getId() : null, // String room,
-                            (g!=null) ? g.getId() : n, // String name,
+                            (g != null) ? g.getId() : n, // String name,
                             (Long) oo[2], // long start,
                             (Long) oo[3], // long duration,
                             null, //Map<String, String> participants,
@@ -479,7 +488,7 @@ public class DataTools {
                     schedule.eventPlanners.put(tep.getId(), tep);
                 }
             }
-            
+
 //            {
 //                Calendar cal = TimeTools.getCalendar(null);
 //                long from = TimeTools.toStartOfMonth(cal);
@@ -526,7 +535,6 @@ public class DataTools {
 //                    schedule.eventPlanners.put(tep.getId(), tep);
 //                }
 //            }
-
             // generate events...
             {
                 Calendar cal = TimeTools.getCalendar(null);

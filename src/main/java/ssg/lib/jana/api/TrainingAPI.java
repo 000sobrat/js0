@@ -44,6 +44,7 @@ public class TrainingAPI implements AppItem, Exportable {
     Map<String, Group> groups = new LinkedHashMap<>();
     Map<Course, List<Trainer>> courseTrainers = new LinkedHashMap<>();
     Map<String, PSTATE> courseParticipants = new LinkedHashMap<>();
+    Map<String, IconInfo> icons = new LinkedHashMap<>();
 
     @Override
     public void exportTo(Writer wr) throws IOException {
@@ -51,6 +52,7 @@ public class TrainingAPI implements AppItem, Exportable {
         Map m = new LinkedHashMap();
         m.put("trainers", trainers);
         m.put("prices", prices);
+        m.put("icons", icons);
         m.put("categories", categories);
         m.put("courses", courses);
         m.put("groups", groups);
@@ -92,6 +94,16 @@ public class TrainingAPI implements AppItem, Exportable {
             Pricing p = refl.enrich(e.getValue(), Pricing.class);
             prices.put(e.getKey(), p);
         }
+
+        mi = (Map) m.get("icons");
+        for (Entry<String, Map> e : mi.entrySet()) {
+            if (icons.containsKey(e.getKey())) {
+                continue;
+            }
+            IconInfo ii = refl.enrich(e.getValue(), IconInfo.class);
+            icons.put(e.getKey(), ii);
+        }
+
         mi = (Map) m.get("categories");
         for (Entry<String, Map> e : mi.entrySet()) {
             if (categories.containsKey(e.getKey())) {
@@ -100,7 +112,6 @@ public class TrainingAPI implements AppItem, Exportable {
             Category c = refl.enrich(e.getValue(), Category.class);
             categories.put(e.getKey(), c);
         }
-
         mi = (Map) m.get("courses");
         for (Entry<String, Map> e : mi.entrySet()) {
             if (courses.containsKey(e.getKey())) {
@@ -319,6 +330,31 @@ public class TrainingAPI implements AppItem, Exportable {
             }
         }
         return r;
+    }
+
+    public IconInfo findIcon(Category cat, Course crs, Group g) {
+        String icon = null;
+        if (g != null) {
+            icon = g.getIcon();
+        }
+        if (icon == null) {
+            if (crs != null || g != null && g.getCourse() != null && courses.containsKey(g.getCourse())) {
+                if (crs == null) {
+                    crs = courses.get(g.getCourse());
+                }
+                icon = crs.getIcon();
+            }
+        }
+        if (icon == null) {
+            if (cat != null || crs != null && crs.getCategory() != null && categories.containsKey(crs.getCategory())) {
+                if (cat == null) {
+                    cat = categories.get(crs.getCategory());
+                }
+                icon = cat.getIcon();
+            }
+        }
+
+        return (icon != null) ? icons.get(icon) : null;
     }
 
     public static class Trainer implements AppItem {
@@ -596,6 +632,7 @@ public class TrainingAPI implements AppItem, Exportable {
 
         private String name;
         private String pricing;
+        private String icon;
 
         public Category() {
         }
@@ -603,6 +640,12 @@ public class TrainingAPI implements AppItem, Exportable {
         public Category(String name, String pricing) {
             this.name = name;
             this.pricing = pricing;
+        }
+
+        public Category(String name, String pricing, String icon) {
+            this.name = name;
+            this.pricing = pricing;
+            this.icon = icon;
         }
 
         @Override
@@ -642,6 +685,20 @@ public class TrainingAPI implements AppItem, Exportable {
         public void setPricing(String pricing) {
             this.pricing = pricing;
         }
+
+        /**
+         * @return the icon
+         */
+        public String getIcon() {
+            return icon;
+        }
+
+        /**
+         * @param icon the icon to set
+         */
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
     }
 
     public static class Course implements AppItem {
@@ -652,6 +709,7 @@ public class TrainingAPI implements AppItem, Exportable {
         private String name;
         private String description;
         private String pricing;
+        private String icon;
 
         public Course() {
         }
@@ -666,6 +724,20 @@ public class TrainingAPI implements AppItem, Exportable {
             this.name = name;
             this.description = description;
             this.pricing = pricing;
+        }
+
+        public Course(
+                String category,
+                String name,
+                String description,
+                String pricing,
+                String icon
+        ) {
+            this.category = category;
+            this.name = name;
+            this.description = description;
+            this.pricing = pricing;
+            this.icon = icon;
         }
 
         @Override
@@ -733,6 +805,20 @@ public class TrainingAPI implements AppItem, Exportable {
         public void setCategory(String category) {
             this.category = category;
         }
+
+        /**
+         * @return the icon
+         */
+        public String getIcon() {
+            return icon;
+        }
+
+        /**
+         * @param icon the icon to set
+         */
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
     }
 
     public static class Group implements AppItem {
@@ -745,6 +831,7 @@ public class TrainingAPI implements AppItem, Exportable {
         private String trainer;
         private int maxSize = 10;
         private String pricing;
+        private String icon;
 
         public Group() {
         }
@@ -765,6 +852,26 @@ public class TrainingAPI implements AppItem, Exportable {
                 this.maxSize = maxSize;
             }
             this.pricing = pricing;
+        }
+
+        public Group(
+                String name,
+                String shortName,
+                String course,
+                String trainer,
+                Integer maxSize,
+                String pricing,
+                String icon
+        ) {
+            this.name = name;
+            this.shortName = shortName;
+            this.course = course;
+            this.trainer = trainer;
+            if (maxSize != null && maxSize > 0) {
+                this.maxSize = maxSize;
+            }
+            this.pricing = pricing;
+            this.icon = icon;
         }
 
         @Override
@@ -859,6 +966,82 @@ public class TrainingAPI implements AppItem, Exportable {
          */
         public void setShortName(String shortName) {
             this.shortName = shortName;
+        }
+
+        /**
+         * @return the icon
+         */
+        public String getIcon() {
+            return icon;
+        }
+
+        /**
+         * @param icon the icon to set
+         */
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+    }
+
+    public static class IconInfo implements AppItem {
+
+        String id;
+        private Map<String, String> icons = new LinkedHashMap<>();
+
+        public IconInfo() {
+        }
+
+        public IconInfo(String id) {
+            this.id = id;
+        }
+
+        public IconInfo(String id, String icon) {
+            this.id = id;
+            addIcon(0, icon);
+        }
+
+        public IconInfo addIcon(int size, String icon) {
+            if (size < 0) {
+                size = 0;
+            }
+            if (icon != null) {
+                this.icons.put("" + size, icon);
+            } else if (this.icons.containsKey(size)) {
+                this.icons.remove(size);
+            }
+            return this;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        /**
+         * @return the icons
+         */
+        public Map<String, String> getIcons() {
+            return icons;
+        }
+
+        /**
+         * @param icons the icons to set
+         */
+        public void setIcons(Map<String, String> icons) {
+            this.icons = icons;
+        }
+
+        public String getIcon(Integer size) {
+            String v = (size != null) ? icons.get("" + size) : null;
+            if (v == null) {
+                v = icons.get("0");
+            }
+            return v;
         }
     }
 

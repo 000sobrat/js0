@@ -101,6 +101,7 @@ td.filter_active {
 }
 
 fieldset.filter {
+    poisition: absolute;
     border-radius: 0px;
     padding: 5px;
 }
@@ -115,6 +116,11 @@ a.filter {
     background-image: linear-gradient(to top left, rgba(200,200,200,0),rgba(200,200,200,5));
 }
 a.filter_active {
+    white-space: nowrap;
+    background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
+}
+
+a.basket_action {
     white-space: nowrap;
     background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
 }
