@@ -185,10 +185,10 @@ function applyForBasket(tsId, action) {
       var el=document.getElementById('temp_email');
       if(!el) {
         var s="";
-        s+="<table align='center'><tr><td align='right'>#{User_name}</td><td align='left'><input id='temp_email' type='text' value=''></td><td><input type='button' value='#{Apply}' onclick='applyForBasket();'></td></tr></table>";
-        el=document.getElementById("navigation_top");
+        s+="<table align='center'><tr><td align='right'>#{User_name}</td><td align='left'><input id='temp_email' type='text' value=''></td><td><input type='button' value='#{Apply}' onclick='applyForBasket("+((tsId) ? "\""+tsId+"\"": "null")+",\""+action+"\");'></td></tr></table>";
+        el=document.getElementById("pane_top");
         if(el) {
-          el.innerHTML=s;
+          el.innerHTML+=s;
         }
         return;
       } else {
@@ -219,6 +219,9 @@ function renderBasket() {
        s+="<caption>";
        s+="<a class='basket_action' onclick='applyForBasket(null,\"apply\");'>#{Apply}</a>"
        s+="<br/><a class='basket_action' onclick='applyForBasket(null,\"remove\");'>#{Remove}</a>"
+       if(userHasRole('admin')) {
+         s+="<br/><a class='basket_action' onclick='applyForBasket(null,\"confirm\");'>#{Confirm}</a>"
+       }
        s+="</caption>";
      }
      for(var i in eventsInBasket) {
@@ -305,6 +308,7 @@ function renderBasket() {
           },
   renderCellEntry: function(id, entry, dMin, dMax) {
   var iconSize="24px";
+  var actionIconSize="15px";
     var s="";
     var trMax=entry.maxSize;//entry.group.training.maxSize;
     var trAct=entry.size;//Object.keys(entry.trainees).length;
@@ -315,26 +319,39 @@ function renderBasket() {
     s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
     s+="</font>";
     s+="</legend>";
-    if(entry.icon) {
-      s+="<img src='images/"+entry.icon+"' alt='remove' width='"+iconSize+"'>";
-    }
-    
-    if(entry.course) {
-    if(entry.myState) {
-        s+="<img src='images/icons8-minus-144.png' alt='remove' width='"+iconSize+"'>";
-    } else {
-        s+="<img src='images/icons8-plus-144.png' alt='add' width='"+iconSize+"'>";
-    }
-    
+
+    // build overlayed images with optional action...
+    var action=null;
+    var actionIcon=null;
     if(eventsInBasket && eventsInBasket[entry.id]) {
-        //s+="<a onclick='removeFromBasket(\""+entry.id+"\")';>";
-        //s+="<img src='images/icons8-unbuy-90.png' alt='remove' width='"+iconSize+"'>";
-        //s+="</a>";
+        action = "<a onclick='removeFromBasket(\""+entry.id+"\")';>";
+        actionIcon="images/icons8-ok-90.png";
     } else {
-        s+="<a onclick='addToBasket(\""+entry.id+"\")';>";
-        s+="<img src='images/icons8-buy-90.png' alt='add' width='"+iconSize+"'>";
-        s+="</a>";
+        action = "<a onclick='addToBasket(\""+entry.id+"\")';>";
+        actionIcon="images/icons8-circle-90.png";
     }
+    
+    s+=(action)?action:"";
+    if(entry.icon) {
+      var cIcon=entry.icon;
+      s+="<img class='overlay_wd' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+      if(entry.myState) {
+        cIcon=cIcon.replace('90','144');
+        s+="<img class='overlay_wdm' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+      }
+    }
+
+    if(entry.course) {
+      if(entry.myState) {
+        //s+="<img class='overlay_wd' src='images/icons8-minus-144.png' alt='remove' width='"+iconSize+"'>";
+      } else {
+        //s+="<img class='overlay_wd' src='images/icons8-plus-144.png' alt='add' width='"+iconSize+"'>";
+      }
+    }
+    
+    if(action && actionIcon) {
+      s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
+      s+="</a>";
     }
     
     s+="<br/>"+((entry.shortName) ? entry.shortName: entry.name);

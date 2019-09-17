@@ -124,3 +124,20 @@ a.basket_action {
     white-space: nowrap;
     background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
 }
+
+img.overlay_wd {
+    position: absolute;
+    top: 10;
+    left: 10;
+}
+img.overlay_wdm {
+    position: absolute;
+    top: 10;
+    left: 10;
+}
+
+img.overlay_wda {
+    position: absolute;
+    top: 10;
+    left: 0;
+}

@@ -21,6 +21,8 @@ import ssg.lib.di.DI;
 import ssg.lib.http.HttpApplication;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
+import ssg.lib.http.base.HttpData;
+import ssg.lib.http.base.HttpRequest;
 import ssg.lib.http.dp.HttpResourceBytes;
 import ssg.lib.http.dp.HttpResourceCollection;
 import ssg.lib.http.dp.HttpStaticDataProcessor;
@@ -179,7 +181,13 @@ public class App extends CS {
                         )
                         //                        .addDataProcessors(new RESTHttpDataProcessor("/app", new MethodsProvider[]{new XMethodsProvider()}, training))
                         //                        .addDataProcessors(new RESTHttpDataProcessor("/app", new MethodsProvider[]{new XMethodsProvider()}, um))
-                        .addDataProcessors(new HttpStaticDataProcessor()
+                        .addDataProcessors(new HttpStaticDataProcessor(){
+            @Override
+            public void onHeaderLoaded(HttpData data) throws IOException {
+                System.out.println("STATIC RESOURCE: "+((HttpRequest)data).getQuery());
+                super.onHeaderLoaded(data);
+            }
+        }
                                 .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/icon.png"), "/app/favicon.ico", "image/png"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/app/logo.png", "image/png"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.html"), "/app/index.html", "text/html"))

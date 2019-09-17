@@ -6,7 +6,6 @@
 package ssg.lib.jana.api;
 
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -377,6 +376,11 @@ public class UI_API {
             }
 
             int max = Math.min(room.getMaxSize(), group.getMaxSize());
+            if(ts.getParticipants().size()>=max) {
+                for(String vs:ts.getParticipants().values()) {
+                    if(!"confirmed".equals(vs)) max++;
+                }
+            }
 
             if (ts.getParticipants().size() < max || action != ACTION.apply) {
                 if (ts.getParticipants().containsKey(email)) {
@@ -430,6 +434,9 @@ public class UI_API {
                     // TODO: send email...
                 } else {
                     for (TimeEvent ts : evs) {
+                        if (ts == null) {
+                            continue;
+                        }
                         String key = ts.getParticipants().get(u);
                         System.out.println("TE: " + ts.getId() + "|" + ts.getRoom() + "|" + ts.getName() + "|" + ts.getStart() + ":" + ts.getDuration() + "|" + u + " -> " + key);
                     }
@@ -640,9 +647,6 @@ public class UI_API {
         return r;
     }
 
-    
-    
-    
     //@XMethod(name = "names")
     public String[] getPropertyNames() {
         return ((Collection<String>) Collections.list(System.getProperties().propertyNames())).toArray(new String[System.getProperties().size()]);
@@ -682,7 +686,7 @@ public class UI_API {
     public String getProperty(@XParameter(name = "name") String name) {
         return System.getProperty(name);
     }
-    
+
     //@XMethod(name = "properties")
     public String[][] getProperties(@XParameter(name = "mask") String mask, @XParameter(name = "valueMask", optional = true) String valueMask, @XParameter(name = "skipEmpties", optional = true) Boolean skipEmpties) {
         String[] ns = getPropertyNames(mask);
@@ -711,7 +715,7 @@ public class UI_API {
             return new String[0][0];
         }
     }
-    
+
     public TE toTE(TimeEvent te, String myEmail, boolean admin) {
         TE t = new TE(te);
         Group g = training.groups.get(te.getName());
