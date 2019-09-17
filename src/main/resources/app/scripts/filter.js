@@ -9,7 +9,7 @@ function buildFilterGroup(conf) {
 
    // build self/no self selector
    si="<div class='filter_sel' id='min_filter_"+conf.id+"'>";
-   s+="<fieldset class='filter'><legend onclick='toggleVisibility(\"filter_"+conf.id+"\")'>"+conf.title+"</legend>";
+   s+="<fieldset class='filter'><legend class='filter' onclick='toggleVisibility(\"filter_"+conf.id+"\")'>"+conf.title+"</legend>";
    s+="<table class='filter' id='filter_"+conf.id+"'>";
        
        if(conf.valueOf(null)) {

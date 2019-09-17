@@ -204,7 +204,7 @@ public class App extends CS {
             http.httpService.setDataProcessors(new Repository<DataProcessor>());
         }
         http.httpService.getDataProcessors(null, null).addItem(new HttpStaticDataProcessor()
-                .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/icon.png"), "/favicon.ico", "image/png"))
+                .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/kuntajana_124.png"), "/favicon.ico", "image/png"))
         );
 
         DI<ByteBuffer, SocketChannel> httpDI = http.buildHandler(server.getDefaultService());

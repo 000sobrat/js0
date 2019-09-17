@@ -3,14 +3,14 @@
   "name": "Jana Club Demo",
   "icons": [
     {
-      "src": "/app/favicon.png",
+      "src": "/app/images/kuntajana_124.png",
       "type": "image/png",
-      "sizes": "21x21"
+      "sizes": "124x124"
     },
     {
-      "src": "/app/favicon.png",
+      "src": "/app/images/kuntajana_240.png",
       "type": "image/png",
-      "sizes": "21x21"
+      "sizes": "240x240"
     }
   ],
   "start_url": "/app/index.html",

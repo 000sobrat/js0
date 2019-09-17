@@ -1,3 +1,4 @@
+<div class='pane'>
 <table id='pane' class='pane' width="100%" border="1" style="border-collapse: collapse">
 <tr class='pane_1'><td class="pane_menu" colspan="3">
   ${include /app/menu.incl}
@@ -24,3 +25,4 @@
   ${include /app/tail.incl}
 </td></tr>
 </table>
+</div>

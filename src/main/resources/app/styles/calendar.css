@@ -1,4 +1,6 @@
 table.calendar { 
+        /*background-color: rgba(187,45,141,25);*/
+        background-color: var(--menu-bg-color);
 	border-collapse: collapse; 
 	border: 0.5px solid #ddd;
 }
@@ -39,9 +41,9 @@ th.calendar_time_30 {
 }
 
 tr.calendar_time { 
-	height: 35px; 
-	min-height: 35px; 
-	max-height: 35 px; 
+	height: 25px; 
+	min-height: 25px; 
+	max-height: 25 px; 
 }
 
 tr.calendar_time_00 { 

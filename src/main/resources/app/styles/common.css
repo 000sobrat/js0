@@ -1,38 +1,79 @@
 * {font-family: Monospace}
-body {background-color: rgba(230,250,230,50); vertical-align: top;}
-table { border-collapse: collapse; border-color: rgb(150,200,200);}
 
-table.menu {border-width:  1px; border-color: black;}
+:root {
+    /* --menu-bg-color: rgba(200,100,200,5); */
+    --menu-bg-color: rgba(152,47,133,240);
+}
+
+
+body {
+    background-color: rgba(187,45,141,25);
+    background-color: rgb(234,182,134);
+    background-image: url('../images/oy_716x90.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    vertical-align: top;
+}
+table { border-collapse: collapse; border-color: rgba(200,200,200,0);}
+
+div.pane {
+    /*background-image: url('../images/kuntajana_240.png');
+    background-size: 50px;
+    background-repeat:  no-repeat;*/
+}
+
+
+
+table.menu {
+    border-width:  1px; 
+    border-color: black;
+}
 tr.menu {
-    /*    background-image: linear-gradient(
+        background-image: linear-gradient(
               to top, 
+              var(--menu-bg-color),
               rgba(200,100,200,0),
-              rgba(200,100,200,0),
-              rgba(200,100,200,5)
+              /*rgba(200,100,200,0),*/
+              var(--menu-bg-color)
               )
-    */
+    
 }
 td.menu-item {width: 25%; text-align: center; 
               background-image: linear-gradient(
-                  to bottom right, 
-                  rgba(100,100,100,50),
+                  to right, 
+                  var(--menu-bg-color),
                   rgba(200,200,200,0),
                   rgba(200,200,200,0),
                   rgba(200,200,200,0), 
-                  rgba(100,100,100,50)
+                  var(--menu-bg-color)
                   )
 }
 
 td.menu_active {border: solid 1px;}
 a.menu-item {
     font-size: 14pt; 
-    font-weight: 700; 
+    font-weight: 300; 
     text-decoration: none; 
     background-image: radial-gradient(
         circle, 
-        rgba(200,100,200,150),
+        var(--menu-bg-color),
         rgba(200,200,200,0)
         )
+}
+
+a:link {
+    color: white;
+}
+a:visited {
+    color: white;
+}
+a:hover {
+    color: white;
+    font-weight: 900;
+}
+a:active {
+    color: white;
+    background-color: black;
 }
 
 
@@ -55,21 +96,21 @@ tr.tail {
     max-height: 50px;
     background-image: linear-gradient(
         to bottom right, 
-        rgba(100,100,100,50),
+        var(--menu-bg-color),
         rgba(200,200,200,0),
         rgba(200,200,200,0),
         rgba(200,200,200,0), 
-        rgba(100,100,100,50)
+        var(--menu-bg-color)
         )
 }
 td.tail {
     text-align: center;
     background-image: linear-gradient(
         to top right, 
-        rgba(100,100,100,50),
+        var(--menu-bg-color),
         rgba(200,200,200,0),
         rgba(200,200,200,0),
-        rgba(100,100,100,50)
+        var(--menu-bg-color)
         )
 }
 
@@ -102,14 +143,39 @@ td.filter_active {
 
 fieldset.filter {
     poisition: absolute;
+    border: solid 0.1px;
     border-radius: 0px;
     padding: 5px;
 }
 legend.filter {
-    padding-left: 10px;
-    padding-right: 5px;
-    padding-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 10px;
+    padding-bottom: 1px;
+    color: rgb(250,240,250);
+    background-color: rgb(200,100,100);
 }
+
+div.filter_sel {
+    color: black;
+    font-weight: 900;
+    text-align: center;
+}
+
+legend:link {
+    color: white;
+}
+legend:visited {
+    color: white;
+}
+legend:hover {
+    color: white;
+    font-weight: 900;
+}
+legend:active {
+    color: white;
+    background-color: black;
+}
+
 
 a.filter {
     white-space: nowrap;
