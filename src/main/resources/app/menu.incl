@@ -1,13 +1,24 @@
 <script>
   function showLoginForm() {
-     var s="<table border='0'>";
-     s+="<tr><td align='right'>#{User_name}</td><td align='left'><input type='text' id='login_name'></input></td></tr>";
-     s+="<tr><td align='right'>#{Password}</td><td align='left'><input type='password' id='login_key'></input></td></tr>";
-     s+="<tr><td align='center' colspan='2'><input type='button' value='Login' onclick='doLogin(); '></input></td></tr>";
+     var s="<table border='0' width='100%' class='loginForm'>";
+     s+="<tr class='loginForm'><td  class='loginForm'align='right'>#{User_name}</td><td  class='loginForm'align='left'><input type='text' id='login_name'></input></td></tr>";
+     s+="<tr class='loginForm'><td  class='loginForm'align='right'>#{Password}</td><td  class='loginForm'align='left'><input type='password' id='login_key'></input></td></tr>";
+     s+="<tr class='loginForm'><td  class='loginForm'align='center' colspan='2'>";
+     s+="<input type='button' value='#{Login}' onclick='doLogin(); '></input>";
+     s+="&nbsp;<input type='button' value='#{Cancel}' onclick='var el=document.getElementById(\"loginForm\"); if(el) {el.innerHTML=null; el.style.display=\"none\";}'></input>";
+     s+="</td></tr>";
      s+="</table>";
     var el=document.getElementById("loginForm");
     el.innerHTML=s;
     el.style.display='block';
+
+    var elW=window.getComputedStyle(el, null).getPropertyValue('width');
+    var ww=window.innerWidth;
+    if("string"==typeof(elW))
+    elW=new Number(elW.substring(0,elW.length-2));
+    if("string"==typeof(ww))
+    ww=new Number(ww.substring(0,ww.length-2));
+    el.style.left=(ww/2-elW/2)+'px';
   }
 
   function doLogin() { 
@@ -33,6 +44,13 @@
     );
   }
 
+  function doLanguageSet(locale) {
+    REST_api.setLanguage(locale, null, function(url,data) { 
+        location.reload(); 
+      }
+    );
+  }
+
 document.addEventListener('DOMContentLoaded', function() {
     if(isValidUser()) {
        var el=document.getElementById('userInfo');
@@ -40,6 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
        var el=document.getElementById('userInfo');
        el.innerHTML="<a onclick='showLoginForm();'>#{Login}...</a>";
+    }
+    if(userLocale) {
+       var locs=["en","ru","fi"];
+       for(var loci in locs) {
+          var loc=locs[loci];
+          if(loc) {
+             var locEl=document.getElementById('locale_'+loc);
+             if(locEl) {
+               if(userLocale==loc) locEl.style.display='none';
+             }
+          }
+       }
     }
 }, false);
   
@@ -49,25 +79,31 @@ document.addEventListener('DOMContentLoaded', function() {
   <tr class='login'>
     <td class='login' colspan='4'>
       <table width='100%' border='0'>
-        <tr><td width='20%' align='left'><img src='images/kuntajana_a.png' width='36px' height='36px'>
-        </td><div id='loginForm' style='display: none; position:fixed; width:100%; border: solid black 1px; background: magenta' align='center'>.</div><td>
-        </td><td width='20%' align='right'><div id='userInfo'></div>
+        <tr><td width='20%' align='left'><img src='images/kuntajana_a.png' width='50px' height='50px'>
+        </td><div id='loginForm' class='loginForm' align='center'>.</div><td>
+        </td><td width='20%' align='right'>
+           <div class='localeSelector'>
+             <img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'>
+             <img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'>
+             <img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'>
+           </div>
+           <div id='userInfo'></div>
         </td></tr>
       </table>
     <td>
   </tr>
   <tr class='menu'>
     <td class='menu-item'>
-      <a class='menu-item' href='index.html'>Main</a>
+      <a class='menu-item' href='index.html'>#{Main}</a>
     </td>
     <td class='menu-item'>
-      <a class='menu-item' href='schedule.html'>Schedule</a>
+      <a class='menu-item' href='schedule.html'>#{Schedule}</a>
     </td>
     <td class='menu-item'>
-      <a class='menu-item' href='basket.html'>Basket</a>
+      <a class='menu-item' href='basket.html'>#{Basket}</a>
     </td>
     <td class='menu-item'>
-      <a class='menu-item' href='contacts.html'>Contacts</a>
+      <a class='menu-item' href='contacts.html'>#{Contacts}</a>
     </td>
   </tr>
 </table>

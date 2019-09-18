@@ -107,7 +107,7 @@ function buildMyFilter(title,all,my,notMy) {
      
      
 // build month selector     
-function buildMonthsFilter(title) {
+function buildMonthsFilter(title,locale) {
         return buildFilterGroup({
            title:title,
            id:"month",
@@ -144,7 +144,7 @@ function buildMonthsFilter(title) {
            valueOf: function(k) {
               if(!k) return null;
               var v=this.data[k];
-              return new Date(v[1]).toLocaleDateString(this.locale, { month: 'short' });
+              return new Date(v[1]).toLocaleDateString(locale, { month: 'short' });
            }}
         );
 }

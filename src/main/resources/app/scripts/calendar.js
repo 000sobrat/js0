@@ -93,6 +93,9 @@ var calendar = {
 
       var t=new Date(tMin);
       if(t && t.getMinutes()!=0) {
+         t.setMinutes(0);
+      }
+      if(t && t.getMinutes()!=0) {
          // add dummy 0-base hour row!
         var h=t.getHours();
         var m=0;

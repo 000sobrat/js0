@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 var userId="${user.email}";
 var userRoles="${user.roles}";
+var userLocale="${session.locale}";
 
 function isValidUser() {
    if(!userId || userId.length>1 && userId[0]=='$' && userId[1]=='{') {

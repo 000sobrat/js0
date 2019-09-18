@@ -21,7 +21,7 @@ function buildFilters(asTable) {
   if(asTable)s+="</td><td valign='top'>";
   s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not_my}");
   if(asTable)s+="</td><td valign='top'>";
-  s+=buildMonthsFilter("#{Month}",);
+  s+=buildMonthsFilter("#{Month}",(userLocale) ? userLocale : 'en');
   if(asTable)s+="</td><td valign='top'>";
   s+=buildWeeksFilter("#{Week}","#{Now}");
   if(asTable)s+="</td><td valign='top'>";

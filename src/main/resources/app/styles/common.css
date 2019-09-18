@@ -29,14 +29,14 @@ table.menu {
     border-color: black;
 }
 tr.menu {
-        background-image: linear-gradient(
-              to top, 
-              var(--menu-bg-color),
-              rgba(200,100,200,0),
-              /*rgba(200,100,200,0),*/
-              var(--menu-bg-color)
-              )
-    
+    background-image: linear-gradient(
+        to top, 
+        var(--menu-bg-color),
+        rgba(200,100,200,0),
+        /*rgba(200,100,200,0),*/
+        var(--menu-bg-color)
+        )
+
 }
 td.menu-item {width: 25%; text-align: center; 
               background-image: linear-gradient(
@@ -70,6 +70,7 @@ a:visited {
 a:hover {
     color: white;
     font-weight: 900;
+    background-color: black;
 }
 a:active {
     color: white;
@@ -87,6 +88,52 @@ td.pane_na {vertical-align: top; }
 td.pane_ca {vertical-align: top; }
 td.pane_xa {vertical-align: top; }
 
+
+div.loginForm {
+    display: none; 
+    position:fixed; 
+    left: 10%; 
+    top: 25px; 
+    min-width:300px; 
+    max-width: 400px; 
+    border: solid black 1px; 
+    background-image: linear-gradient(
+        to top, 
+        var(--menu-bg-color),
+        rgba(200,100,200,100),
+        rgba(200,100,200,100),
+        var(--menu-bg-color)
+        );
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+table.loginForm {
+    border: 0px; 
+    border-spacing: 10px;
+    background-image: linear-gradient(
+        to left, 
+        var(--menu-bg-color),
+        rgba(200,100,200,200),
+        rgba(200,100,200,100),
+        rgba(200,100,200,200),
+        var(--menu-bg-color)
+        );
+}
+tr.loginForm {
+}
+td.loginForm {
+    padding: 5px;
+    color: white;
+}
+
+div.localeSelector {
+    white-space: nowrap;
+}
+img.localeSelector {
+    width: 25px;
+}
 
 
 table.tail {}

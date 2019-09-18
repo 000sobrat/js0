@@ -166,7 +166,7 @@ public class App extends CS {
                         if (user == null) {
                             session.getProperties().clear();
                         } else {
-                            session.setLocale(Locale.forLanguageTag("ru"));
+                            //session.setLocale(Locale.forLanguageTag("ru"));
                         }
                         return super.onAuhtenticatedUser(session, user);
                     }
