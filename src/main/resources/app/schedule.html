@@ -43,11 +43,17 @@ function buildListSwitch(asList, notList) {
    var active=eventsFilter.mode=="list";
    s+="<table><tr>";
    s+="<td>";
-   s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
+   //s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
+   s+=(active) 
+     ? "<img class='list_mode_active' src='images/icons8-list-144.png' alt=\""+asList+"\">" 
+     : "<img class='list_mode' src='images/icons8-list-144.png' alt=\""+asList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>";
    s+="</td>";
-   s+="<td>.</td>";
+   s+="<td></td>";
    s+="<td>";
-   s+=(!active) ? "<a class='filter_active'>"+notList+"</a>" : "<a class='filter' onclick='eventsFilter.mode=eventsFilter.lastMode; eventsFilter.lastMode=null; renderEvents(); renderFilter();'>"+notList+"</a>";
+   //s+=(!active) ? "<a class='filter_active'>"+notList+"</a>" : "<a class='filter' onclick='eventsFilter.mode=eventsFilter.lastMode; eventsFilter.lastMode=null; renderEvents(); renderFilter();'>"+notList+"</a>";
+   s+=(!active) 
+     ? "<img class='list_mode_active' src='images/icons8-calendar-144.png' alt=\""+notList+"\">" 
+     : "<img class='list_mode' src='images/icons8-calendar-144.png' alt=\""+notList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=null; renderEvents(); renderFilter();'>";
    s+="</td>";
    s+="</tr></table>";
    return s;

@@ -54,6 +54,7 @@ a.menu-item {
     font-size: 14pt; 
     font-weight: 300; 
     text-decoration: none; 
+    text-shadow: 2px -2px var(--menu-bg-color);
     background-image: radial-gradient(
         circle, 
         var(--menu-bg-color),
@@ -133,6 +134,9 @@ div.localeSelector {
 }
 img.localeSelector {
     width: 25px;
+    border-right: solid 1px var(--menu-bg-color);
+    border-bottom: solid 1px var(--menu-bg-color);
+    border-bottom-right-radius: 7px;
 }
 
 
@@ -150,6 +154,7 @@ tr.tail {
         var(--menu-bg-color)
         )
 }
+
 td.tail {
     text-align: center;
     background-image: linear-gradient(
@@ -200,6 +205,7 @@ legend.filter {
     padding-bottom: 1px;
     color: rgb(250,240,250);
     background-color: rgb(200,100,100);
+    text-shadow: 2px -2px var(--menu-bg-color);
 }
 
 div.filter_sel {
@@ -232,6 +238,16 @@ a.filter_active {
     white-space: nowrap;
     background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
 }
+img.list_mode {
+    width: 30;
+}
+
+img.list_mode_active {
+    width: 30;
+    border: solid 1px var(--menu-bg-color);
+}
+
+
 
 a.basket_action {
     white-space: nowrap;

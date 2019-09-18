@@ -46,6 +46,7 @@ import ssg.lib.service.Repository;
 public class App extends CS {
     public static String googleOAuth_client_id="1019090063722-27erg4nojo9972piqtmriq77fg4t1fan.apps.googleusercontent.com";
     public static String googleOAuth_client_secret="jprKPNimLbcNsmAX6GJzI6yy";
+    public static final String google_OAuth_endpoint="https://accounts.google.com/o/oauth2/v2/auth";
 
     //ByteBufferPipeReplacement.GDEBUG=true;
     //HttpResourceCollection.DEBUG  = true;
