@@ -68,6 +68,7 @@ public class SSLSupport {
                     }
 
                 }
+                this.sslCtx = sslCtx;
                 ssl_df_client = new SSL_DF(sslCtx, true);
                 ssl_df_server = new SSL_DF(sslCtx, false);
                 ssl_df_server.setNeedClientAuth(Boolean.FALSE);

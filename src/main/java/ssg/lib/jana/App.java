@@ -15,7 +15,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.Locale;
 import ssg.lib.common.TaskExecutor;
 import ssg.lib.di.DI;
 import ssg.lib.http.HttpApplication;
@@ -45,6 +44,8 @@ import ssg.lib.service.Repository;
  * @author sesidoro
  */
 public class App extends CS {
+    public static String googleOAuth_client_id="1019090063722-27erg4nojo9972piqtmriq77fg4t1fan.apps.googleusercontent.com";
+    public static String googleOAuth_client_secret="jprKPNimLbcNsmAX6GJzI6yy";
 
     //ByteBufferPipeReplacement.GDEBUG=true;
     //HttpResourceCollection.DEBUG  = true;
