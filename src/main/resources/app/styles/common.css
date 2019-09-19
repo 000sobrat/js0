@@ -38,19 +38,28 @@ tr.menu {
         )
 
 }
-td.menu-item {width: 25%; text-align: center; 
-              background-image: linear-gradient(
-                  to right, 
-                  var(--menu-bg-color),
-                  rgba(200,200,200,0),
-                  rgba(200,200,200,0),
-                  rgba(200,200,200,0), 
-                  var(--menu-bg-color)
-                  )
+td.menu-item {
+    width: 25%; 
+    text-align: center; 
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-image: linear-gradient(
+        to right, 
+        var(--menu-bg-color),
+        rgba(200,200,200,0),
+        rgba(200,200,200,0),
+        rgba(200,200,200,0), 
+        var(--menu-bg-color)
+        )
 }
 
-td.menu_active {border: solid 1px;}
+td.menu_active {
+    border: solid 1px;
+}
+
 a.menu-item {
+    padding-left: 5px;
+    padding-right: 5px;
     font-size: 14pt; 
     font-weight: 300; 
     text-decoration: none; 
@@ -244,14 +253,39 @@ img.list_mode {
 
 img.list_mode_active {
     width: 30;
-    border: solid 1px var(--menu-bg-color);
+    border-bottom: solid 3px var(--menu-bg-color);
+    /*border: solid 1px var(--menu-bg-color);*/
 }
 
 
+fieldset.calendar_basket {
+    height: 100%;
+    border: solid 1px var(--menu-bg-color);
+    padding: 5px;
+}
+table.calendar_basket {
+}
+
+table.basket_action {
+}
+caption.basket_action {
+    padding-bottom: 10px;
+}
+tr.basket_action {
+}
+td.basket_action {
+    padding-bottom: 5px;
+}
+
 
 a.basket_action {
+    font-weight: 300;
     white-space: nowrap;
-    background-image: linear-gradient(to bottom right, rgba(200,200,250,0),rgba(200,200,250,5));
+    background-image: linear-gradient(to bottom right, rgba(200,200,250,0), rgba(200,200,250,5));
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 5px;
+    border-radius: 5px;
 }
 
 img.overlay_wd {

@@ -8,7 +8,7 @@
   <div id="pane_top"></div>
 </td></tr>
 <tr class='pane_2'>
-<td width="5%" class='pane_na'>
+<td width="0px" class='pane_na'>
   <!-- navigation area: left -->
   <div id="pane_left"></div>
 </td>
@@ -16,7 +16,7 @@
   <!-- content area -->
   <div id="pane_content"></div>
 </td>
-<td width="5%" class='pane_xa'>
+<td width="0px" class='pane_xa'>
   <!-- extra navigation area -->
   <div id="pane_right"></div>
 </td>

@@ -41,7 +41,7 @@ function buildFilters(asTable) {
 function buildListSwitch(asList, notList) {
    var s="";
    var active=eventsFilter.mode=="list";
-   s+="<table><tr>";
+   s+="<fieldset class='filter'><table><tr>";
    s+="<td>";
    //s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
    s+=(active) 
@@ -55,7 +55,7 @@ function buildListSwitch(asList, notList) {
      ? "<img class='list_mode_active' src='images/icons8-calendar-144.png' alt=\""+notList+"\">" 
      : "<img class='list_mode' src='images/icons8-calendar-144.png' alt=\""+notList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=null; renderEvents(); renderFilter();'>";
    s+="</td>";
-   s+="</tr></table>";
+   s+="</tr></table></fieldset>";
    return s;
 }
 
@@ -219,16 +219,20 @@ function applyForBasket(tsId, action) {
 }
 
 function renderBasket() {
-  if(eventsInBasket) {
-     var s="<table class='calendar_basket'>";
-     if(eventsInBasket) {
-       s+="<caption>";
-       s+="<a class='basket_action' onclick='applyForBasket(null,\"apply\");'>#{Apply}</a>"
-       s+="<br/><a class='basket_action' onclick='applyForBasket(null,\"remove\");'>#{Remove}</a>"
+  if(eventsInBasket && Object.keys(eventsInBasket).length>0) {
+     var s="<fieldset class='calendar_basket'><legend class='calendar_basket'>#{Basket}</legend><table class='calendar_basket'>";
+     if(eventsInBasket && Object.keys(eventsInBasket).length>0) {
+       s+="<caption class='basket_action'><table width='100%'><tr class='basket_action'><td class='basket_action'>";
+       s+="<a class='basket_action' onclick='applyForBasket(null,\"apply\");'>#{Apply}</a>";
+       s+="</td></tr><tr class='basket_action'><td class='basket_action'>";
+       s+="<a class='basket_action' onclick='applyForBasket(null,\"remove\");'>#{Remove}</a>";
        if(userHasRole('admin')) {
-         s+="<br/><a class='basket_action' onclick='applyForBasket(null,\"confirm\");'>#{Confirm}</a>"
+         s+="</td></tr><tr class='basket_action'><td class='basket_action'>";
+         s+="<a class='basket_action' onclick='applyForBasket(null,\"confirm\");'>#{Confirm}</a>";
        }
-       s+="</caption>";
+       s+="</td></tr><tr><td>";
+       s+="<a class='basket_action' onclick='removeFromBasket(-1);'>#{Clear_basket}</a>";
+       s+="</td></tr></table></caption>";
      }
      for(var i in eventsInBasket) {
        var entry=eventsInBasket[i];
@@ -236,25 +240,29 @@ function renderBasket() {
          s+="\n<tr class='calendar_basket'>";
          //s+="<td class='calendar_basket_time'>"+toDateYMD(ts.start)+'  '+toTimeHM(ts.start)+" - "+toTimeHM(ts.end)+"</td>";
          //s+="<td class='calendar_basket_value'>"+ts.name+"</td>";
-         //s+="<td><a onclick='if(removeFromBasket(\""+ts.id+"\")) loadBasket();'><img src='images/ball_red_gradient.png' alt='remove' width='12px'></a></td>";
+         //s+="<td><a onclick='if(removeFromBasket(\""+ts.id+"\")) loadBasket();'><img src='images/icons8-del-90.png' alt='remove' width='12px'></a></td>";
     var cst="";
     s+="<td>";
     s+="<fieldset class='calendar_cell "+cst+"' style='position: relative;'>";
     s+="<legend class='calendar_cell'>";
     s+="<font size=-2>";
-    s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
+    s+=""+this.toDateYMD(entry.start)+" "+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
     s+="</font>";
     s+="</legend>";
-    s+="<a onclick='if(removeFromBasket(\""+entry.id+"\")) loadBasket();'><img src='images/ball_red_gradient.png' alt='remove' width='12px'></a>";
+    s+="<a onclick='if(removeFromBasket(\""+entry.id+"\")) loadBasket();'><img src='images/icons8-del-90.png' alt='remove' width='12px'></a>";
     s+="&nbsp;"+entry.name+"  <font size=-1><br/>"+entry.trainer+"</font>";
     s+="</fieldset>";
 
          s+="</td></tr>";
        }
      }
+     s+="</table></fieldset>";
      
      var div=document.getElementById('pane_right');
      div.innerHTML=s;
+  }else {
+     var div=document.getElementById('pane_right');
+     div.innerHTML="";
   }
 }
 

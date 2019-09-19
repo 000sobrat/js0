@@ -333,6 +333,11 @@ public class UI_API {
             Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
             if (basket != null) {
                 for (String eventId : eventIDs) {
+                    if("-1".equals(eventId)){
+                        basket.clear();
+                        r=true;
+                        break;
+                    }
                     TimeEvent ts = schedule.getEvent(eventId, null, null, null);
                     if (ts != null && basket.containsKey(ts.getId())) {
                         basket.remove(ts.getId());

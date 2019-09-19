@@ -2,7 +2,7 @@ table.calendar {
         /*background-color: rgba(187,45,141,25);*/
         background-color: var(--menu-bg-color);
 	border-collapse: collapse; 
-	border: 0.5px solid #ddd;
+	border: 0.5px solid var(--menu-bg-color);
 }
 
 tr.calendar_date_row { 
@@ -17,7 +17,7 @@ th.calendar_date {
 	padding-left: 5px; 
 	padding-right: 5px; 
         text-align: center;
-	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+	background-image: linear-gradient(to right, rgba(200,200,200,0.9),rgba(200,200,200,0), rgba(200,200,200,0.9));
 }
 
 th.calendar_time {
@@ -28,7 +28,7 @@ th.calendar_time {
         vertical-align: top;
 	padding-left: 5px; 
 	padding-right: 5px; 
-	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,0.9));
 }
 
 th.calendar_time_00 {
@@ -42,36 +42,36 @@ th.calendar_time_30 {
 
 tr.calendar_time { 
 	height: 25px; 
-	min-height: 25px; 
-	max-height: 25 px; 
+	min-height: 22px; 
+	max-height: 22px; 
 }
 
 tr.calendar_time_00 { 
-	background-image: linear-gradient(to top, rgba(200,200,200,0), rgba(200,200,200,5))
+	background-image: linear-gradient(to bottom, rgba(200,200,200,0), rgba(200,200,200,0.5))
 }
 tr.calendar_time_30 { 
-	background-image: linear-gradient(to bottom, rgba(200,200,200,0), rgba(200,200,200,5))
+	background-image: linear-gradient(to top, rgba(200,200,200,0), rgba(200,200,200,0.5))
 }
 
 
 td.calendar_cell {
         vertical-align: top;
-	background-image: linear-gradient(to right, rgba(200,200,200,0), rgba(200,200,200,5));
+	background-image: linear-gradient(to right, rgba(200,200,200,0),rgba(200,200,200,0.5));
 }
 
 div.calendar_cell {
 	position: absolute; 
 	border: solid black 0.5px; 
 	border-radius: 4.5px; padding-left: 4px; padding-right: 2px;
-	background-color: rgba(100,200,150,250);
+	background-color: rgba(100,200,150,50);
 }
 
 div.calendar_cell_participant {
-	background-color: rgba(150,200,200,250);
+	background-color: rgba(150,200,200,50);
 }
 
 div.calendar_cell_full {
-	background-color: rgba(250,200,200,250);
+	background-color: rgba(250,200,200,50);
 }
 
 
@@ -80,7 +80,7 @@ fieldset.calendar_cell {
 	border: solid black 0.5px;
 	border-radius: 4.5px; padding-left: 4px; padding-right: 2px;
 	background-color: rgba(100,200,150,250);
-        box-shadow: rgba(0,0,0,0.25) 0px 2px 9px;
+        box-shadow: rgba(0,0,0,0.5) 0px 2px 9px;
 }
 
 fieldset.calendar_cell_participant {
