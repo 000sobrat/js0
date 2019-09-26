@@ -1,4 +1,21 @@
 <script>
+  var loginLinks;
+  function showLoginLinks() {
+       var s="";
+       s+="<a onclick='showLoginForm();' class='login'>#{Login}...</a>&nbsp;";
+       if(loginLinks) {
+          for(var l in loginLinks) {
+             var img=loginLinks[l];
+             if(l && img) {
+                s+="<a href='"+l+"' class='login'><img src='images/"+img+"' width='24px'></a>&nbsp;";
+             }
+          }
+       }
+
+       var el=document.getElementById('userInfo');
+       el.innerHTML=s;
+  }
+
   function showLoginForm() {
      var s="<table border='0' width='100%' class='loginForm'>";
      s+="<tr class='loginForm'><td  class='loginForm'align='right'>#{User_name}</td><td  class='loginForm'align='left'><input type='text' id='login_name'></input></td></tr>";
@@ -58,6 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
        var el=document.getElementById('userInfo');
        el.innerHTML="<a onclick='showLoginForm();'>#{Login}...</a>";
+       REST_api.loginVariants(
+         function(url,data) { 
+           if(data.result) {
+              loginLinks=data.result;
+              showLoginLinks();
+           } 
+         }
+       );
     }
     if(userLocale) {
        var locs=["en","ru","fi"];
@@ -87,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
              <img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'>
              <img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'>
            </div>
-           <div id='userInfo'></div>
+           <div id='userInfo' class='userInfo'></div>
         </td></tr>
       </table>
     <td>

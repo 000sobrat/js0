@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.mail.Message;
-import ssg.lib.http.HttpAuthenticator.HttpSimpleAuth.Domain;
+import ssg.lib.http.HttpAuthenticator.Domain;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
 import ssg.lib.http.RAT;
@@ -698,7 +698,7 @@ public class ApplicationAPI implements Serializable, Cloneable {
                     }
                     domain.addUser(tr.email, scheduler.getPasses().get(tr), domain.getName(), rat);
                 } else {
-                    RAT rat = domain.getUserRAT(tr.email);
+                    RAT rat = domain.getUserStore().getRAT(tr.email);
                     if (rat != null) {
                         if (rat.getRoles() != null) {
                             rat.getRoles().add(ROLE_TRAINER);

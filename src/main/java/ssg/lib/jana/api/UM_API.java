@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import javax.mail.Message;
 import ssg.lib.common.JSON;
 import ssg.lib.http.HttpAuthenticator;
-import ssg.lib.http.HttpAuthenticator.HttpSimpleAuth.Domain;
+import ssg.lib.http.HttpAuthenticator.Domain;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
 import ssg.lib.http.RAT;
@@ -25,6 +25,7 @@ import ssg.lib.http.rest.annotations.XMethod;
 import ssg.lib.http.rest.annotations.XParameter;
 import ssg.lib.http.rest.annotations.XType;
 import ssg.lib.jana.tools.EmailAgent;
+import ssg.lib.oauth.OAuthClient.OAuthContext;
 
 /**
  *
@@ -35,12 +36,29 @@ public class UM_API implements AppItem, Exportable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id = "userManagmenet";
+    private String id = "userManagement";
     Map<String, String> users = new LinkedHashMap<>();
     Map<String, String> pwds = new LinkedHashMap<>();
     Map<String, List<String>> roles = new LinkedHashMap<>();
 
-    HttpAuthenticator.HttpSimpleAuth.Domain domain = new Domain(id);
+    Map<String, String> authVariants = new LinkedHashMap<>();
+
+    HttpAuthenticator.HttpSimpleAuth.Domain domain = new Domain(id) {
+        @Override
+        public HttpUser authenticate(Object provider, Object... parameters) throws IOException {
+            HttpUser r = super.authenticate(provider, parameters);
+            if (r != null && r.getProperties().containsKey("email")) {
+                String email = (String) r.getProperties().get("email");
+                if (!r.getName().equals(email) && r.getProperties().containsKey("oauth")) {
+                    OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
+                    domain.getUserStore().registerUser(email, c);
+                    r = r.toUser(email);
+                }
+            }
+            System.out.println("OAuth authenticated user:\n   | " + (("" + r).replace("\n", "\n   | ")));
+            return r;
+        }
+    };
     private EmailAgent agent;
     private EmailAgent.EMailListener emailListener = null;
 
@@ -228,4 +246,35 @@ public class UM_API implements AppItem, Exportable {
         }
     }
 
+    @XMethod(name = "loginVariants")
+    public Map<String, String> loginVariants(HttpRequest req) {
+        Map<String, String> r = new LinkedHashMap<>();
+
+        String host = req.getHostURL();
+        if (host.endsWith("/")) {
+            host = host.substring(0, host.length() - 1);
+        }
+        String path = req.getQuery();
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        path = path.substring(0, path.lastIndexOf("/") + 1);
+        r.put(host + "/" + path, null);
+
+        for (Entry<String, String> entry : authVariants.entrySet()) {
+            String s = entry.getKey();
+            if (s.startsWith("/")) {
+                s = s.substring(1);
+            }
+            r.put(host + "/" + s, entry.getValue());
+        }
+        return r;
+    }
+
+    public Map<String, String> getAuthVariants() {
+        return authVariants;
+    }
 }

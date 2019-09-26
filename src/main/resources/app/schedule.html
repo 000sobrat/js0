@@ -363,11 +363,6 @@ function renderBasket() {
       }
     }
     
-    if(action && actionIcon) {
-      s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
-      s+="</a>";
-    }
-    
     s+="<br/>"+((entry.shortName) ? entry.shortName: entry.name);
     s+="&nbsp;<font size=-1>"+entry.confSize+"/"+entry.maxSize+"</font>";
     if(entry.myState) {
@@ -375,6 +370,12 @@ function renderBasket() {
        s+="<br/>"+ss[0];
     }
     //s+="  <font size=-1><br/>"+entry.trainer+"</font>";
+
+    if(action && actionIcon) {
+      s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
+      s+="</a>";
+    }
+    
     s+=this.renderCellEntryActions(id,entry);
     s+="</fieldset>";
     return s;

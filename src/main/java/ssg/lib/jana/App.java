@@ -15,9 +15,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import ssg.lib.common.TaskExecutor;
 import ssg.lib.di.DI;
 import ssg.lib.http.HttpApplication;
+import ssg.lib.http.HttpMatcher;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
 import ssg.lib.http.base.HttpData;
@@ -35,6 +39,12 @@ import ssg.lib.jana.api.UM_API;
 import ssg.lib.net.CS;
 import ssg.lib.net.CSListener;
 import ssg.lib.net.TCPHandler;
+import ssg.lib.oauth.impl.OAuthClientFB;
+import ssg.lib.oauth.impl.OAuthClientGoolge;
+import ssg.lib.oauth.impl.OAuthClientMSO;
+import ssg.lib.oauth.impl.OAuthClientVK;
+import ssg.lib.oauth.impl.OAuthHttpDataProcessor;
+import ssg.lib.oauth.impl.UserOAuthVerifier;
 import ssg.lib.service.DF_Service;
 import ssg.lib.service.DataProcessor;
 import ssg.lib.service.Repository;
@@ -44,121 +54,111 @@ import ssg.lib.service.Repository;
  * @author sesidoro
  */
 public class App extends CS {
-    public static String googleOAuth_client_id="1019090063722-27erg4nojo9972piqtmriq77fg4t1fan.apps.googleusercontent.com";
-    public static String googleOAuth_client_secret="jprKPNimLbcNsmAX6GJzI6yy";
-    public static final String google_OAuth_endpoint="https://accounts.google.com/o/oauth2/v2/auth";
-
-    //ByteBufferPipeReplacement.GDEBUG=true;
-    //HttpResourceCollection.DEBUG  = true;
 
     // SSL support
     SSLSupport sslSupport;
     // service handlers support
     DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorSimple());
-
+    
     public App(String... args) throws IOException {
         sslSupport = new SSLSupport(args);
         init();
     }
-
+    
     public App(SSLSupport sslSupport) throws IOException {
         this.sslSupport = sslSupport;
         init();
     }
-
+    
     public void init() {
         if (sslSupport != null && sslSupport.ssl_df_server != null) {
             service.filter(sslSupport.ssl_df_server);
         }
         addCSListener(new CSListener.DebuggingCSListener(System.out, CSListener.DebuggingCSListener.DO_STRUCTURAL));
     }
-
+    
     public DF_Service<SocketChannel> getDefaultService() {
         return service;
     }
-
+    
     public static void main(String... args) throws Exception {
         ClassLoader classLoader = App.class.getClassLoader();
         App server = new App(args);
         server.start();
-
-//        ExcelTools.GTSX gts = ExcelTools.loadGTS(new FileInputStream("./src/test/SchedulerBase.xlsx"));
-//        ApplicationAPI app = new ApplicationAPI(gts);
-//        if (gts.meta.containsKey("email-agent.email")) {
-//            EmailAgent.EMailAccount.MediatorAccount m = new EmailAgent.EMailAccount.MediatorAccount(
-//                    new URL(gts.meta.get("email-agent.imap")[0]),
-//                    new URL(gts.meta.get("email-agent.smtp")[0]),
-//                    gts.meta.get("email-agent.email")[0],
-//                    gts.meta.get("email-agent.p")[0]
-//            );
-//            EmailAgent agent = new EmailAgent(m, gts.meta.get("admin")[0]);
-//            agent.from = gts.meta.get("email-agent.from");
-//            agent.replyTo = gts.meta.get("email-agent.replyTo");
-//            app.setEmailAgent(agent);
-//        }
-//
-//        Http http = new Http();
-//        http.addApp(
-//                new HttpApplication("App", "/app") {
-//                    @Override
-//                    public HttpUser onAuhtenticatedUser(HttpUser user) {
-//                        return super.onAuhtenticatedUser(user);
-//                    }
-//                }
-//                        .addDataProcessors(new RESTHttpDataProcessor("/app/scheduler", new MethodsProvider[]{new XMethodsProvider()}, app))
-//                        .addDataProcessors(new HttpStaticDataProcessor()
-//                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/app/favicon.ico", "image/png"))
-//                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/app/logo.png", "image/png"))
-//                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.html"), "/app/index.html", "text/html"))
-//                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/app/manifest.json", "application/json"))
-//                                .add(new HttpResourceCollection("/app/*", "resource:app"))
-//                                .noCacheing()
-//                        ),
-//                app.getDomain()
-//        );
-//
-//        if (1 == 1) {
-//            if (http.httpService.getDataProcessors(null, null) == null) {
-//                http.httpService.setDataProcessors(new Repository<DataProcessor>());
-//            }
-//            http.httpService.getDataProcessors(null, null).addItem(new HttpStaticDataProcessor()
-//                    .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/favicon.ico", "image/png"))
-//                    .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/logo.png", "image/png"))
-//                    .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.html"), "/index.html", "text/html"))
-//                    .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/manifest.json", "application/json"))
-//            //.noCacheing()
-//            );
-//        }
+        
         final ScheduleAPI schedule = new ScheduleAPI();
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
         final UI_API ui = new UI_API(schedule, training, um);
-
+        
         try (InputStream is = new FileInputStream("target/jana.json");) {
             Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             um.importFrom(rdr);
             training.importFrom(rdr);
             schedule.importFrom(rdr);
-
+            
             int a = 0;
-
+            
         } catch (Throwable th) {
             th.printStackTrace();
-
+            
             try (InputStream is = App.class.getClassLoader().getResourceAsStream("conf/jana.json");) {
                 Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 um.importFrom(rdr);
                 training.importFrom(rdr);
                 schedule.importFrom(rdr);
-
+                
                 int a = 0;
-
+                
             } catch (Throwable th1) {
                 th.printStackTrace();
             }
-
+            
         }
-
+        
+        OAuthHttpDataProcessor oahttp = new OAuthHttpDataProcessor(new HttpMatcher("/app/oauth/*"))
+                .addOAuth("google", new OAuthClientGoolge(
+                        "1019090063722-00ibplc6sv0fu1j5ma0g6fsq527c1qcv.apps.googleusercontent.com",
+                        "2ZvOfhPpyaC7OKkuiwpzll6D")
+                )
+                .addOAuth("fb", new OAuthClientFB(
+                        "512657122859011",
+                        "246fa8201bdedeb046c2f4fd4c6937e4")
+                )
+                .addOAuth("mso", new OAuthClientMSO(
+                        "392b54ed-67ab-4b08-bad6-3fb4f66bb406",
+                        "ifgxAVEB306~ifbWCZ46!^{",
+                        null)
+                )
+                .addOAuth("vk", new OAuthClientVK(
+                        "7145014",
+                        "qjc8oqqft1TxlORtDTOg")
+                );
+        oahttp.setHttpAuhtenticator(um.getDomain());
+        UserOAuthVerifier oav = new UserOAuthVerifier(oahttp);
+        um.getDomain().getUserStore().verifiers().add(oav);
+        
+        final List<String> oauthLinks = oahttp.getAuthLinks();
+        final Map<String, String> oauthImages = new LinkedHashMap<>();
+        for (String oal : oauthLinks) {
+            String img = null;
+            if (oal.contains("/vk/")) {
+                img = "vk.com";
+            } else if (oal.contains("/fb/")) {
+                img = "facebook";
+            } else if (oal.contains("/google/")) {
+                img = "google";
+            } else if (oal.contains("/instagram/")) {
+                img = "instagram";
+            } else if (oal.contains("/mso/")) {
+                img = "microsoft-outlook";
+            }
+            if (img != null) {
+                oauthImages.put(oal, "icons8-" + img + "-144.png");
+            }
+        }
+        um.getAuthVariants().putAll(oauthImages);
+        
         Http http = new Http();
         http.addApp(
                 new HttpApplication("App", "/app") {
@@ -181,15 +181,14 @@ public class App extends CS {
                                 training,
                                 um)
                         )
-                        //                        .addDataProcessors(new RESTHttpDataProcessor("/app", new MethodsProvider[]{new XMethodsProvider()}, training))
-                        //                        .addDataProcessors(new RESTHttpDataProcessor("/app", new MethodsProvider[]{new XMethodsProvider()}, um))
-                        .addDataProcessors(new HttpStaticDataProcessor(){
-            @Override
-            public void onHeaderLoaded(HttpData data) throws IOException {
-                System.out.println("STATIC RESOURCE: "+((HttpRequest)data).getQuery());
-                super.onHeaderLoaded(data);
-            }
-        }
+                        .addDataProcessors(oahttp)
+                        .addDataProcessors(new HttpStaticDataProcessor() {
+                            @Override
+                            public void onHeaderLoaded(HttpData data) throws IOException {
+                                System.out.println("STATIC RESOURCE: " + ((HttpRequest) data).getQuery());
+                                super.onHeaderLoaded(data);
+                            }
+                        }
                                 .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/icon.png"), "/app/favicon.ico", "image/png"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/app/logo.png", "image/png"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.html"), "/app/index.html", "text/html"))
@@ -208,9 +207,9 @@ public class App extends CS {
         http.httpService.getDataProcessors(null, null).addItem(new HttpStaticDataProcessor()
                 .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/kuntajana_124.png"), "/favicon.ico", "image/png"))
         );
-
+        
         DI<ByteBuffer, SocketChannel> httpDI = http.buildHandler(server.getDefaultService());
-
+        
         int httpPort = 18123;
         try {
             server.add(new TCPHandler(
@@ -220,7 +219,7 @@ public class App extends CS {
         } catch (Throwable th) {
             System.out.println("Failed to set listener at " + httpPort);
         }
-
+        
         try {
             server.add(new TCPHandler(
                     new InetSocketAddress(InetAddress.getByAddress(new byte[]{0, 0, 0, 0}), 80))
@@ -238,12 +237,12 @@ public class App extends CS {
             System.out.println("Failed to set listener at " + 443);
         }
         System.out.println(server);
-
+        
         long timeout = System.currentTimeMillis() + 1000 * 60 * 15;
         while (System.currentTimeMillis() < timeout) {
             Thread.sleep(100);
         }
-
+        
         try {
             while (true) {
                 Thread.sleep(100);
@@ -252,5 +251,5 @@ public class App extends CS {
             server.stop();
         }
     }
-
+    
 }

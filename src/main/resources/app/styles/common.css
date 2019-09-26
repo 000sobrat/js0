@@ -98,6 +98,12 @@ td.pane_na {vertical-align: top; }
 td.pane_ca {vertical-align: top; }
 td.pane_xa {vertical-align: top; }
 
+div.userInfo {
+}
+a.login {
+    vertical-align: middle;
+    white-space: nowrap;
+}
 
 div.loginForm {
     display: none; 
