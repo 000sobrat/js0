@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <tr class='login'>
     <td class='login' colspan='4'>
       <table width='100%' border='0'>
-        <tr><td width='20%' align='left'><img src='images/kuntajana_a.png' width='50px' height='50px'>
+        <tr><td width='20%' align='left'><a href='policy.html'><img src='images/kuntajana_a.png' width='50px' height='50px'></a>
         </td><div id='loginForm' class='loginForm' align='center'>.</div><td>
         </td><td width='20%' align='right'>
            <div class='localeSelector'>
