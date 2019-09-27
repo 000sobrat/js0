@@ -5,10 +5,13 @@
  */
 package ssg.lib.jana;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.net.ssl.SSLContext;
 import ssg.lib.di.base.SSL_DF;
 import ssg.lib.ssl.SSLTools;
+import ssg.lib.ssl.SSLTools.PrivateKeyCertificateInfo;
 
 public class SSLSupport {
     // SSL support
@@ -19,6 +22,54 @@ public class SSLSupport {
 
     public SSLSupport(String... args) throws IOException {
         initSSL(args);
+    }
+
+    public SSLSupport(PrivateKeyCertificateInfo... pkcis) throws IOException {
+        String tsLocation = System.getProperty("javax.net.ssl.trustStore");
+        String tsPassword = System.getProperty("javax.net.ssl.trustStorePassword");
+
+        if (tsLocation == null) {
+            URL ts = SSLSupport.class.getClassLoader().getResource("jssecacerts");
+            if (ts == null) {
+                ts = SSLSupport.class.getClassLoader().getResource("cacerts");
+            }
+            String sep = File.separator;
+            File file = new File(System.getProperty("java.home") + sep
+                    + "lib" + sep + "security" + sep
+                    + "cacerts");
+            if (file.exists()) {
+                ts = file.toURI().toURL();
+            }
+            if (ts != null) {
+                tsLocation = ts.toString();
+            }
+        }
+
+        try {
+
+            SSLContext ctx = SSLTools.composeSSLContext(
+                    (tsLocation != null) ? new URL(tsLocation) : null,
+                    tsPassword,
+                    "TLS",
+                    pkcis);
+            prepareFor(ctx);
+        } catch (Throwable th) {
+            prepareFor(null);
+            th.printStackTrace();
+        }
+    }
+
+    void prepareFor(SSLContext ctx) {
+        this.sslCtx = ctx;
+        if (ctx != null) {
+            ssl_df_client = new SSL_DF(sslCtx, true);
+            ssl_df_server = new SSL_DF(sslCtx, false);
+            ssl_df_server.setNeedClientAuth(Boolean.FALSE);
+            ssl_df_server.setAutodetect(true);
+        } else {
+            ssl_df_client = null;
+            ssl_df_server = null;
+        }
     }
 
     public void initSSL(String args[]) throws IOException {
@@ -68,14 +119,13 @@ public class SSLSupport {
                     }
 
                 }
-                this.sslCtx = sslCtx;
-                ssl_df_client = new SSL_DF(sslCtx, true);
-                ssl_df_server = new SSL_DF(sslCtx, false);
-                ssl_df_server.setNeedClientAuth(Boolean.FALSE);
-                ssl_df_server.setAutodetect(true);
+                prepareFor(sslCtx);
             } catch (Throwable th) {
+                prepareFor(null);
                 throw (th instanceof IOException) ? (IOException) th : new IOException(th);
             }
+        } else {
+            prepareFor(null);
         }
     }
 

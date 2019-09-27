@@ -48,6 +48,8 @@ import ssg.lib.oauth.impl.UserOAuthVerifier;
 import ssg.lib.service.DF_Service;
 import ssg.lib.service.DataProcessor;
 import ssg.lib.service.Repository;
+import ssg.lib.ssl.SSLTools;
+import ssg.lib.ssl.SSLTools.PrivateKeyCertificateInfo;
 
 /**
  *
@@ -59,63 +61,76 @@ public class App extends CS {
     SSLSupport sslSupport;
     // service handlers support
     DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorSimple());
-    
+
     public App(String... args) throws IOException {
         sslSupport = new SSLSupport(args);
         init();
     }
-    
+
+    public App(SSLTools.PrivateKeyCertificateInfo... pkcis) throws IOException {
+        sslSupport = new SSLSupport(pkcis);
+        init();
+    }
+
     public App(SSLSupport sslSupport) throws IOException {
         this.sslSupport = sslSupport;
         init();
     }
-    
+
     public void init() {
         if (sslSupport != null && sslSupport.ssl_df_server != null) {
             service.filter(sslSupport.ssl_df_server);
         }
         addCSListener(new CSListener.DebuggingCSListener(System.out, CSListener.DebuggingCSListener.DO_STRUCTURAL));
     }
-    
+
     public DF_Service<SocketChannel> getDefaultService() {
         return service;
     }
-    
+
     public static void main(String... args) throws Exception {
         ClassLoader classLoader = App.class.getClassLoader();
-        App server = new App(args);
+
+        PrivateKeyCertificateInfo pkci = new PrivateKeyCertificateInfo(
+                "js",
+                classLoader.getResource("ssl/js.ca.crt"),
+                classLoader.getResource("ssl/js.crt"),
+                classLoader.getResource("ssl/js.pk")
+        );
+
+        App server = (pkci.checkCert() && pkci.checkPK()) ? new App(pkci) : new App(args);
         server.start();
-        
+
         final ScheduleAPI schedule = new ScheduleAPI();
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
         final UI_API ui = new UI_API(schedule, training, um);
-        
+
         try (InputStream is = new FileInputStream("target/jana.json");) {
             Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             um.importFrom(rdr);
             training.importFrom(rdr);
             schedule.importFrom(rdr);
-            
+
             int a = 0;
-            
+
         } catch (Throwable th) {
             th.printStackTrace();
-            
+
             try (InputStream is = App.class.getClassLoader().getResourceAsStream("conf/jana.json");) {
                 Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 um.importFrom(rdr);
                 training.importFrom(rdr);
                 schedule.importFrom(rdr);
-                
+
                 int a = 0;
-                
+
             } catch (Throwable th1) {
                 th.printStackTrace();
             }
-            
+
         }
-        
+
         OAuthHttpDataProcessor oahttp = new OAuthHttpDataProcessor(new HttpMatcher("/app/oauth/*"))
                 .addOAuth("google", new OAuthClientGoolge(
                         "1019090063722-00ibplc6sv0fu1j5ma0g6fsq527c1qcv.apps.googleusercontent.com",
@@ -137,7 +152,7 @@ public class App extends CS {
         oahttp.setHttpAuhtenticator(um.getDomain());
         UserOAuthVerifier oav = new UserOAuthVerifier(oahttp);
         um.getDomain().getUserStore().verifiers().add(oav);
-        
+
         final List<String> oauthLinks = oahttp.getAuthLinks();
         final Map<String, String> oauthImages = new LinkedHashMap<>();
         for (String oal : oauthLinks) {
@@ -158,7 +173,7 @@ public class App extends CS {
             }
         }
         um.getAuthVariants().putAll(oauthImages);
-        
+
         Http http = new Http();
         http.addApp(
                 new HttpApplication("App", "/app") {
@@ -206,11 +221,11 @@ public class App extends CS {
         }
         http.httpService.getDataProcessors(null, null).addItem(new HttpStaticDataProcessor()
                 .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/kuntajana_124.png"), "/favicon.ico", "image/png"))
-                .add(new HttpResourceBytes(classLoader.getResourceAsStream("tmp/Cv2b1euqKh9izZ2G8qxtepa_eRfw8muFpdGYHpAXx0Y"), "/.well-known/acme-challenge/Cv2b1euqKh9izZ2G8qxtepa_eRfw8muFpdGYHpAXx0Y", "application/binary"))
+                .add(new HttpResourceCollection("/.well-known/acme-challenge/", "/tmp/*"))
         );
-        
+
         DI<ByteBuffer, SocketChannel> httpDI = http.buildHandler(server.getDefaultService());
-        
+
         int httpPort = 18123;
         try {
             server.add(new TCPHandler(
@@ -220,7 +235,7 @@ public class App extends CS {
         } catch (Throwable th) {
             System.out.println("Failed to set listener at " + httpPort);
         }
-        
+
         try {
             server.add(new TCPHandler(
                     new InetSocketAddress(InetAddress.getByAddress(new byte[]{0, 0, 0, 0}), 80))
@@ -238,12 +253,12 @@ public class App extends CS {
             System.out.println("Failed to set listener at " + 443);
         }
         System.out.println(server);
-        
+
         long timeout = System.currentTimeMillis() + 1000 * 60 * 15;
         while (System.currentTimeMillis() < timeout) {
             Thread.sleep(100);
         }
-        
+
         try {
             while (true) {
                 Thread.sleep(100);
@@ -252,5 +267,5 @@ public class App extends CS {
             server.stop();
         }
     }
-    
+
 }

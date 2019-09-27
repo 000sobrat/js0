@@ -52,7 +52,7 @@ public class UM_API implements AppItem, Exportable {
                 if (!r.getName().equals(email) && r.getProperties().containsKey("oauth")) {
                     OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
                     domain.getUserStore().registerUser(email, c);
-                    r = r.toUser(email);
+                    r = r.toUserId(email);
                 }
             }
             System.out.println("OAuth authenticated user:\n   | " + (("" + r).replace("\n", "\n   | ")));
