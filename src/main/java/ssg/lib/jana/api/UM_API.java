@@ -49,7 +49,7 @@ public class UM_API implements AppItem, Exportable {
             HttpUser r = super.authenticate(provider, parameters);
             if (r != null && r.getProperties().containsKey("email")) {
                 String email = (String) r.getProperties().get("email");
-                if (!r.getName().equals(email) && r.getProperties().containsKey("oauth")) {
+                if (!r.getId().equals(email) && r.getProperties().containsKey("oauth")) {
                     OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
                     domain.getUserStore().registerUser(email, c);
                     r = r.toUserId(email);
