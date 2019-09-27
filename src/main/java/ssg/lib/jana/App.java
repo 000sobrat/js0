@@ -206,6 +206,7 @@ public class App extends CS {
         }
         http.httpService.getDataProcessors(null, null).addItem(new HttpStaticDataProcessor()
                 .add(new HttpResourceBytes(classLoader.getResourceAsStream("app/images/kuntajana_124.png"), "/favicon.ico", "image/png"))
+                .add(new HttpResourceBytes(classLoader.getResourceAsStream("tmp/Cv2b1euqKh9izZ2G8qxtepa_eRfw8muFpdGYHpAXx0Y"), "/.well-known/acme-challenge/Cv2b1euqKh9izZ2G8qxtepa_eRfw8muFpdGYHpAXx0Y", "application/binary"))
         );
         
         DI<ByteBuffer, SocketChannel> httpDI = http.buildHandler(server.getDefaultService());
