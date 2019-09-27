@@ -63,16 +63,19 @@ public class App extends CS {
     DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorSimple());
 
     public App(String... args) throws IOException {
+        System.out.println("init App for String[]");
         sslSupport = new SSLSupport(args);
         init();
     }
 
     public App(SSLTools.PrivateKeyCertificateInfo... pkcis) throws IOException {
+        System.out.println("init App for PrivateKeyCertificateInfo[]");
         sslSupport = new SSLSupport(pkcis);
         init();
     }
 
     public App(SSLSupport sslSupport) throws IOException {
+        System.out.println("init App for SSLSupport");
         this.sslSupport = sslSupport;
         init();
     }
@@ -92,7 +95,7 @@ public class App extends CS {
         ClassLoader classLoader = App.class.getClassLoader();
 
         PrivateKeyCertificateInfo pkci = new PrivateKeyCertificateInfo(
-                "js",
+                "",
                 classLoader.getResource("ssl/js.ca.crt"),
                 classLoader.getResource("ssl/js.crt"),
                 classLoader.getResource("ssl/js.pk")
