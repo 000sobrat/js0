@@ -26,6 +26,7 @@ import ssg.lib.http.rest.annotations.XParameter;
 import ssg.lib.http.rest.annotations.XType;
 import ssg.lib.jana.tools.EmailAgent;
 import ssg.lib.oauth.OAuthClient.OAuthContext;
+import ssg.lib.oauth.OAuthClient.OAuthUserInfo;
 
 /**
  *
@@ -51,8 +52,9 @@ public class UM_API implements AppItem, Exportable {
                 String email = (String) r.getProperties().get("email");
                 if (!r.getId().equals(email) && r.getProperties().containsKey("oauth")) {
                     OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
-                    domain.getUserStore().registerUser(email, c);
-                    r = r.toUserId(email);
+                    OAuthUserInfo u=c.getOAuthUserInfo();
+                    //domain.getUserStore().registerUser(email, c);
+                    r = domain.toUser(r,email);// r .toUserId(email, domain.getUserStore().getRAT(email));
                 }
             }
             System.out.println("OAuth authenticated user:\n   | " + (("" + r).replace("\n", "\n   | ")));

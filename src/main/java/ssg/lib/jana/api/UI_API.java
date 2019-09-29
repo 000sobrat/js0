@@ -289,7 +289,7 @@ public class UI_API {
         }
         
         HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
-        String email = (user != null) ? user.getName() : null;
+        String email = (user != null) ? user.getId() : null;
         boolean admin = (user != null && user.getRoles() != null && user.getRoles().contains("admin"));
         for (TimeEvent te : rs) {
             TE t = toTE(te, email, admin);
@@ -354,7 +354,7 @@ public class UI_API {
         Map<String, TimeEvent> tes = (Map) req.getHttpSession().getProperties().get("eventsBasket");
         if (tes != null) {
             HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
-            String email = (user != null) ? user.getName() : null;
+            String email = (user != null) ? user.getId() : null;
             boolean admin = (user != null && user.getRoles() != null && user.getRoles().contains("admin"));
             Map<String, TE> r = new LinkedHashMap<>();
             for (TimeEvent te : tes.values()) {
