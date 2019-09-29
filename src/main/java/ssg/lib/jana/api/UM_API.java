@@ -35,10 +35,18 @@ import ssg.lib.oauth.OAuthClient.OAuthUserInfo;
 @XType
 public class UM_API implements AppItem, Exportable {
 
+    public static enum UM_STATE {
+        pending, // user is not verified, verification request is sent
+        verified, // user is verified (e.g. via OAuth, Certificte, or e-mail-based verification
+        disabled, // user is diabled - proved to be untrusted
+        other
+    }
+
     private static final long serialVersionUID = 1L;
 
     private String id = "userManagement";
     Map<String, String> users = new LinkedHashMap<>();
+    Map<String, UM_STATE> userStates = new LinkedHashMap<>();
     Map<String, String> pwds = new LinkedHashMap<>();
     Map<String, List<String>> roles = new LinkedHashMap<>();
 
@@ -52,13 +60,46 @@ public class UM_API implements AppItem, Exportable {
                 String email = (String) r.getProperties().get("email");
                 if (!r.getId().equals(email) && r.getProperties().containsKey("oauth")) {
                     OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
-                    OAuthUserInfo u=c.getOAuthUserInfo();
-                    //domain.getUserStore().registerUser(email, c);
-                    r = domain.toUser(r,email);// r .toUserId(email, domain.getUserStore().getRAT(email));
+                    OAuthUserInfo u = c.getOAuthUserInfo();
+                    if (users.containsKey(email)) {
+                        if (!userStates.containsKey(email) || UM_STATE.disabled != userStates.get(email)) {
+                            userStates.put(email, UM_STATE.verified);
+                        }
+                    } else {
+                        UM_API.this.addUser(email, null, UM_STATE.verified);
+                    }
+                    r = domain.toUser(r, email);
+                }
+            } else if (r != null) {
+                // no e-mail
+                if (r.getProperties().containsKey("oauth")) {
+                    OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
+                    OAuthUserInfo u = c.getOAuthUserInfo();
+                    String prefix = c.domain();
+                    if (prefix == null) {
+                        prefix = "undefined";
+                    }
+                    String id = prefix + "_" + u.id();
+                    if (users.containsKey(id)) {
+                        if (!userStates.containsKey(id) || UM_STATE.disabled != userStates.get(id)) {
+                            userStates.put(id, UM_STATE.verified);
+                        }
+                    } else {
+                        UM_API.this.addUser(id, null, UM_STATE.verified);
+                    }
+                    r = domain.toUser(r, id);
                 }
             }
             System.out.println("OAuth authenticated user:\n   | " + (("" + r).replace("\n", "\n   | ")));
             return r;
+        }
+
+        @Override
+        public void addUser(String name, String pwd, String dn, RAT rat) {
+            super.addUser(name, pwd, dn, rat);
+            if (!users.containsKey(name)) {
+                UM_API.this.addUser(name, pwd, null);
+            }
         }
     };
     private EmailAgent agent;
@@ -94,6 +135,14 @@ public class UM_API implements AppItem, Exportable {
             }
         }
         return domain;
+    }
+
+    boolean addUser(String user, String pwd, UM_STATE verified) {
+        if (user != null && !users.containsKey(user)) {
+            users.put(user, pwd);
+            userStates.put(user, (verified != null) ? verified : UM_STATE.other);
+        }
+        return false;
     }
 
     void addUserRoles(String user, String... roles) {
@@ -163,6 +212,7 @@ public class UM_API implements AppItem, Exportable {
         JSON.Encoder jsonEncoder = new JSON.Encoder("UTF-8");
         Map m = new LinkedHashMap();
         m.put("users", users);
+        m.put("userStates", userStates);
         m.put("pws", pwds);
         m.put("roles", roles);
         //System.out.println("M : "+m.toString());
@@ -173,9 +223,23 @@ public class UM_API implements AppItem, Exportable {
     public void importFrom(Reader rdr) throws IOException {
         JSON.Decoder jsonDecoder = new JSON.Decoder("UTF-8");
         Map m = jsonDecoder.readObject(rdr, Map.class);
-        users.putAll((Map) m.get("users"));
-        pwds.putAll((Map) m.get("pws"));
-        roles.putAll((Map) m.get("roles"));
+        if (m.containsKey("users")) {
+            users.putAll((Map) m.get("users"));
+        }
+        if (m.containsKey("userStates")) {
+            userStates.putAll((Map) m.get("userStates"));
+        } else {
+            // if no userStates info -> all users are trusted -> verified state
+            for (String un : users.keySet()) {
+                userStates.put(un, UM_STATE.verified);
+            }
+        }
+        if (m.containsKey("pws")) {
+            pwds.putAll((Map) m.get("pws"));
+        }
+        if (m.containsKey("roles")) {
+            roles.putAll((Map) m.get("roles"));
+        }
     }
 
     public String findUser(String name) {

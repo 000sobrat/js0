@@ -67,8 +67,10 @@ function buildListSwitch(asList, notList) {
 
         var qu = new URL(window.location.href);
         for(var i in pns) {
-           var pn=pns[i];
-           eventsFilter[pn] = qu.searchParams.get(pn);
+          try{
+            var pn=pns[i];
+            eventsFilter[pn] = qu.searchParams.get(pn);
+          } catch(e){break;}
         }
         eventsFilter.mode="week";
      }

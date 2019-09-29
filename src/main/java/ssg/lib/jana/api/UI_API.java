@@ -30,6 +30,7 @@ import ssg.lib.jana.api.TrainingAPI.Course;
 import ssg.lib.jana.api.TrainingAPI.Group;
 import ssg.lib.jana.api.TrainingAPI.IconInfo;
 import ssg.lib.jana.api.TrainingAPI.Trainer;
+import ssg.lib.jana.api.UM_API.UM_STATE;
 import ssg.lib.jana.tools.TimeTools;
 
 /**
@@ -38,7 +39,7 @@ import ssg.lib.jana.tools.TimeTools;
  */
 @XType
 public class UI_API {
-    
+
     public static enum TRAINEE_STATUS {
         added, // trainee added to trainees list for the training
         skipped_duplicate, // trainee adding is skipped for already in list
@@ -51,20 +52,20 @@ public class UI_API {
         cancelled, // trainee cancelled participation in training
         attended // trainee attended the training
     }
-    
+
     public static enum ACTION {
         apply,
         remove,
         confirm
     }
-    
+
     ScheduleAPI schedule = new ScheduleAPI();
     TrainingAPI training = new TrainingAPI();
     UM_API um = new UM_API();
-    
+
     public UI_API() {
     }
-    
+
     public UI_API(
             ScheduleAPI schedule,
             TrainingAPI training,
@@ -74,7 +75,7 @@ public class UI_API {
         this.training = training;
         this.um = um;
     }
-    
+
     @XMethod(name = "setLanguage")
     public String setLanguage(
             HttpRequest req,
@@ -97,7 +98,7 @@ public class UI_API {
         }
         return req.getHttpSession().getLocale().getLanguage();
     }
-    
+
     @XMethod(name = "eventsMeta")
     public Map<String, Object> getEventsMeta(
             HttpRequest req,
@@ -110,16 +111,16 @@ public class UI_API {
         Map<String, String[]> rcc = new LinkedHashMap<>();
         Map<String, String> rt = new LinkedHashMap<>();
         Map<String, String> rm = new LinkedHashMap<>();
-        
+
         r.put("groups", rg);
         r.put("courses", rc);
         r.put("categories", rcc);
         r.put("trainers", rt);
         r.put("rooms", rm);
-        
+
         List<TimeEvent> tss = schedule.findEvent(null, from, to, null);
         r.put("ranges", schedule.getTimeRanges(tss));
-        
+
         if (from == null || to == null) {
             Calendar c = TimeTools.getCalendar(null);
             long[] bounds = (long[]) ((Map) r.get("ranges")).get("bounds");
@@ -132,7 +133,7 @@ public class UI_API {
                 to = TimeTools.toEndOfWeek(c);
             }
         }
-        
+
         for (TimeEvent t : tss) {
             if (t.getRoom() != null && !rm.containsKey(t.getRoom())) {
                 Room room = schedule.getRoom(t.getRoom(), null);
@@ -140,14 +141,14 @@ public class UI_API {
                     rm.put(room.getId(), room.getAddress());
                 }
             }
-            
+
             Group g = training.groups.get(t.getName());
-            
+
             if (g != null && !rg.containsKey(t.getName())) {
                 IconInfo icon = training.findIcon(null, null, g);
                 rg.put(t.getName(), new String[]{g.getShortName(), icon != null ? icon.getIcon(null) : null});
             }
-            
+
             if (g != null && g.getTrainer() != null && !rt.containsKey(g.getTrainer())) {
                 Trainer tr = training.getTrainer(g.getTrainer(), null);
                 if (tr != null && !rt.containsKey(tr.getId())) {
@@ -162,7 +163,7 @@ public class UI_API {
                         IconInfo icon = training.findIcon(null, crs, null);
                         rc.put(c, new String[]{c, icon != null ? icon.getIcon(null) : null});
                     }
-                    
+
                     if (crs.getCategory() != null && training.categories.containsKey(crs.getCategory())) {
                         Category cat = training.categories.get(crs.getCategory());
                         if (!rcc.containsKey(cat.getId())) {
@@ -206,7 +207,7 @@ public class UI_API {
             @XParameter(name = "group", optional = true) String group
     ) throws IOException {
         List<TE> r = new ArrayList<>();
-        
+
         if (room != null && room.isEmpty()) {
             room = null;
         }
@@ -287,7 +288,7 @@ public class UI_API {
                 }
             }
         }
-        
+
         HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
         String email = (user != null) ? user.getId() : null;
         boolean admin = (user != null && user.getRoles() != null && user.getRoles().contains("admin"));
@@ -299,7 +300,7 @@ public class UI_API {
 
         return r;
     }
-    
+
     @XMethod(name = "addEventsToBasket")
     public boolean addEventsToBasket(HttpRequest req,
             @XParameter(name = "eventIDs") String... eventIDs
@@ -323,7 +324,7 @@ public class UI_API {
         }
         return r;
     }
-    
+
     @XMethod(name = "removeEventsFromBasket")
     public boolean removeEventsFromBasket(HttpRequest req,
             @XParameter(name = "eventIDs") String... eventIDs
@@ -333,9 +334,9 @@ public class UI_API {
             Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
             if (basket != null) {
                 for (String eventId : eventIDs) {
-                    if("-1".equals(eventId)){
+                    if ("-1".equals(eventId)) {
                         basket.clear();
-                        r=true;
+                        r = true;
                         break;
                     }
                     TimeEvent ts = schedule.getEvent(eventId, null, null, null);
@@ -348,7 +349,7 @@ public class UI_API {
         }
         return r;
     }
-    
+
     @XMethod(name = "getEventsInBasket")
     public Map<String, TE> getEventsInBasket(HttpRequest req) throws IOException {
         Map<String, TimeEvent> tes = (Map) req.getHttpSession().getProperties().get("eventsBasket");
@@ -368,28 +369,28 @@ public class UI_API {
             return null;
         }
     }
-    
+
     @XMethod(name = "applyForGroups")
     public TRAINEE_STATUS[] applyForGroups(HttpRequest req,
             @XParameter(name = "email", optional = true) String email,
             @XParameter(name = "action", optional = true) ACTION action
     ) throws IOException {
-        
+
         Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
-        
+
         TRAINEE_STATUS[] r = new TRAINEE_STATUS[basket != null ? basket.size() : 0];
-        
+
         String u0 = um.findUser(email);
         String u = checkUser(req, email);
         HttpUser user = req.getHttpSession().getUser();
-        
+
         if (u == null) {
             for (int i = 0; i < basket.size(); i++) {
                 r[i] = TRAINEE_STATUS.no_applier;
             }
             return r;
         }
-        
+
         int off = 0;
         for (TimeEvent ts : basket.values()) {
             int i = off++;
@@ -397,14 +398,14 @@ public class UI_API {
                 r[i] = TRAINEE_STATUS.no_target;
                 continue;
             }
-            
+
             Room room = schedule.getRoom(ts.getRoom(), null);
             Group group = training.groups.get(ts.getName());
             if (group == null) {
                 r[i] = TRAINEE_STATUS.no_target;
                 continue;
             }
-            
+
             int max = Math.min(room.getMaxSize(), group.getMaxSize());
             if (ts.getParticipants().size() >= max) {
                 for (String vs : ts.getParticipants().values()) {
@@ -413,7 +414,7 @@ public class UI_API {
                     }
                 }
             }
-            
+
             if (ts.getParticipants().size() < max || action != ACTION.apply) {
                 if (ts.getParticipants().containsKey(email)) {
                     switch (action) {
@@ -475,16 +476,16 @@ public class UI_API {
                 }
             }
         }
-        
+
         return r;
     }
-    
+
     @XMethod(name = "applyForGroup")
     public TRAINEE_STATUS applyForGroup(HttpRequest req,
             @XParameter(name = "eventId") String eventId,
             @XParameter(name = "email", optional = true) String email) throws IOException {
         TRAINEE_STATUS r = TRAINEE_STATUS.no_target;
-        
+
         TimeEvent ts = schedule.getEvent(eventId, null, null, null);
         if (ts == null) {
             return r; //TRAINEE_STATUS.no_target;
@@ -545,12 +546,12 @@ public class UI_API {
 //        String u = um.findUser(email);
         String u0 = um.findUser(email);
         String u = checkUser(req, email);
-        
+
         Room room = schedule.getRoom(ts.getRoom(), null);
         Group group = training.groups.get(ts.getName());
-        
+
         int max = Math.min(room.getMaxSize(), group.getMaxSize());
-        
+
         if (ts.getParticipants().size() < max) {
             if (ts.getParticipants().containsKey(email)) {
                 r = TRAINEE_STATUS.skipped_duplicate;
@@ -566,10 +567,10 @@ public class UI_API {
         } else {
             r = TRAINEE_STATUS.no_space_in_target;
         }
-        
+
         return r;
     }
-    
+
     public String checkUser(HttpRequest req, String email) throws IOException {
         HttpSession sess = (req != null) ? req.getHttpSession() : null;
         HttpUser user = (sess != null) ? sess.getUser() : null;
@@ -577,7 +578,7 @@ public class UI_API {
             if (email == null) {
                 email = (String) user.getProperties().get("email");
             }
-            if (email != null && !email.equals(user.getProperties().get(email))) {
+            if (email != null && !(email.equals(user.getProperties().get(email)) || UM_STATE.verified.equals(um.userStates.get(user.getId())))) {
                 List<String> roles = user.getRoles();
                 if (roles != null && !roles.contains("admin")) {
                     throw new IOException("Non-admin can only self-apply.");
@@ -605,11 +606,11 @@ public class UI_API {
                 req.getContext().getProperties().put("email", email);
             }
         }
-        
+
         String u = um.findUser(email);
         if (u == null) {
             u = email;
-            um.users.put(u, u);
+            um.addUser(u, null, UM_STATE.pending);
             training.courseParticipants.put(u, TrainingAPI.PSTATE.verifying);
         } else {
             // verify if need authentication
@@ -626,7 +627,7 @@ public class UI_API {
         }
         return u;
     }
-    
+
     public HttpUser checkAuthentication(HttpRequest req, boolean required) throws IOException {
         // verify if need authentication
         HttpSession sess = req.getHttpSession();
@@ -641,7 +642,7 @@ public class UI_API {
         }
         return user;
     }
-    
+
     @XMethod(name = "checkResources")
     public List<String> getResources(HttpRequest req,
             @XParameter(name = "prefix", optional = true) String prefix,
@@ -747,7 +748,7 @@ public class UI_API {
             return new String[0][0];
         }
     }
-    
+
     public TE toTE(TimeEvent te, String myEmail, boolean admin) {
         TE t = new TE(te);
         Group g = training.groups.get(te.getName());
@@ -756,7 +757,7 @@ public class UI_API {
             t.trainer = g.getTrainer();
             t.shortName = g.getShortName();
             t.maxSize = g.getMaxSize();
-            
+
             IconInfo ii = training.findIcon(null, null, g);
             if (ii != null) {
                 t.icon = ii.getIcon(null);
@@ -785,9 +786,9 @@ public class UI_API {
         }
         return t;
     }
-    
+
     public static class TE {
-        
+
         public String id;
         public String name;
         public String shortName;
@@ -804,10 +805,10 @@ public class UI_API {
         public int maxSize;
         public int confSize;
         public String icon;
-        
+
         public TE() {
         }
-        
+
         public TE(TimeEvent te) {
             this.id = te.getId();
             this.name = te.getName();
