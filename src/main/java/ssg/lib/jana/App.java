@@ -213,7 +213,7 @@ public class App extends CS {
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/app/manifest.json", "application/json"))
                                 .add(new HttpResourceCollection("/app/*", "resource:app"))
                                 .resourceBundle("i18n.jana")
-                                .noCacheing()
+                                //.noCacheing()
                         ),
                 um.getDomain()
         );
