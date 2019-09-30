@@ -15,6 +15,8 @@
 //////////////////////////////////////////////////////////////////// user
 ////////////////////////////////////////////////////////////////////////////////
 var userId="${user.id}";
+var userName="${user.name}";
+var userDomain="${user.domain}";
 var userRoles="${user.roles}";
 var userLocale="${session.locale}";
 
@@ -23,6 +25,30 @@ function isValidUser() {
      return false;
    } else {
      return true;
+   }
+}
+
+function userDisplayName() {
+   if(isValidUser()) {
+     if(!userName || "null"==userName || userName.length>1 && userName[0]=='$' && userName[1]=='{') {
+        return userId;
+     } else {
+        return userName;
+     }
+   } else {
+      return "<>";
+   }
+}
+
+function userDomainName() {
+   if(isValidUser()) {
+     if(!userDomain || userDomain.length>1 && userDomain[0]=='$' && userDomain[1]=='{') {
+        return "<>";
+     } else {
+        return userDomain;
+     }
+   } else {
+      return "<>";
    }
 }
 

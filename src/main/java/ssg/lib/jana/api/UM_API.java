@@ -44,13 +44,13 @@ public class UM_API implements AppItem, Exportable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id = "userManagement";
+    private String id = "js";
     Map<String, String> users = new LinkedHashMap<>();
     Map<String, UM_STATE> userStates = new LinkedHashMap<>();
     Map<String, String> pwds = new LinkedHashMap<>();
     Map<String, List<String>> roles = new LinkedHashMap<>();
 
-    Map<String, String> authVariants = new LinkedHashMap<>();
+    Map<String, String[]> authVariants = new LinkedHashMap<>();
 
     HttpAuthenticator.HttpSimpleAuth.Domain domain = new Domain(id) {
         @Override
@@ -58,6 +58,10 @@ public class UM_API implements AppItem, Exportable {
             HttpUser r = super.authenticate(provider, parameters);
             if (r != null && r.getProperties().containsKey("email")) {
                 String email = (String) r.getProperties().get("email");
+                // ensure email is lowcase only
+                if (email != null && email.contains("@")) {
+                    email = email.toLowerCase();
+                }
                 if (!r.getId().equals(email) && r.getProperties().containsKey("oauth")) {
                     OAuthContext c = (OAuthContext) r.getProperties().get("oauth");
                     OAuthUserInfo u = c.getOAuthUserInfo();
@@ -285,6 +289,10 @@ public class UM_API implements AppItem, Exportable {
 //                    resp.onLoaded();
                     return "OK";
                 } else if (user != null) {
+                    // ensure email is lowcase only
+                    if (user.contains("@")) {
+                        user = user.toLowerCase();
+                    }
                     HttpUser httpUser = domain.authenticate(null, null, user, pwd);
                     if (httpUser != null) {
                         httpUser.getProperties().put("email", httpUser.getName());
@@ -313,8 +321,8 @@ public class UM_API implements AppItem, Exportable {
     }
 
     @XMethod(name = "loginVariants")
-    public Map<String, String> loginVariants(HttpRequest req) {
-        Map<String, String> r = new LinkedHashMap<>();
+    public Map<String, String[]> loginVariants(HttpRequest req) {
+        Map<String, String[]> r = new LinkedHashMap<>();
 
         String host = req.getHostURL();
         if (host.endsWith("/")) {
@@ -330,7 +338,7 @@ public class UM_API implements AppItem, Exportable {
         path = path.substring(0, path.lastIndexOf("/") + 1);
         r.put(host + "/" + path, null);
 
-        for (Entry<String, String> entry : authVariants.entrySet()) {
+        for (Entry<String, String[]> entry : authVariants.entrySet()) {
             String s = entry.getKey();
             if (s.startsWith("/")) {
                 s = s.substring(1);
@@ -340,7 +348,7 @@ public class UM_API implements AppItem, Exportable {
         return r;
     }
 
-    public Map<String, String> getAuthVariants() {
+    public Map<String, String[]> getAuthVariants() {
         return authVariants;
     }
 }

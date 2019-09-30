@@ -41,6 +41,7 @@ import ssg.lib.net.CSListener;
 import ssg.lib.net.TCPHandler;
 import ssg.lib.oauth.impl.OAuthClientFB;
 import ssg.lib.oauth.impl.OAuthClientGoolge;
+import ssg.lib.oauth.impl.OAuthClientInstagram;
 import ssg.lib.oauth.impl.OAuthClientMSO;
 import ssg.lib.oauth.impl.OAuthClientVK;
 import ssg.lib.oauth.impl.OAuthHttpDataProcessor;
@@ -143,6 +144,10 @@ public class App extends CS {
                         "512657122859011",
                         "246fa8201bdedeb046c2f4fd4c6937e4")
                 )
+                .addOAuth("instagram", new OAuthClientInstagram(
+                        "512657122859011",
+                        "246fa8201bdedeb046c2f4fd4c6937e4")
+                )
                 .addOAuth("mso", new OAuthClientMSO(
                         "392b54ed-67ab-4b08-bad6-3fb4f66bb406",
                         "ifgxAVEB306~ifbWCZ46!^{",
@@ -156,23 +161,14 @@ public class App extends CS {
         UserOAuthVerifier oav = new UserOAuthVerifier(oahttp);
         um.getDomain().getUserStore().verifiers().add(oav);
 
-        final List<String> oauthLinks = oahttp.getAuthLinks();
-        final Map<String, String> oauthImages = new LinkedHashMap<>();
-        for (String oal : oauthLinks) {
-            String img = null;
-            if (oal.contains("/vk/")) {
-                img = "vk.com";
-            } else if (oal.contains("/fb/")) {
-                img = "facebook";
-            } else if (oal.contains("/google/")) {
-                img = "google";
-            } else if (oal.contains("/instagram/")) {
-                img = "instagram";
-            } else if (oal.contains("/mso/")) {
-                img = "microsoft-outlook";
-            }
-            if (img != null) {
-                oauthImages.put(oal, "icons8-" + img + "-144.png");
+        final List<String[]> oauthLinks = oahttp.getAuthLinks();
+        final Map<String, String[]> oauthImages = new LinkedHashMap<>();
+        for (String[] oal : oauthLinks) {
+            String link = oal[0];
+            String img = oal[1];
+            String title = oal[2];
+            if (img != null && !"none".equals(img)) {
+                oauthImages.put(link, new String[]{"icons8-" + img + "-144.png", "#{" + title + "}"});
             }
         }
         um.getAuthVariants().putAll(oauthImages);
@@ -213,7 +209,7 @@ public class App extends CS {
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/app/manifest.json", "application/json"))
                                 .add(new HttpResourceCollection("/app/*", "resource:app"))
                                 .resourceBundle("i18n.jana")
-                                //.noCacheing()
+                        //.noCacheing()
                         ),
                 um.getDomain()
         );

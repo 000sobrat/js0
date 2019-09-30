@@ -2,15 +2,25 @@
   var loginLinks;
   function showLoginLinks() {
        var s="";
-       s+="<a onclick='showLoginForm();' class='login'>#{Login}...</a>&nbsp;";
+       s+="<table border='0' style='border-collapse: collapse;'><tr>";
+       s+="<td>";
+       s+="<a onclick='showLoginForm();' class='login'>";
+       s+="<img src='images/icons8-login-90.png' alt='#{Login}...' width='20'>"
+       s+="</a>";
+       s+="</td>";
        if(loginLinks) {
           for(var l in loginLinks) {
-             var img=loginLinks[l];
-             if(l && img) {
-                s+="<a href='"+l+"' class='login'><img src='images/"+img+"' width='24px'></a>&nbsp;";
+             var ll=loginLinks[l];
+             if(l && ll && ll[0]) {
+                s+="<td nowrap>";
+                s+="<a href='"+l+"' class='login'>";
+                s+="<img src='images/"+ll[0]+"' width='20px' alt='"+ll[1]+"'>";
+                s+="</a>";
+                s+="</td>";
              }
           }
        }
+       s+="</tr></table>";
 
        var el=document.getElementById('userInfo');
        el.innerHTML=s;
@@ -71,10 +81,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     if(isValidUser()) {
        var el=document.getElementById('userInfo');
-       el.innerHTML=userId+"<br/><a onclick='doLogout();'>#{Logout}</a>";
+       var un=userDisplayName();
+       var ud=userDomainName();
+       el.innerHTML=un+"&nbsp;("+ud+")&nbsp;<a onclick='doLogout();' class='login'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'></a>";
     } else {
        var el=document.getElementById('userInfo');
-       el.innerHTML="<a onclick='showLoginForm();'>#{Login}...</a>";
+       el.innerHTML="<a onclick='showLoginForm();' class='login'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'></a>";
        REST_api.loginVariants(
          function(url,data) { 
            if(data.result) {
@@ -104,9 +116,13 @@ document.addEventListener('DOMContentLoaded', function() {
   <tr class='login'>
     <td class='login' colspan='4'>
       <table width='100%' border='0'>
-        <tr><td width='20%' align='left'><a href='policy.html'><img src='images/kuntajana_a.png' width='50px' height='50px'></a>
+        <tr><td width='40%' align='left' nowrap>
+           <a href='policy.html' class='appRef'><img src='images/kuntajana_a.png' width='50px' height='50px' class='appRef'></a>
+           <a class='appRef'><img src='images/icons8-facebook-144.png' width='24px' class='appRef'></a>
+           <a class='appRef'><img src='images/icons8-instagram-144.png' width='24px' class='appRef'></a>
+           <a class='appRef'><img src='images/icons8-vk.com-144.png' width='24px' class='appRef'></a>
         </td><div id='loginForm' class='loginForm' align='center'>.</div><td>
-        </td><td width='20%' align='right'>
+        </td><td width='40%' align='right'>
            <div class='localeSelector'>
              <img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'>
              <img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'>

@@ -101,8 +101,31 @@ td.pane_xa {vertical-align: top; }
 div.userInfo {
 }
 a.login {
+    cursor: crosshair;
     vertical-align: middle;
     white-space: nowrap;
+}
+a.login:hover {
+    cursor: pointer;
+    color: white;
+    font-weight: 900;
+    background-color: rgba(200,200,200,0);
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--menu-bg-color);
+}
+
+a.appRef:hover {
+    color: white;
+    font-weight: 900;
+    background-color: rgba(200,200,200,0);
+    border-bottom-color: var(--menu-bg-color);
+}
+img.appRef:hover {
+    cursor: pointer;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--menu-bg-color);
 }
 
 div.loginForm {
@@ -153,6 +176,9 @@ img.localeSelector {
     border-bottom: solid 1px var(--menu-bg-color);
     border-bottom-right-radius: 7px;
 }
+img.localeSelector:hover {
+    cursor: pointer;
+}
 
 
 table.tail {}
@@ -201,6 +227,9 @@ td.filter {
     padding-right: 15px; 
     background-image: linear-gradient(to top left, rgba(200,200,200,0),rgba(200,200,200,5));
 }
+td.filter:hover {
+    cursor: pointer;
+}
 td.filter_active {
     white-space: nowrap;
     padding-left: 15px; 
@@ -236,6 +265,7 @@ legend:visited {
     color: white;
 }
 legend:hover {
+    cursor: pointer;
     color: white;
     font-weight: 900;
 }
@@ -256,11 +286,21 @@ a.filter_active {
 img.list_mode {
     width: 30;
 }
+img.list_mode:hover {
+    cursor: pointer;
+}
 
 img.list_mode_active {
     width: 30;
     border-bottom: solid 3px var(--menu-bg-color);
     /*border: solid 1px var(--menu-bg-color);*/
+}
+
+a.cell_action {
+}
+
+a.cell_action:hover {
+    cursor: pointer
 }
 
 
@@ -309,4 +349,11 @@ img.overlay_wda {
     position: absolute;
     top: 10;
     left: 0;
+}
+
+img.overlay_login {
+    position: absolute;
+    top: 0;
+    left: 17;
+    background-color: rgba(200,200,200,20);
 }

@@ -340,10 +340,10 @@ function renderBasket() {
     var action=null;
     var actionIcon=null;
     if(eventsInBasket && eventsInBasket[entry.id]) {
-        action = "<a onclick='removeFromBasket(\""+entry.id+"\")';>";
+        action = "<a onclick='removeFromBasket(\""+entry.id+"\");' class='cell_action'>";
         actionIcon="images/icons8-ok-90.png";
     } else {
-        action = "<a onclick='addToBasket(\""+entry.id+"\")';>";
+        action = "<a onclick='addToBasket(\""+entry.id+"\");' class='cell_action'>";
         actionIcon="images/icons8-circle-90.png";
     }
     
