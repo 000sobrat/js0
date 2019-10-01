@@ -357,3 +357,47 @@ img.overlay_login {
     left: 17;
     background-color: rgba(200,200,200,20);
 }
+
+
+table.tep {
+    border: solid 1 var(--menu-bg-color);
+    border-collapse: collapse;
+}
+
+tr.tep {
+    
+}
+
+th.tep {
+    text-align: center;
+    vertical-align: middle;
+    border: solid 1 var(--menu-bg-color);
+}
+
+td.tep {
+    padding-left: 2px;
+    padding-right: 2px;
+    border: solid 1 var(--menu-bg-color);
+}
+
+td.tep_modified {
+    padding-left: 2px;
+    padding-right: 2px;
+    border: solid 1 var(--menu-bg-color);
+    background-color: white;
+}
+
+select.tep {
+    font-weight: 900;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: rgba(0,0,0,0);
+}
+
+input.tep {
+    font-weight: 900;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: solid 1 var(--menu-bg-color);
+    background-color: rgba(0,0,0,0);
+}

@@ -1,0 +1,621 @@
+<html><head>
+
+${include /app/head.incl}
+<link rel="stylesheet" type="text/css" href="/app/styles/calendar.css" media="screen">
+<script type="text/javascript" src="/app/scripts/calendar.js"></script>
+<script type="text/javascript" src="/app/scripts/filter.js"></script>
+
+
+<script>
+var events;
+var modifiedEvents={};
+var eventsFilter;
+var eventsInBasket; // planned/selected events
+var eventsMeta;
+var seasonNames=["#{Winter}","#{Spring}","#{Summer}","#{Autumn}"];
+var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
+var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}", "all": [2,3,4,5,6,7,1]};
+
+function buildFilters(asTable) {
+  var s="";
+  if(asTable)s+="<table><tr><td valign='top'>";
+  s+=buildListSwitch("#{List}","#{notList}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not_my}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildSeasonsFilter("#{Season}", seasonNames);
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildQuartersFilter("#{Quarter}", quarterNames);
+  /*
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildDayOfWeekFilter("#{DayOfWeek}", "#{ALL}", weekDayNames);
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildGroupsFilter("#{Groups}","#{ALL}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildRoomsFilter("#{Rooms}","#{ALL}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildTrainersFilter("#{Trainers}","#{ALL}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildCoursesFilter("#{Courses}","#{ALL}");
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildCategoriesFilter("#{Categories}","#{ALL}");
+  */
+  if(asTable)s+="<tr></tr></table>";
+  return s;
+}
+
+function buildListSwitch(asList, notList) {
+   var s="";
+   var active=eventsFilter.mode=="list";
+   s+="<fieldset class='filter'><table><tr>";
+   s+="<td>";
+   //s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
+   s+=(active) 
+     ? "<img class='list_mode_active' src='images/icons8-list-144.png' alt=\""+asList+"\">" 
+     : "<img class='list_mode' src='images/icons8-list-144.png' alt=\""+asList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>";
+   s+="</td>";
+   s+="<td></td>";
+   s+="<td>";
+   //s+=(!active) ? "<a class='filter_active'>"+notList+"</a>" : "<a class='filter' onclick='eventsFilter.mode=eventsFilter.lastMode; eventsFilter.lastMode=null; renderEvents(); renderFilter();'>"+notList+"</a>";
+   s+=(!active) 
+     ? "<img class='list_mode_active' src='images/icons8-calendar-144.png' alt=\""+notList+"\">" 
+     : "<img class='list_mode' src='images/icons8-calendar-144.png' alt=\""+notList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=null; renderEvents(); renderFilter();'>";
+   s+="</td>";
+   s+="</tr></table></fieldset>";
+   return s;
+}
+
+// initial filter
+     if(!eventsFilter) {
+        eventsFilter=new Object();
+        var pns=["room","name","from","to","status","trainer","participant","category","course","group","season","quarter","edit"];
+
+        var qu = new URL(window.location.href);
+        for(var i in pns) {
+          try{
+            var pn=pns[i];
+            eventsFilter[pn] = qu.searchParams.get(pn);
+          } catch(e){break;}
+        }
+        eventsFilter.mode="week";
+     }
+
+function loadEventsMeta() {
+     
+   REST_api.eventsMeta(null,null,function (url, data) {
+                    //debugRR(url, data);
+
+                    if (data.result) {
+			eventsMeta=data.result;
+                        if(1==0 && eventsMeta && eventsFilter && !eventsFilter.from && eventsMeta.ranges && eventsMeta.ranges.default) {
+                           eventsFilter.from=eventsMeta.ranges.default[1];
+                           eventsFilter.to=eventsMeta.ranges.default[2];
+                        }
+                        if(eventsMeta && eventsFilter && !eventsFilter.from && eventsMeta.yearSeason) {
+                           eventsFilter.from=eventsMeta.yearSeason[1];
+                           eventsFilter.to=eventsMeta.yearSeason[2];
+                        }
+                        renderFilter();
+                        loadEvents();
+                    }
+                });
+}
+
+function toggleVisibility(elementName) {
+   var el=document.getElementById(elementName);
+   var elMin=document.getElementById("min_"+elementName);
+   if(el) {
+      if(el.style.display!='none') {
+        el.style.display='none';
+        if(elMin) elMin.style.display='block';
+      } else {
+        el.style.display=null;
+        if(elMin) elMin.style.display='none';
+      }
+   }
+}
+
+function renderFilter() {
+     var s="";
+
+     s+=buildFilters(true);
+
+     // get visibility of any existing filter group
+     var gv={
+       my: false,
+       month: false,
+       week: false,
+       room: false,
+       trainer: false,
+       category: false,
+       course: false,
+       group: false,
+       season: false,
+       quarter: false,
+       dayOfWeek: false
+     };
+
+     for(var v in gv) {
+        var el=document.getElementById('filter_'+v);
+        if(el && el.style.display!='none') {
+        } else if(el){
+           gv[v]=true;
+        }else {
+           // default hidden:
+           if("my"==v || "month"==v || "room"==v || "category"==v || "course"==v || "trainer"==v){
+             gv[v]=true;
+           }
+        }
+     }
+     
+     for(var v in gv) {
+       gv[v]=true;
+     }
+     
+     var div=document.getElementById('pane_right');
+     div=document.getElementById('pane_top');
+     div.innerHTML=s;
+
+     for(var v in gv) {
+        if(gv[v]) {
+          toggleVisibility('filter_'+v);
+        }
+     }
+     
+     //toggleVisibility('filter_room');
+     //toggleVisibility('filter_trainer');
+     //toggleVisibility('filter_course');
+}
+
+  function loadEvents() {
+     REST_api.eventPlanners(
+       eventsFilter.room,
+       eventsFilter.name,
+       eventsFilter.from,
+       eventsFilter.to,
+       eventsFilter.status,
+       eventsFilter.trainer,
+       eventsFilter.participant,
+       eventsFilter.category,
+       eventsFilter.course,
+       eventsFilter.group,
+       [-1],
+       function(url,data) {
+          if(data.result)  {
+            events=data.result;
+            renderEvents();
+          }else if(data.responseText) {
+            events=eval(data.responseText);
+            renderEvents();
+          }
+       }
+     );
+  }
+
+  function renderEvents() {
+    var s="";
+    
+    s+="<table class='tep'>";
+    s+="<caption class='tep'>";
+    s+="</caption>";
+    
+    s+="<tr class='tep'>";
+    s+="<th class='tep'>#{TEP_Action}</th>";
+    s+="<th class='tep'>#{TEP_From}</th>";
+    s+="<th class='tep'>#{TEP_To}</th>";
+    s+="<th class='tep'>#{TEP_Weekday}</th>";
+    s+="<th class='tep'>#{TEP_Start}</th>";
+    s+="<th class='tep'>#{TEP_Duration}</th>";
+    s+="<th class='tep'>#{TEP_End}</th>";
+    s+="<th class='tep'>#{TEP_Group}</th>";
+    s+="</tr>";
+
+    s+="<tr class='tep'>";
+    s+="<th class='tep'>";
+    if(isChangedEvent(null,null)) {
+        s+="<a class='appRef' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
+    }
+    s+="</th>";
+    s+="<th class='tep'></th>";
+    s+="<th class='tep'></th>";
+    s+="<th class='tep'>";
+    s+="<table class='tep' border='1' width='100%'><tr>";
+    for(var wd in weekDayNames.all) {
+       s+="<td>"+weekDayNames[weekDayNames.all[wd]]+"</td>";
+    }
+    s+="</tr></table>";
+    s+="</th>";
+    s+="<th class='tep'></th>";
+    s+="<th class='tep'></th>";
+    s+="<th class='tep'></th>";
+    s+="<th class='tep'></th>";
+    s+="</tr>";
+
+    
+    var edit=eventsFilter.edit==true || userHasRole('admin');
+    
+    // ad "new item" row if in edit mode...
+    if(edit) {
+    }
+    
+    if(events) for(var ei in events) {
+       var tep=events[ei];
+       if(tep) {
+          s+="<tr class='tep'>";
+          s+="<td class='tep'>";
+          if(isChangedEvent(tep.id,null)) {
+            s+="<a class='appRef' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
+            s+="<a class='appRef' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
+          }
+          s+="</td>";
+          s+="<td class='tep'>"+toDateYMD(tep.from)+"</td>";
+          s+="<td class='tep'>"+toDateYMD(tep.to)+"</td>";
+          
+          // weekDay
+          s+="<td class='tep"+(isChangedEvent(tep.id,'weekDays') ? "_modified" : "")+"'>";
+          s+="<table class='tep' border='1' width='100%'><tr>";
+            var wds="";
+            for(var di in tep.weekDays) {
+               if(wds) wds+=",";
+               wds+=tep.weekDays[di];
+            }
+
+          for(var wd in weekDayNames.all) {
+            s+="<td>";
+            wd=weekDayNames.all[wd];
+            var found=false;
+            for(var di in tep.weekDays) {
+               if(wd==tep.weekDays[di]) {
+                  found=true;
+                  break;
+               }
+            }
+            if(found) {
+               if(edit) {
+                 var v="";
+                 for(var di in tep.weekDays) {
+                   if(wd==tep.weekDays[di]) continue;
+                   if(v) v+=",";
+                   v+=tep.weekDays[di];
+                 }
+                 s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
+               }
+               s+="<img style='position: absolute;' src='images/icons8-ok-90.png' width='15px'>";
+               if(edit) {
+                 s+="</a>";
+               }
+               s+="&nbsp;";
+            }else {
+               if(edit) {
+                 var v=wds;
+                 if(v) v+=",";
+                 v+=wd;
+                 s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
+                 s+="<img style='position: absolute;' src='images/icons8-circle-90.png' width='15px'>";
+                 s+="</a>";
+               }
+               s+="&nbsp;";
+            }
+            s+="</td>";
+          }
+          s+="</tr></table>";
+          s+="</td>";
+          
+          // start
+          s+="<td class='tep"+(isChangedEvent(tep.id,'start') ? "_modified" : "")+"'>";
+          if(edit) {
+            s+="<input class='tep' type='text' size='5' value='"+asTimeHM(tep.start)+"' onchange='if(modifyEvent(\""+tep.id+"\",\"start\",fromTimeHM(event.currentTarget.value))) renderEvents();'>";
+          } else {
+            s+=asTimeHM(tep.start);
+          }
+          s+="</td>";
+
+          // duration
+          s+="<td class='tep"+(isChangedEvent(tep.id,'duration') ? "_modified" : "")+"'>";
+          if(edit) {
+            s+="<input class='tep' type='text' size='5' value='"+asTimeHM(tep.duration)+"' onchange='if(modifyEvent(\""+tep.id+"\",\"duration\",fromTimeHM(event.currentTarget.value))) renderEvents();'>";
+          } else {
+            s+=asTimeHM(tep.duration);
+          }
+          s+="</td>";
+          
+          // end
+          s+="<td class='tep'>"+asTimeHM(tep.end)+"</td>";
+          
+          // group
+          s+="<td class='tep"+(isChangedEvent(tep.id,'name') ? "_modified" : "")+"'>";
+          if(edit) {
+            var found=false;
+            s+="<select class='tep' onchange='if(modifyEvent(\""+tep.id+"\",\"name\",event.currentTarget.value)) renderEvents();'>";
+            for(var i in eventsMeta.groups) {
+               var v=eventsMeta.groups[i];
+               if(tep.name && tep.name==i) found=true;
+               s+="<option"+((tep.name==i) ? " selected" : "")+" value=\""+i+"\">";
+               s+=i;
+               s+="</option>";
+            }
+            if(!found) {
+               s+="<option selected value=\""+tep.name+"\">";
+               s+=tep.name;
+               s+="</option>";
+            }
+            s+="</select>";
+          }else{
+            s+=tep.name;
+          }
+          s+="</td>";
+          
+          
+          s+="</tr>";
+       }
+    }
+    
+    s+="</table>";
+    
+  
+    var el=document.getElementById('pane_content');
+    el.innerHTML=s;
+    
+    generateEvents();
+  }
+  
+  function modifyEvent(id,prop,val) {
+     if(!modifiedEvents[id]) {
+       for(var i in events) {
+          var e=events[i];
+          if(e.id==id) {
+             modifiedEvents[id]= {item: e, changes:{}};
+             break;
+          }
+       }
+    }
+    
+    var em=modifiedEvents[id];
+    if(em) {
+        if(undefined==em.changes[prop]) {
+            em.changes[prop]=em.item[prop];
+        }
+        em.item[prop]=val;
+        return true;
+    }
+    
+    return false;
+  }
+  
+  function isChangedEvent(id,prop) {
+    if(!id) return Object.keys(modifiedEvents).length>0;
+    var r=false;
+    var em=modifiedEvents[id];
+    if(em){
+      if(prop) {
+          r = undefined!=em.changes[prop];
+          if(r) {
+             r=!jsonEqual(em.item[prop],em.changes[prop]);// em.item[prop]!=em.changes[prop];
+          }
+      }else {
+         // just if was modified
+         r = true;
+      }
+    }else{
+       r = false;
+    }
+    return r;
+  }
+
+  function undoEventChanges(id,prop) {
+    if(!isChangedEvent(id,prop)) return false;
+    
+    var r=false;
+    var em=modifiedEvents[id];
+    if(em){
+      if(prop) {
+          r = undefined!=em.changes[prop];
+          if(r) {
+             if(!jsonEqual(em.item[prop],em.changes[prop])) {
+                em.item[prop]=em.changes[prop];
+                delete em.changes[prop];
+             }
+          }
+      }else {
+         // just if was modified
+         for(var i in em.changes) {
+           em.item[i]=em.changes[i];
+         }
+         delete modifiedEvents[id];
+         r = true;
+      }
+    }else{
+       r = false;
+    }
+    return r;
+  }
+
+  
+  function jsonEqual(a1,a2) {
+    return JSON.stringify(a1)==JSON.stringify(a2);
+  }  
+  
+  function toDateYMD(val) {
+     if("number"==typeof(val)) val=new Date(val);
+     else if("string"==typeof(val)) val=new Date(val);
+     return ""
+           +val.getFullYear()
+           +"-"
+           +((val.getMonth()<9) ? "0" : "")+(val.getMonth()+1)
+           +"-"
+           +((val.getDate()<10) ? "0"+val.getDate() : val.getDate());
+  }
+  
+  function asTimeHM(val) {
+     if(val) {
+        var h=Math.floor(val / (1000*60*60));
+        var m= Math.floor((val % (1000*60*60))/(1000*60));
+        return ((h<10) ? "0"+h :h)+":"+((m<10) ? "0"+m:m);
+     } else return "";
+  }
+  function fromTimeHM(val) {
+     if(val) {
+        var h=val.substring(0,val.indexOf(':'));
+        var m= val.substring(val.indexOf(':')+1);
+        return h*1000*60*60 + m*1000*60;
+     } else return 0;
+  }
+  
+  
+  
+/*******************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+  
+  
+  var generatedEvents;
+  function generateEvents() {
+    generatedEvents=[];
+    for(var i in events) {
+       var e=events[i];
+       
+       if(e.weekDays && e.weekDays.length>0) for(var i in e.weekDays) {
+         var wd=e.weekDays[i];
+         var ds=eventsMeta.weekDays[wd-1];
+         ge={id:e.id,start:e.start+ds,end:e.end+ds,duration:e.duration,name:e.name, shortName:e.shortName, confSize: e.confSize, maxSize:e.maxSize};
+         if(ge)
+           generatedEvents[generatedEvents.length]=ge;
+       }
+    }
+    renderGeneratedEvents();
+  }
+
+  function toPrevPeriod() {
+     if(eventsFilter.prev || eventsFilter.prev==0) {
+        eventsFilter.from=eventsFilter.prev[1];
+        eventsFilter.to=eventsFilter.prev[2];
+        renderFilter();
+     }
+  }
+  
+  function toNextPeriod() {
+     if(eventsFilter.next) {
+        eventsFilter.from=eventsFilter.next[1];
+        eventsFilter.to=eventsFilter.next[2];
+        renderFilter();
+     }
+  }
+  
+  function renderGeneratedEvents() {
+  if(generatedEvents) {
+     var calendar = new Calendar({
+        locale:userLocale,
+        toPrev: (eventsFilter.prev) ? "toPrevPeriod(); loadEvents(); " : null,
+        toNext: (eventsFilter.next) ? "toNextPeriod(); loadEvents();" : null,
+        showDates: false,
+        renderCellEntryActions: function(id,entry){
+            var s="";
+            return s;
+          },
+  renderCellEntry: function(id, entry, dMin, dMax) {
+  var iconSize="24px";
+  var actionIconSize="15px";
+    var s="";
+    var trMax=entry.maxSize;//entry.group.training.maxSize;
+    var trAct=entry.size;//Object.keys(entry.trainees).length;
+    var cst=(trAct<trMax)? (trAct>0)? (trAct>=trMax) ?"calendar_cell_full" :"calendar_cell_participant":"":"calendar_cell_full";
+    s+="<fieldset  id='"+id+"' class='calendar_cell "+cst+"' tMin='"+dMin.getTime()+"' tMax='"+dMax.getTime()+"'>";
+    s+="<legend class='calendar_cell'>";
+    s+="<font size=-2>";
+    s+=""+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
+    s+="</font>";
+    s+="</legend>";
+
+    // build overlayed images with optional action...
+    var action=null;
+    var actionIcon=null;
+    if(eventsInBasket && eventsInBasket[entry.id]) {
+        action = "<a onclick='removeFromBasket(\""+entry.id+"\");' class='cell_action'>";
+        actionIcon="images/icons8-ok-90.png";
+    } else {
+        action = "<a onclick='addToBasket(\""+entry.id+"\");' class='cell_action'>";
+        actionIcon="images/icons8-circle-90.png";
+    }
+    
+    s+=(action)?action:"";
+    if(entry.icon) {
+      var cIcon=entry.icon;
+      s+="<img class='overlay_wd' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+      if(entry.myState) {
+        cIcon=cIcon.replace('90','144');
+        s+="<img class='overlay_wdm' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+      }
+    }
+
+    if(entry.course) {
+      if(entry.myState) {
+        //s+="<img class='overlay_wd' src='images/icons8-minus-144.png' alt='remove' width='"+iconSize+"'>";
+      } else {
+        //s+="<img class='overlay_wd' src='images/icons8-plus-144.png' alt='add' width='"+iconSize+"'>";
+      }
+    }
+    
+    s+="<br/>"+((entry.shortName) ? entry.shortName: entry.name);
+    s+="&nbsp;<font size=-1>"+entry.confSize+"/"+entry.maxSize+"</font>";
+    if(entry.myState) {
+       var ss=entry.myState.split("_");
+       s+="<br/>"+ss[0];
+    }
+    //s+="  <font size=-1><br/>"+entry.trainer+"</font>";
+
+    if(action && actionIcon) {
+      s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
+      s+="</a>";
+    }
+    
+    s+=this.renderCellEntryActions(id,entry);
+    s+="</fieldset>";
+    return s;
+  },
+  adjustableElements: function() {
+     return document.getElementsByTagName("fieldset");
+  }
+        }
+        );
+        
+        if(eventsFilter && "list"==eventsFilter.mode)
+        calendar.renderList('pane_content',events);
+        else if(eventsFilter && "month"==eventsFilter.mode)
+        calendar.renderMonth('pane_right',generatedEvents);
+        else
+        calendar.render('pane_right',generatedEvents);
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  document.addEventListener('DOMContentLoaded', function() { loadEventsMeta(); loadEvents();}, false);
+</script>
+    
+</head><body>
+
+${include /app/pane.incl}
+
+</body></html>

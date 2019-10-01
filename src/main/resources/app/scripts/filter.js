@@ -26,6 +26,7 @@ function buildFilterGroup(conf) {
        if(conf.columns)
            s+="<tr class='filter'>";
        
+       var ac=0;
        for(var k in conf.keys()) {
          a=conf.isActive(k);
          
@@ -45,7 +46,11 @@ function buildFilterGroup(conf) {
            s+="</td>";
          else
            s+="</td></tr>";
-         if(a) si+=conf.valueOf(k);
+         if(a) {
+           if(ac>0) si+=' ';
+           si+=conf.valueOf(k);
+           ac++;
+         }
        }
        if(conf.columns) s+="</tr>";
        
@@ -195,6 +200,158 @@ function buildWeeksFilter(title,_now_) {
            }}
         );
 }
+
+// build season selector     
+function buildSeasonsFilter(title, seasonNames) {
+        return buildFilterGroup({
+           title:title,
+           id:"season",
+           columns: 1,
+           data: eventsMeta.yearSeasons,
+           dataNow: eventsMeta.yearSeason,
+           isActive: function(k) {
+              if(k) {
+                var v=this.data[k];
+                var b = v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                if(b) {
+                   try{
+                     eventsFilter.prev=this.data[new Number(k)-1];
+                   }catch(e){ eventsFilter.prev=null;}
+                   try{
+                     eventsFilter.next=this.data[new Number(k)+1];
+                   }catch(e){ eventsFilter.next=null;}
+                }
+                return b;
+              } else {
+                var v=this.dataNow;
+                return v && v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+              }
+           },
+           setFilter: function(k) {
+              if(k) {
+                var v=this.data[k];
+                return "eventsFilter.mode=\"week\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
+              } else {
+                var v=this.dataNow;
+                return "eventsFilter.mode=\"week\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
+              }
+           },
+           keys: function() {
+              return this.data;
+           },
+           valueOf: function(k) {
+              if(!k) return null;
+              var v=this.data[k];
+              return (v[0] >> 16)+"/"+((seasonNames) ? seasonNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
+           }}
+        );
+}
+
+// build quarter selector     
+function buildQuartersFilter(title, quarterNames) {
+        return buildFilterGroup({
+           title:title,
+           id:"quarter",
+           columns: 1,
+           data: eventsMeta.yearQuarters,
+           dataNow: eventsMeta.yearQuarter,
+           isActive: function(k) {
+              if(k) {
+                var v=this.data[k];
+                var b = v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+                if(b) {
+                   try{
+                     eventsFilter.prev=this.data[new Number(k)-1];
+                   }catch(e){ eventsFilter.prev=null;}
+                   try{
+                     eventsFilter.next=this.data[new Number(k)+1];
+                   }catch(e){ eventsFilter.next=null;}
+                }
+                return b;
+              } else {
+                var v=this.dataNow;
+                return v[1]==eventsFilter.from && v[2]==eventsFilter.to;
+              }
+           },
+           setFilter: function(k) {
+              if(k) {
+                var v=this.data[k];
+                return "eventsFilter.mode=\"week\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
+              } else {
+                var v=this.dataNow;
+                return "eventsFilter.mode=\"week\"; eventsFilter.from="+v[1]+"; eventsFilter.to="+v[2]+";";
+              }
+           },
+           keys: function() {
+              return this.data;
+           },
+           valueOf: function(k) {
+              if(!k) return null;
+              var v=this.data[k];
+              return (v[0] >> 16)+"/"+((quarterNames) ? quarterNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
+           }}
+        );
+}
+
+// build dayOfWeek selector     
+function buildDayOfWeekFilter(title,all,daysOfWeek) {
+        return buildFilterGroup({
+           title:title,
+           id:"dayOfWeek",
+           data: daysOfWeek,
+           columns: 4,
+           isActive: function(k) {
+              var fv=eventsFilter.dayOfWeek;
+              if(k) {
+                if(fv)
+                for(var vi in fv) {
+                  if(k==fv[vi]) {
+                    return true;
+                  }
+                }
+                return false;
+              } else {
+                return null==eventsFilter.dayOfWeek;
+              }
+           },
+           setFilter: function(k) {
+              if(k) {
+                var s="";
+                var fv=eventsFilter.dayOfWeek;
+                if(fv) {
+                  var found=false;
+                  for(var vi in fv) if(k==fv[vi]) {
+                     found=true;
+                  }else{
+                     if(s) s+=",";
+                     s+=fv[vi];
+                  }
+                  if(!found) {
+                     if(s) s+=",";
+                     s+=k;
+                  }
+                }else{
+                   s+=k;
+                }
+                if(s) {
+                  s='['+s+']';
+                } else s="null";
+                return "eventsFilter.dayOfWeek="+s+";";
+              } else {
+                return "eventsFilter.dayOfWeek=null;";
+              }
+           },
+           keys: function() {
+              return this.data;
+           },
+           valueOf: function(k) {
+              var v=this.data[k];
+              return (k) ? this.data[k] : all;
+           }}
+        );
+}
+
+
      
 // build room selector     
 function buildRoomsFilter(title,all) {

@@ -25,6 +25,7 @@ import ssg.lib.http.rest.annotations.XParameter;
 import ssg.lib.http.rest.annotations.XType;
 import ssg.lib.jana.api.ScheduleAPI.Room;
 import ssg.lib.jana.api.ScheduleAPI.TimeEvent;
+import ssg.lib.jana.api.ScheduleAPI.TimeEventPlanner;
 import ssg.lib.jana.api.TrainingAPI.Category;
 import ssg.lib.jana.api.TrainingAPI.Course;
 import ssg.lib.jana.api.TrainingAPI.Group;
@@ -32,6 +33,7 @@ import ssg.lib.jana.api.TrainingAPI.IconInfo;
 import ssg.lib.jana.api.TrainingAPI.Trainer;
 import ssg.lib.jana.api.UM_API.UM_STATE;
 import ssg.lib.jana.tools.TimeTools;
+import ssg.lib.jana.tools.TimeTools.SEASON;
 
 /**
  *
@@ -112,6 +114,8 @@ public class UI_API {
         Map<String, String> rt = new LinkedHashMap<>();
         Map<String, String> rm = new LinkedHashMap<>();
 
+        r.putAll(getEventPlannersMeta(req));
+
         r.put("groups", rg);
         r.put("courses", rc);
         r.put("categories", rcc);
@@ -187,8 +191,10 @@ public class UI_API {
      * @param status
      * @param trainer
      * @param participant
+     * @param category
      * @param course
      * @param group
+     * @param dayOfWeek
      * @return
      * @throws IOException
      */
@@ -204,7 +210,8 @@ public class UI_API {
             @XParameter(name = "participant", optional = true) String participant,
             @XParameter(name = "category", optional = true) String category,
             @XParameter(name = "course", optional = true) String course,
-            @XParameter(name = "group", optional = true) String group
+            @XParameter(name = "group", optional = true) String group,
+            @XParameter(name = "dayOfWeek", optional = true) Integer[] dayOfWeek
     ) throws IOException {
         List<TE> r = new ArrayList<>();
 
@@ -235,6 +242,7 @@ public class UI_API {
 
         // generic filter based on event properties...
         List<TimeEvent> rs = schedule.findEvent(room, from, to, status, name);
+        Calendar c = TimeTools.getCalendar(null);
 
         // training-specific filtering, if needed
         if (!rs.isEmpty() && (trainer != null || participant != null || course != null || category != null || group != null)) {
@@ -283,6 +291,20 @@ public class UI_API {
                     Course crs = training.courses.get(gs.get(0).getCourse());
                     if (crs == null || !category.equals(crs.getCategory())) {
                         it.remove();
+                        continue;
+                    }
+                }
+                if (dayOfWeek != null && dayOfWeek.length > 0) {
+                    c.setTimeInMillis(t.getStart());
+                    int dow = c.get(Calendar.DAY_OF_WEEK);
+                    boolean found = false;
+                    for (int dw : dayOfWeek) {
+                        if (dw == dow) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
                         continue;
                     }
                 }
@@ -490,60 +512,6 @@ public class UI_API {
         if (ts == null) {
             return r; //TRAINEE_STATUS.no_target;
         }
-
-//        HttpSession sess = (req != null) ? req.getHttpSession() : null;
-//        HttpUser user = (sess != null) ? sess.getUser() : null;
-//        if (user != null) {
-//            if (email == null) {
-//                email = (String) user.getProperties().get("email");
-//            }
-//            if (email != null && !email.equals(user.getProperties().get(email))) {
-//                List<String> roles = user.getRoles();
-//                if (roles != null && !roles.contains("admin")) {
-//                    throw new IOException("Non-admin can only self-apply.");
-//                }
-//            }
-//        }
-//        // guess if have trainee -> evaluate email.
-//        if (email != null && !email.contains("@")) {
-//            String un = um.findUser(email);
-//            if (un != null) {
-//                email = un;
-//            } else {
-//                email = null;
-//            }
-//        }
-//        if (email == null || email.isEmpty()) {
-//            email = (String) req.getContext().getProperties().get("email");
-//            if (email == null || email.isEmpty()) {
-//                return TRAINEE_STATUS.no_applier;
-//            }
-//        } else {
-//            String semail = (String) req.getContext().getProperties().get("email");
-//            if (semail == null || semail.isEmpty()) {
-//                req.getContext().getProperties().put("email", email);
-//            }
-//        }
-//
-//        String u = um.findUser(email);
-//        if (u == null) {
-//            u = email;
-//            um.users.put(u, u);
-//            training.courseParticipants.put(u, TrainingAPI.PSTATE.verifying);
-//        } else {
-//            // verify if need authentication
-//            String pass = um.pwds.get(u);
-//            if (user == null && pass != null && !pass.isEmpty() && req.getHttpSession() != null) {
-//                user = checkAuthentication(req, true);
-//                if (user == null) {
-//                    return r;
-//                }
-//                user.getProperties().put("email", email);
-//                user.getProperties().put("name", user.getName());
-//                user.getProperties().put("roles", user.getRoles());
-//            }
-//        }
-//        String u = um.findUser(email);
         String u0 = um.findUser(email);
         String u = checkUser(req, email);
 
@@ -680,6 +648,207 @@ public class UI_API {
         return r;
     }
 
+    @XMethod(name = "eventPlannersMeta")
+    public Map getEventPlannersMeta(
+            HttpRequest req
+    ) throws IOException {
+        Map r = new LinkedHashMap<>();
+
+        // year-level meta
+        Calendar c = TimeTools.getCalendar(null);
+        TimeTools.toStartOfYear(c);
+
+        int nowYear = c.get(Calendar.YEAR);
+        int nowSeason = SEASON.seasonOf(c).order();
+        int nowQuarter = c.get(Calendar.MONTH) / 3;
+        //c.add(Calendar.YEAR, -1);
+        int year = c.get(Calendar.YEAR);
+        Map y = new LinkedHashMap();
+        List ys = new ArrayList();
+        List yq = new ArrayList();
+        r.put("years", y);
+        r.put("yearSeasons", ys);
+        r.put("yearQuarters", yq);
+        for (int i = year; i < (year + 2); i++) {
+            Map ym = new LinkedHashMap<>();
+            Map sm = new LinkedHashMap<>();
+            Map qm = new LinkedHashMap<>();
+            y.put("" + i, ym);
+            ym.put("seasons", sm);
+            ym.put("quarters", qm);
+            c.set(Calendar.YEAR, i);
+            TimeTools.toStartOfYear(c);
+            for (SEASON s : SEASON.values()) {
+                c.set(Calendar.MONTH, s.months()[1]);
+                long start = TimeTools.toStartOfSeason((Calendar) c.clone());
+                long end = TimeTools.toEndOfSeason((Calendar) c.clone());
+                sm.put("" + s, new long[]{start, end});
+                ys.add(new long[]{i << 16 | s.order(), start, end});
+                if (i == nowYear && s.order() == nowSeason) {
+                    r.put("yearSeason", new long[]{i << 16 | s.order(), start, end});
+                }
+            }
+            for (int q = 0; q < 4; q++) {
+                c.set(Calendar.MONTH, q * 3);
+                long start = TimeTools.toStartOfQuarter((Calendar) c.clone());
+                long end = TimeTools.toEndOfQuarter((Calendar) c.clone());
+                qm.put("" + q, new long[]{start, end});
+                yq.add(new long[]{i << 16 | q, start, end});
+                if (i == nowYear && q == nowQuarter) {
+                    r.put("yearQuarter", new long[]{i << 16 | q, start, end});
+                }
+            }
+        }
+        List wd = new ArrayList();
+        r.put("weekDays", wd);
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.set(Calendar.MONTH, 4);
+        TimeTools.toStartOfDay(c);
+        while (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+            c.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        for (int i = 0; i < 7; i++) {
+            wd.add(c.getTimeInMillis());
+            c.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        // start times: 6:00
+        Map t = new LinkedHashMap();
+        List ts = new ArrayList();
+        List td = new ArrayList();
+        r.put("times", t);
+        t.put("starts", ts);
+        t.put("durations", td);
+        long minT=1000*60*60*6; // 6:00
+        long maxT=1000*60*60*22; // 22:00
+        long stepT=1000*60*15; // 22:00
+        long maxD=1000*60*60*12; // 12:00
+        t.put("min", minT);
+        t.put("max", maxT);
+        t.put("step", stepT);
+        for(long l=minT;l<=maxT;l+=stepT) {
+            ts.add(l);
+        }
+        for(long l=0;l<=maxD;l+=stepT) {
+            td.add(l);
+        }
+        return r;
+    }
+
+    @XMethod(name = "eventPlanners")
+    public Collection<TE> findTimeEventPlanners(
+            HttpRequest req,
+            @XParameter(name = "room", optional = true) String room,
+            @XParameter(name = "name", optional = true) String name,
+            @XParameter(name = "from", optional = true) Long from,
+            @XParameter(name = "to", optional = true) Long to,
+            @XParameter(name = "status", optional = true) String status,
+            @XParameter(name = "trainer", optional = true) String trainer,
+            @XParameter(name = "participant", optional = true) String participant,
+            @XParameter(name = "category", optional = true) String category,
+            @XParameter(name = "course", optional = true) String course,
+            @XParameter(name = "group", optional = true) String group,
+            @XParameter(name = "dayOfWeek", optional = true) Integer[] dayOfWeek
+    ) throws IOException {
+        List<TE> r = new ArrayList<>();
+
+        if (room != null && room.isEmpty()) {
+            room = null;
+        }
+        if (name != null && name.isEmpty()) {
+            name = null;
+        }
+        if (status != null && status.isEmpty()) {
+            status = null;
+        }
+        if (trainer != null && trainer.isEmpty()) {
+            trainer = null;
+        }
+        if (participant != null && participant.isEmpty()) {
+            participant = null;
+        }
+        if (category != null && category.isEmpty()) {
+            category = null;
+        }
+        if (course != null && course.isEmpty()) {
+            course = null;
+        }
+        if (group != null && group.isEmpty()) {
+            group = null;
+        }
+
+        // generic filter based on event properties...
+        List<TimeEventPlanner> rs = schedule.findEventPlanners(room, from, to, name);
+
+        // training-specific filtering, if needed
+        if (!rs.isEmpty() && (trainer != null || participant != null || course != null || category != null || group != null)) {
+            Iterator<TimeEventPlanner> it = rs.iterator();
+            String notParticipant = null;
+            if (participant != null && participant.startsWith("!")) {
+                notParticipant = participant.substring(1);
+                participant = null;
+            }
+            while (it.hasNext()) {
+                TimeEventPlanner t = it.next();
+                if (group != null && !group.equals(t.getName())) {
+                    it.remove();
+                    continue;
+                }
+//                if (participant != null && !t.getParticipants().containsKey(participant)) {
+//                    it.remove();
+//                    continue;
+//                }
+//                if (notParticipant != null && t.getParticipants().containsKey(notParticipant)) {
+//                    it.remove();
+//                    continue;
+//                }
+                List<Group> gs = training.findGroups(t.getName(), trainer);
+                if (trainer != null) {
+                    if (gs == null || gs.size() != 1) {
+                        it.remove();
+                        continue;
+                    }
+                }
+                if (course != null) {
+                    if (gs == null || gs.size() != 1) {
+                        it.remove();
+                        continue;
+                    }
+                    if (!course.equals(gs.get(0).getCourse())) {
+                        it.remove();
+                        continue;
+                    }
+                }
+                if (category != null) {
+                    if (gs == null || gs.size() != 1) {
+                        it.remove();
+                        continue;
+                    }
+                    Course crs = training.courses.get(gs.get(0).getCourse());
+                    if (crs == null || !category.equals(crs.getCategory())) {
+                        it.remove();
+                        continue;
+                    }
+                }
+            }
+        }
+
+        HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
+        String email = (user != null) ? user.getId() : null;
+        boolean admin = (user != null && user.getRoles() != null && user.getRoles().contains("admin"));
+        for (TimeEventPlanner te : rs) {
+            TEP[] t = toTEP(te, dayOfWeek);
+            if (t != null) {
+                for (TEP tep : t) {
+                    r.add(tep);
+                }
+            }
+        }
+        //r.addAll(rs);
+
+        return r;
+    }
+
     //@XMethod(name = "names")
     public String[] getPropertyNames() {
         return ((Collection<String>) Collections.list(System.getProperties().propertyNames())).toArray(new String[System.getProperties().size()]);
@@ -751,7 +920,7 @@ public class UI_API {
 
     public TE toTE(TimeEvent te, String myEmail, boolean admin) {
         TE t = new TE(te);
-        Group g = training.groups.get(te.getName());
+        Group g = training.groups.get(t.name);
         if (g != null) {
             t.course = g.getCourse();
             t.trainer = g.getTrainer();
@@ -787,6 +956,53 @@ public class UI_API {
         return t;
     }
 
+    public TEP[] toTEP(TimeEventPlanner te, Integer... dayOfWeek) {
+        TEP[] r = new TEP[te != null && te.getWeekDays() != null ? te.getWeekDays().length : 0];
+        int off = 0;
+        if (te != null && te.getWeekDays() != null) {
+            for (int dow : te.getWeekDays()) {
+                // check if mentioned day of week is valid or no day separation is needed.
+                if (dayOfWeek != null && dayOfWeek.length == 1 && dayOfWeek[0] == -1) {
+                    dow = -1;
+                } else if (dayOfWeek != null) {
+                    boolean found = false;
+                    for (int dw : dayOfWeek) {
+                        if (dow == dw) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        continue;
+                    }
+                }
+                TEP t = new TEP(te, dow);
+                r[off++] = t;
+                Group g = training.groups.get(t.name);
+                if (g != null) {
+                    t.course = g.getCourse();
+                    t.trainer = g.getTrainer();
+                    t.shortName = g.getShortName();
+                    t.maxSize = g.getMaxSize();
+
+                    IconInfo ii = training.findIcon(null, null, g);
+                    if (ii != null) {
+                        t.icon = ii.getIcon(null);
+                    }
+                }
+                if (dow == -1) {
+                    break;
+                }
+            }
+        }
+
+        if (off < r.length) {
+            r = Arrays.copyOf(r, off);
+        }
+
+        return r;
+    }
+
     public static class TE {
 
         public String id;
@@ -817,6 +1033,44 @@ public class UI_API {
             this.end = te.getEnd();
             this.duration = te.getDuration();
             this.group = te.getName();
+        }
+    }
+
+    public static class TEP extends TE {
+
+        public long from;
+        public long to;
+        public int[] weekDays;
+
+        public TEP() {
+        }
+
+        public TEP(TimeEventPlanner te, int dayOfWeek) {
+            Calendar c = TimeTools.getCalendar(te.getFrom());
+            TimeTools.toStartOfWeek(c);
+            if (dayOfWeek < 0) {
+                this.start = te.getStart();
+                this.duration = te.getDuration();
+                this.end = this.start + this.duration;
+            } else {
+                int dow = c.get(Calendar.DAY_OF_WEEK);
+                while (dow != dayOfWeek) {
+                    c.add(Calendar.DAY_OF_YEAR, 1);
+                    dow = c.get(Calendar.DAY_OF_WEEK);
+                }
+                c.set(Calendar.HOUR_OF_DAY, (int) (te.getStart() / (1000 * 60 * 60)));
+                c.set(Calendar.MINUTE, (int) (te.getStart() % (1000 * 60)));
+                this.start = c.getTimeInMillis();
+                this.end = start + te.getDuration();
+                this.duration = te.getDuration();
+            }
+            this.id = te.getId();
+            this.name = te.getName();
+            this.room = te.getRoom();
+            this.group = te.getName();
+            this.weekDays = te.getWeekDays();
+            this.from = te.getFrom();
+            this.to = te.getTo();
         }
     }
 }

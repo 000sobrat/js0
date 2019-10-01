@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -465,6 +466,59 @@ public class ScheduleAPI implements AppItem, Exportable {
 
         return tes.size();
     }
+    
+    public List<TimeEventPlanner> findEventPlanners(
+            @XParameter(name = "room", optional = true) String room,
+            @XParameter(name = "from", optional = true) Long from,
+            @XParameter(name = "to", optional = true) Long to,
+            @XParameter(name = "names", optional = true) String... names
+    ) {
+        List<ScheduleAPI.TimeEventPlanner> r = new ArrayList<>();
+
+        if ("".equals(room)) {
+            room = null;
+        }
+
+        for (ScheduleAPI.TimeEventPlanner e : eventPlanners.values()) {
+            if (room != null && !room.equals(e.room)) {
+                continue;
+            }
+//            if (from != null && e.start < from) {
+//                continue;
+//            }
+//            if (to != null && (e.start + e.duration) > to) {
+//                continue;
+//            }
+            if (room != null && !room.equals(e.getRoom())) {
+                continue;
+            }
+            if (names != null && names.length > 0 && !(names.length == 1 && names[0] == null)) {
+                boolean found = false;
+                for (String name : names) {
+                    if (name != null && name.equals(e.name)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    continue;
+                }
+            }
+            r.add(e);
+        }
+        Collections.sort(r, new Comparator<ScheduleAPI.TimeEventPlanner>() {
+            @Override
+            public int compare(ScheduleAPI.TimeEventPlanner o1, ScheduleAPI.TimeEventPlanner o2) {
+                Long from = o1.start;
+                int c = from.compareTo(o2.start);
+                if (c == 0) {
+                    c = o1.room.compareTo(o2.room);
+                }
+                return c;
+            }
+        });
+        return r;
+    }
 
     /**
      * @return the id
@@ -720,7 +774,7 @@ public class ScheduleAPI implements AppItem, Exportable {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(getClass().getSimpleName() + "{");
-            sb.append("id=" + id + ", room=" + room + ", name=" + name + ", start=" + TimeTools.dumpDateTime(start)+" ("+start + "), duration=" + duration + ", status=" + status);
+            sb.append("id=" + id + ", room=" + room + ", name=" + name + ", start=" + TimeTools.dumpDateTime(start) + " (" + start + "), duration=" + duration + ", status=" + status);
             if (participants != null && !participants.isEmpty()) {
                 sb.append(", participants=" + participants.size());
                 for (Entry<String, String> p : participants.entrySet()) {

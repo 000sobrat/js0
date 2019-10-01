@@ -33,6 +33,42 @@ public class TimeTools {
     public static enum SEASON {
         spring, summer, autumn, winter;
 
+        public int[] months() {
+            switch (this) {
+                case spring:
+                    return new int[]{2, 3, 4};
+                case summer:
+                    return new int[]{5, 6, 7};
+                case autumn:
+                    return new int[]{8, 9, 10};
+                case winter:
+                default:
+                    return new int[]{11, 0, 1};
+            }
+        }
+
+        public static SEASON seasonOf(Calendar c) {
+            if (c == null) {
+                return null;
+            }
+            switch (c.get(Calendar.MONTH)) {
+                case 0:
+                case 1:
+                case 11:
+                    return winter;
+                case 2:
+                case 3:
+                case 4:
+                    return spring;
+                case 5:
+                case 6:
+                case 7:
+                    return summer;
+                default:
+                    return autumn;
+            }
+        }
+
         public int order() {
             return order(this);
         }
@@ -53,7 +89,6 @@ public class TimeTools {
                 default:
                     return -1;
             }
-
         }
     }
 
@@ -420,6 +455,70 @@ public class TimeTools {
         toStartOfMonth(c);
         c.add(Calendar.MILLISECOND, -1);
         return c.getTimeInMillis();
+    }
+
+    public SEASON getSeason(Calendar c) {
+        return SEASON.seasonOf(c);
+    }
+
+    public static long toStartOfSeason(Calendar c) {
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        SEASON s = SEASON.seasonOf(c);
+        int m = c.get(Calendar.MONTH);
+        int[] ms = s.months();
+        if (ms[0] > 1) {
+            c.set(Calendar.MONTH, ms[0]);
+        } else {
+            if (m != 11) {
+                c.add(Calendar.YEAR, -1);
+            }
+            c.set(Calendar.MONTH, ms[0]);
+        }
+        return c.getTimeInMillis();
+    }
+
+    public static long toEndOfSeason(Calendar c) {
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        SEASON s = SEASON.seasonOf(c);
+        int m = c.get(Calendar.MONTH);
+        int[] ms = s.months();
+        if (ms[0] == 11) {
+            c.add(Calendar.YEAR, 1);
+            c.set(Calendar.MONTH, ms[2]);
+        } else {
+            c.set(Calendar.MONTH, ms[2]);
+        }
+        return toEndOfMonth(c);
+    }
+
+    public static long toStartOfQuarter(Calendar c) {
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        int m = (c.get(Calendar.MONTH) / 3)*3;
+        c.set(Calendar.MONTH, m);
+        return c.getTimeInMillis();
+    }
+
+    public static long toEndOfQuarter(Calendar c) {
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        int m = (c.get(Calendar.MONTH) / 3)*3;
+        c.set(Calendar.MONTH, m + 2);
+        return toEndOfMonth(c);
     }
 
     public static long toStartOfYear(Calendar c) {

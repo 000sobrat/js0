@@ -12,6 +12,8 @@ var events;
 var eventsFilter;
 var eventsInBasket; // planned/selected events
 var eventsMeta;
+var seasonNames=["#{Winter}","#{Spring}","#{Summer}","#{Autumn}"];
+var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
 
 
 function buildFilters(asTable) {
@@ -21,9 +23,11 @@ function buildFilters(asTable) {
   if(asTable)s+="</td><td valign='top'>";
   s+=buildMyFilter("#{My}","#{ANY}","#{my}","#{not_my}");
   if(asTable)s+="</td><td valign='top'>";
-  s+=buildMonthsFilter("#{Month}",(userLocale) ? userLocale : 'en');
+  s+=buildSeasonsFilter("#{Season}", seasonNames);
   if(asTable)s+="</td><td valign='top'>";
-  s+=buildWeeksFilter("#{Week}","#{Now}");
+  s+=buildQuartersFilter("#{Quarter}", quarterNames);
+  if(asTable)s+="</td><td valign='top'>";
+  s+=buildDayOfWeekFilter("#{DayOfWeek}", "#{ALL}", {"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"});
   if(asTable)s+="</td><td valign='top'>";
   s+=buildGroupsFilter("#{Groups}","#{ALL}");
   if(asTable)s+="</td><td valign='top'>";
@@ -63,7 +67,7 @@ function buildListSwitch(asList, notList) {
 // initial filter
      if(!eventsFilter) {
         eventsFilter=new Object();
-        var pns=["room","name","from","to","status","trainer","participant","category","course","group"];
+        var pns=["room","name","from","to","status","trainer","participant","category","course","group","season","quarter"];
 
         var qu = new URL(window.location.href);
         for(var i in pns) {
@@ -82,9 +86,13 @@ function loadEventsMeta() {
 
                     if (data.result) {
 			eventsMeta=data.result;
-                        if(eventsMeta && eventsFilter && !eventsFilter.from && eventsMeta.ranges && eventsMeta.ranges.default) {
+                        if(1==0 && eventsMeta && eventsFilter && !eventsFilter.from && eventsMeta.ranges && eventsMeta.ranges.default) {
                            eventsFilter.from=eventsMeta.ranges.default[1];
                            eventsFilter.to=eventsMeta.ranges.default[2];
+                        }
+                        if(eventsMeta && eventsFilter && !eventsFilter.from && eventsMeta.yearSeason) {
+                           eventsFilter.from=eventsMeta.yearSeason[1];
+                           eventsFilter.to=eventsMeta.yearSeason[2];
                         }
                         renderFilter();
                         loadEvents();
@@ -121,6 +129,8 @@ function renderFilter() {
        category: false,
        course: false,
        group: false,
+       season: false,
+       quarter: false,
        dayOfWeek: false
      };
 
@@ -274,7 +284,7 @@ function renderBasket() {
 
 
   function loadEvents() {
-     REST_api.events(
+     REST_api.eventPlanners(
        eventsFilter.room,
        eventsFilter.name,
        eventsFilter.from,
@@ -317,9 +327,10 @@ function renderBasket() {
   function renderEvents() {
   if(events) {
      var calendar = new Calendar({
-        locale:'ru',
+        locale:userLocale,
         toPrev: (eventsFilter.prev) ? "toPrevPeriod(); loadEvents(); " : null,
         toNext: (eventsFilter.next) ? "toNextPeriod(); loadEvents();" : null,
+        showDates: false,
         renderCellEntryActions: function(id,entry){
             var s="";
             return s;

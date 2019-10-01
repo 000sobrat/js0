@@ -5,6 +5,8 @@ var calendar = {
   compact: false, // if compact=true, empty days are skipped from table(s)
   toPrev: null,
   toNext: null,
+  range: null,
+  showDates: true, // if false, show only day of week, no date
 
   find: function (events, from, to) {
      var a=new Array();
@@ -21,11 +23,10 @@ var calendar = {
      }
      return a;
   },
+  
+  evalRange: function(events) {
+     var range={};
 
-  render: function (element, events) {
-      var el=document.getElementById(element);
-      el.ess=new Object();
-      el.conf=this;
       var minD=null;
       var minT=null;
       var maxD=null;
@@ -56,6 +57,69 @@ var calendar = {
       minD=new Date(minD);
       maxD=new Date(maxD);
 
+      range.minD=minD;
+      range.minT=minT;
+      range.maxD=maxD;
+      range.maxT=maxT;
+      range.minDT=minDT;
+      range.maxDT=maxDT;
+      range.tMin=tMin;
+      range.tMax=tMax;
+
+      return range;
+  },
+
+  render: function (element, events) {
+      var el=document.getElementById(element);
+      el.ess=new Object();
+      el.conf=this;
+
+      if(!this.range) {
+         this.range=this.evalRange(events);
+      }
+      var range=this.range;
+
+      var minD=range.minD;
+      var minT=range.minT;
+      var maxD=range.maxD;
+      var maxT=range.maxT;
+      var minDT=range.minDT;
+      var maxDT=range.maxDT;
+      var tMin=range.tMin;
+      var tMax=range.tMax;
+
+
+/*
+      var minD=null;
+      var minT=null;
+      var maxD=null;
+      var maxT=null;
+
+           for(var i in events) {
+              var event=events[i];
+
+              var sd=this.toDateYMD(event.start);//  event.start.substring(0,event.start.indexOf('T'));
+              var ed=(event.end) ? this.toDateYMD(event.end) : null; // (event.end) ? event.end.substring(0,event.end.indexOf('T')) : null;
+
+              var st=this.toTimeHM(event.start); // event.start.substring(event.start.indexOf('T')+1);
+              var et=(event.end) ? this.toTimeHM(event.end) : null; //(event.end) ? event.end.substring(event.end.indexOf('T')+1) : null;
+
+              if(!minD || sd<minD) minD=sd;
+              if(event.end)
+              if(!maxD || ed>maxD) maxD=ed;
+
+              if(!minT || st<minT) minT=st;
+              if(event.end)
+              if(!maxT || et>maxT) maxT=et;
+           }
+
+      var minDT=new Date(minD+'T'+minT);
+      var maxDT=new Date(maxD+'T'+maxT);
+      var tMin=minDT;
+      var tMax=new Date(minD+'T'+maxT);
+      minD=new Date(minD);
+      maxD=new Date(maxD);
+*/
       var days=new Object();      
       var s="<table border=1 class='calendar'>";
       // date headers
@@ -78,11 +142,15 @@ var calendar = {
             
             if(es && es.length>0 || !this.compact) {
               s+="<th class='calendar_date'";
-              var dS=this.toDateYMD(d);
+              var dS=(this.showDates) ? this.toDateYMD(d) : this.toWeekDay(d);
               s+=" id='th_"+dS+"'";
               s+=">";
-              s+=dS;
-              s+="<br/>"+this.toWeekDay(d);
+              if(this.showDates) {
+                s+=dS;
+                s+="<br/>"+this.toWeekDay(d);
+              } else {
+                s+=this.toWeekDay(d);
+              }
               s+="</th>";
             }
             d.setDate(d.getDate()+1);
@@ -515,7 +583,8 @@ var calendar = {
             }
 
             // adjust column width
-            var th_id="th_"+this.toDateYMD(es.start);
+            var dS=(this.showDates) ? this.toDateYMD(es.start) : this.toWeekDay(es.start);
+            var th_id="th_"+dS;//this.toDateYMD(es.start);
             var dTH=document.getElementById(th_id);
             if(dTH) {
                var dH = this.toNumeric(window.getComputedStyle(dTH, null).getPropertyValue('width'));
