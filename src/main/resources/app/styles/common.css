@@ -364,6 +364,11 @@ table.tep {
     border-collapse: collapse;
 }
 
+caption.tep {
+    text-align: left;
+    vertical-align: middle;
+}
+
 tr.tep {
     
 }
@@ -406,4 +411,13 @@ input.tep {
     padding-right: 2px;
     border: solid 1 var(--menu-bg-color);
     background-color: rgba(0,0,0,0);
+}
+
+a.tep:hover {
+    color: white;
+    font-weight: 900;
+    background-color: rgba(200,100,100,0.6);
+}
+img.tep:hover {
+    cursor: pointer;
 }

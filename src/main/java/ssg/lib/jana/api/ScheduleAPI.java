@@ -673,6 +673,7 @@ public class ScheduleAPI implements AppItem, Exportable {
         static final long serialVersionUID = 1L;
 
         private String id = UUID.randomUUID().toString();
+        private String plannerId;
         private String room;
         private String name;
         private long start;
@@ -827,6 +828,20 @@ public class ScheduleAPI implements AppItem, Exportable {
             sb.append('}');
             return sb.toString();
         }
+
+        /**
+         * @return the plannerId
+         */
+        public String getPlannerId() {
+            return plannerId;
+        }
+
+        /**
+         * @param plannerId the plannerId to set
+         */
+        public void setPlannerId(String plannerId) {
+            this.plannerId = plannerId;
+        }
     }
 
     public static class TimeEventPlanner implements AppItem {
@@ -921,6 +936,7 @@ public class ScheduleAPI implements AppItem, Exportable {
                         c.getTimeInMillis(), getDuration(),
                         null
                 );
+                te.setPlannerId(id);
                 if (participants != null) {
                     te.getParticipants().putAll(participants);
                 }

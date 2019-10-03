@@ -171,6 +171,9 @@ function renderFilter() {
 }
 
   function loadEvents() {
+     if(modifiedEvents) modifiedEvents={};
+     if(addedEvents) addedEvents={};
+     if(deletedEvents) deletedEvents={};
      REST_api.eventPlanners(
        eventsFilter.room,
        eventsFilter.name,
@@ -201,7 +204,13 @@ function renderFilter() {
     
     s+="<div style='overflow: scroll; height: 200px; width: 100%;'><table class='tep'>";
     s+="<caption class='tep'>";
-    s+=""+toDateYMD(eventsFilter.from)+" - "+toDateYMD(eventsFilter.to);
+    if(eventsFilter.prev || eventsFilter.prev==0) {
+       s+="<img class='tep' src='images/icons8-shevrone-left-90.png' height='15px' width='20px' onclick='toPrevPeriod(); loadEvents(); '>";
+    } 
+    s+=""+toDateYMD(eventsFilter.from)+" - "+toDateYMD(eventsFilter.to)+"";
+    if(eventsFilter.next) {
+       s+="<img class='tep' src='images/icons8-shevrone-right-90.png' height='15px' width='20px' onclick='toNextPeriod(); loadEvents(); '>";
+    } 
     s+="</caption>";
     
     s+="<tr class='tep'>";
@@ -224,14 +233,14 @@ function renderFilter() {
       var hasAdded=isAddedEvent(null);
       var hasDeleted=isDeletedEvent(null);
       var hasChanged=isChangedEvent(null,null);
-      s+="<a class='appRef' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-plus-144.png' width='20px' alt='#{AddNew}'></a>";
+      s+="<a class='tep' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-add-db-90.png' width='20px' alt='#{AddNew}'></a>";
       if(hasAdded || hasChanged || hasDeleted) {
           if(hasDeleted) {
-            s+="<a class='appRef' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{UndeleteAll}'></a>";
+            s+="<a class='tep' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{UndeleteAll}'></a>";
           }
-          s+="<a class='appRef' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
+          s+="<a class='tep' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
           if(hasChanged || hasAdded) {
-            s+="<a class='appRef' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{UndoAll}'></a>";
+            s+="<a class='tep' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{UndoAll}'></a>";
           }
       }
     }
@@ -261,16 +270,18 @@ function renderFilter() {
        if(tep && !tep.hidden) {
           var isDeleted=isDeletedEvent(tep.id);
           var isChanged=isChangedEvent(tep.id,null);
+          //console.log('renderEvent(m='+isChanged+', d='+'+isDeleted+'+'): '+toJSON(tep));     
+          
           s+="<tr class='tep"+((isDeleted) ? "_deleted" : "")+"'>";
           s+="<td class='tep'>";
           if(edit) {
             if(isDeleted) {
-              s+="<a class='appRef' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{Undelete}'></a>";
+              s+="<a class='tep' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{Undelete}'></a>";
             }else {
-              s+="<a class='appRef' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='20px' alt='#{Delete}'></a>";
+              s+="<a class='tep' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='20px' alt='#{Delete}'></a>";
               if(isChanged) {
-                s+="<a class='appRef' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
-                s+="<a class='appRef' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
+                s+="<a class='teå' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
+                s+="<a class='tep' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
               }
             }
           }
@@ -305,7 +316,7 @@ function renderFilter() {
                    if(v) v+=",";
                    v+=tep.weekDays[di];
                  }
-                 s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
+                 s+="<a class='tep' onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
                }
                s+="<img src='images/icons8-ok-90.png' width='15px'>";
                if(edit) {
@@ -317,7 +328,7 @@ function renderFilter() {
                  var v=wds;
                  if(v) v+=",";
                  v+=wd;
-                 s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
+                 s+="<a class='tep' onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
                  s+="<img src='images/icons8-circle-90.png' width='15px'>";
                  s+="</a>";
                }else
@@ -424,6 +435,7 @@ function renderFilter() {
   }
   
   function modifyEvent(id,prop,val) {
+     //console.log('modifyEvent(strt): '+id+":"+prop+":"+val);     
      if(!modifiedEvents[id]) {
        for(var i in events) {
           var e=events[i];
@@ -440,10 +452,18 @@ function renderFilter() {
             em.changes[prop]=em.item[prop];
         }
         em.item[prop]=val;
+        fixModifiedEvent(em.item);
+        //console.log('modifyEvent(done): '+id+":"+prop+":"+val+"\n  "+em.item[prop]+" ("+em.changes[prop]+")");     
         return true;
     }
     
     return false;
+  }
+  
+  function fixModifiedEvent(item) {
+     if(item && item.start && item.duration) {
+        item.end=item.start+item.duration;
+     }
   }
   
   function isChangedEvent(id,prop) {
@@ -552,6 +572,8 @@ function renderFilter() {
     if(!isChangedEvent(id,prop)) {
        return false;
     }
+  
+    //console.log('undoEventChanges(strt): '+id+":"+prop);     
     
     if(!id) {
        var done=false;
@@ -564,12 +586,15 @@ function renderFilter() {
     var r=false;
     var em=modifiedEvents[id];
     if(em){
+      //console.log("\n  "+em.item[prop]+" ("+em.changes[prop]+")");     
       if(prop) {
           r = undefined!=em.changes[prop];
           if(r) {
              if(!jsonEqual(em.item[prop],em.changes[prop])) {
                 em.item[prop]=em.changes[prop];
+                fixModifiedEvent(em.item);
                 delete em.changes[prop];
+                //console.log('undoEventChanges(strt): '+id+":"+prop+":  "+em.item[prop]+" ("+em.changes[prop]+")");     
              }
           }
       }else {
@@ -577,6 +602,7 @@ function renderFilter() {
          for(var i in em.changes) {
            em.item[i]=em.changes[i];
          }
+         fixModifiedEvent(em.item);
          delete modifiedEvents[id];
          r = true;
       }
@@ -694,8 +720,13 @@ function renderFilter() {
   function jsonEqual(a1,a2) {
     return JSON.stringify(a1)==JSON.stringify(a2);
   }  
+
+  function jsonClone(val) {
+    return (val) ? JSON.parse(JSON.stringify(val)) : null;
+  }  
   
   function toDateYMD(val) {
+     if(!val) return "<no date>";
      if("number"==typeof(val)) val=new Date(val);
      else if("string"==typeof(val)) val=new Date(val);
      return ""
@@ -736,7 +767,8 @@ function renderFilter() {
        var e=events[i];
        if(isDeletedEvent(e.id)) continue;
        var wd0=(isChangedEvent(e.id,'weekDays')) ? modifiedEvents[e.id].changes.weekDays : null;
-       var wds=e.weekDays;
+       var weekDays=(e.weekDays) ? jsonClone(e.weekDays) : null;
+       var wds=(e.weekDays) ? jsonClone(e.weekDays) : null;
        if(wds && wds.length>0) {for(var i in wds) {
          var wd=e.weekDays[i];
          var ds=eventsMeta.weekDays[wd-1];
@@ -752,7 +784,7 @@ function renderFilter() {
            icon:e.icon, 
            room: e.room, 
            hidden: e.hidden,
-           weekDays: e.weekDays,
+           weekDays: weekDays,
            weekDay: wd
          };
          if(ge) {
@@ -787,7 +819,7 @@ function renderFilter() {
              maxSize:e.maxSize, 
              icon:e.icon, 
              room: e.room, 
-             weekDays: e.weekDays,
+             weekDays: weekDays,
              weekDay: wd,
              hidden: e.hidden,
              removed: true

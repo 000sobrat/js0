@@ -711,10 +711,12 @@ public class UI_API {
         while (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
             c.add(Calendar.DAY_OF_YEAR, 1);
         }
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 8; i++) {
             wd.add(c.getTimeInMillis());
             c.add(Calendar.DAY_OF_YEAR, 1);
         }
+        wd.set(0, wd.get(wd.size()-1));
+        wd.remove(wd.size()-1);
 
         // start times: 6:00
         Map t = new LinkedHashMap();

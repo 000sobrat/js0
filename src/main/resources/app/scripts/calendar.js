@@ -554,7 +554,7 @@ var calendar = {
                      var pm=window.getComputedStyle(dds[i-1], null).getPropertyValue('margin-left');
                      var m=window.getComputedStyle(dds[i], null).getPropertyValue('margin-left');
                      dds[i].style.marginLeft=(this.toNumeric(m)+this.toNumeric(pw)+this.toNumeric(pm))+"px";
-                     console.log(dds[i].id+': '+dds[i].innerText+": -> "+dds[i].style.marginLeft);
+                     //console.log(dds[i].id+': '+dds[i].innerText+": -> "+dds[i].style.marginLeft);
                   }
                }
             }
