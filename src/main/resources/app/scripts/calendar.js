@@ -73,6 +73,7 @@ var calendar = {
       var el=document.getElementById(element);
       el.ess=new Object();
       el.conf=this;
+      el.data=events;
 
       if(!this.range) {
          this.range=this.evalRange(events);
@@ -88,38 +89,6 @@ var calendar = {
       var tMin=range.tMin;
       var tMax=range.tMax;
 
-
-/*
-      var minD=null;
-      var minT=null;
-      var maxD=null;
-      var maxT=null;
-
-           for(var i in events) {
-              var event=events[i];
-
-              var sd=this.toDateYMD(event.start);//  event.start.substring(0,event.start.indexOf('T'));
-              var ed=(event.end) ? this.toDateYMD(event.end) : null; // (event.end) ? event.end.substring(0,event.end.indexOf('T')) : null;
-
-              var st=this.toTimeHM(event.start); // event.start.substring(event.start.indexOf('T')+1);
-              var et=(event.end) ? this.toTimeHM(event.end) : null; //(event.end) ? event.end.substring(event.end.indexOf('T')+1) : null;
-
-              if(!minD || sd<minD) minD=sd;
-              if(event.end)
-              if(!maxD || ed>maxD) maxD=ed;
-
-              if(!minT || st<minT) minT=st;
-              if(event.end)
-              if(!maxT || et>maxT) maxT=et;
-           }
-
-      var minDT=new Date(minD+'T'+minT);
-      var maxDT=new Date(maxD+'T'+maxT);
-      var tMin=minDT;
-      var tMax=new Date(minD+'T'+maxT);
-      minD=new Date(minD);
-      maxD=new Date(maxD);
-*/
       var days=new Object();      
       var s="<table border=1 class='calendar'>";
       // date headers
@@ -127,7 +96,12 @@ var calendar = {
          s+="<tr class='calendar_date_row'>";
          s+="<th align='center' valign='middle'>";
          if(this.toPrev) s+="<img src='images/icons8-shevrone-left-90.png' width='20px' onclick='"+this.toPrev+"'>";
-         s+="-";
+         //s+="-";
+         if(this.compact) {
+           s+="<img src='images/icons8-expand-96.png' width='20px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=false; c.conf.render(c.id,c.data);'>";
+         } else {
+           s+="<img src='images/icons8-compactify-90.png' width='20px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=true; c.conf.render(c.id,c.data);'>";
+         }
          if(this.toNext) s+="<img src='images/icons8-shevrone-right-90.png' width='20px' onclick='"+this.toNext+"'>";
          s+="</th>";
          var d=new Date(minD);

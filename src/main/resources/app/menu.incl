@@ -6,6 +6,7 @@
        s+="<td>";
        s+="<a onclick='showLoginForm();' class='login'>";
        s+="<img src='images/icons8-login-90.png' alt='#{Login}...' width='20'>"
+       s+="<tt>#{Login}</tt>";
        s+="</a>";
        s+="</td>";
        if(loginLinks) {
@@ -15,6 +16,7 @@
                 s+="<td nowrap>";
                 s+="<a href='"+l+"' class='login'>";
                 s+="<img src='images/"+ll[0]+"' width='20px' alt='"+ll[1]+"'>";
+                s+="<tt>"+ll[1]+"</tt>";
                 s+="</a>";
                 s+="</td>";
              }
@@ -83,10 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
        var el=document.getElementById('userInfo');
        var un=userDisplayName();
        var ud=userDomainName();
-       el.innerHTML=un+"&nbsp;("+ud+")&nbsp;<a onclick='doLogout();' class='login'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'></a>";
+       el.innerHTML=un+"&nbsp;("+ud+")&nbsp;<a onclick='doLogout();' class='login'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'><tt>#{Logout}</tt></a>";
     } else {
        var el=document.getElementById('userInfo');
-       el.innerHTML="<a onclick='showLoginForm();' class='login'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'></a>";
+       el.innerHTML="<a onclick='showLoginForm();' class='login'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'><tt>#{Login}</tt></a>";
        REST_api.loginVariants(
          function(url,data) { 
            if(data.result) {
@@ -124,9 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </td><div id='loginForm' class='loginForm' align='center'>.</div><td>
         </td><td width='40%' align='right'>
            <div class='localeSelector'>
-             <img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'>
-             <img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'>
-             <img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'>
+             <span><img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'><tt>#{SwitchTo} #{Finnish}</tt></span>
+             <span><img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'><tt>#{SwitchTo} #{Russian}</tt></span>
+             <span><img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'><tt>#{SwitchTo} #{English}</tt></span>
            </div>
            <div id='userInfo' class='userInfo'></div>
         </td></tr>
@@ -147,4 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class='menu-item' href='contacts.html'>#{Contacts}</a>
     </td>
   </tr>
+ <tr class='menu-toolbar'>
+   <td class='menu-toolbar' colspan='4'>
+     ${include /app/toolbar.incl}
+   </td>
+ </tr>
 </table>

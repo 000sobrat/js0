@@ -16,6 +16,14 @@ body {
 }
 table { border-collapse: collapse; border-color: rgba(200,200,200,0);}
 
+/* tooltip: insert inside <a> tag <span> element with tooltip text */
+a tt {display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: #fff; text-align: right; padding-right: 10px;}
+a:hover tt {display: block; }
+
+span tt {display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: #fff; text-align: right; padding-right: 10px;}
+span:hover tt {display: block; }
+
+
 div.pane {
     /*background-image: url('../images/kuntajana_240.png');
     background-size: 50px;
@@ -388,6 +396,7 @@ td.tep {
     padding-left: 2px;
     padding-right: 2px;
     border: solid 1 var(--menu-bg-color);
+    background-color: rgba(200,100,100,0);
 }
 
 td.tep_modified {
@@ -414,10 +423,22 @@ input.tep {
 }
 
 a.tep:hover {
+    cursor: pointer;
     color: white;
     font-weight: 900;
-    background-color: rgba(200,100,100,0.6);
+    background-color: rgba(200,100,100,0);
 }
 img.tep:hover {
     cursor: pointer;
+}
+
+/*
+a.tep span {display: none; position: absolute; bottom: 0; left: 0; right: 0; background: #333; color: #ff0; }
+a.tep:hover span {display: block; }
+*/
+img.toolbar:hover {
+    cursor: pointer;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--menu-bg-color);
 }

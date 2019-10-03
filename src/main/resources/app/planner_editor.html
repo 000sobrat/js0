@@ -16,8 +16,8 @@ var eventsInBasket; // planned/selected events
 var eventsMeta;
 var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
 var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
-var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}", "all": [2,3,4,5,6,7,1]};
-
+var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"};
+var weekDaysOrder=[2,3,4,5,6,7,1]
 function buildFilters(asTable) {
   var s="";
   if(asTable)s+="<table><tr><td valign='top'>";
@@ -157,6 +157,7 @@ function renderFilter() {
      
      var div=document.getElementById('pane_right');
      div=document.getElementById('pane_top');
+     div=document.getElementById('toolbar_1');
      div.innerHTML=s;
 
      for(var v in gv) {
@@ -164,10 +165,24 @@ function renderFilter() {
           toggleVisibility('filter_'+v);
         }
      }
-     
+
+     renderToolbarActions();     
      //toggleVisibility('filter_room');
      //toggleVisibility('filter_trainer');
      //toggleVisibility('filter_course');
+}
+
+function renderToolbarActions() {
+     var s="";
+     
+     if(userHasRole('admin')) {
+        s+="<span><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='24px'><tt>#{Export}</tt></span>";
+        s+="<span><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='24px'><tt>#{Import}</tt></span>";
+        s+="<span><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='24px'><tt>#{Backup}</tt></span>";
+     }
+     
+     div=document.getElementById('toolbar_2');
+     div.innerHTML=s;
 }
 
   function loadEvents() {
@@ -201,15 +216,17 @@ function renderFilter() {
   function renderEvents() {
     var edit=eventsFilter.edit==true || userHasRole('admin');
     var s="";
+    var actionIconSize = '25px';
+    var wdIconSize = '20px';
     
     s+="<div style='overflow: scroll; height: 200px; width: 100%;'><table class='tep'>";
     s+="<caption class='tep'>";
     if(eventsFilter.prev || eventsFilter.prev==0) {
-       s+="<img class='tep' src='images/icons8-shevrone-left-90.png' height='15px' width='20px' onclick='toPrevPeriod(); loadEvents(); '>";
+       s+="<span><img class='tep' src='images/icons8-shevrone-left-90.png' height='15px' width='20px' onclick='toPrevPeriod(); loadEvents(); '><tt>#{Prev}</tt></span>";
     } 
     s+=""+toDateYMD(eventsFilter.from)+" - "+toDateYMD(eventsFilter.to)+"";
     if(eventsFilter.next) {
-       s+="<img class='tep' src='images/icons8-shevrone-right-90.png' height='15px' width='20px' onclick='toNextPeriod(); loadEvents(); '>";
+       s+="<span><img class='tep' src='images/icons8-shevrone-right-90.png' height='15px' width='20px' onclick='toNextPeriod(); loadEvents(); '><tt>#{Prev}</tt></span>";
     } 
     s+="</caption>";
     
@@ -233,14 +250,14 @@ function renderFilter() {
       var hasAdded=isAddedEvent(null);
       var hasDeleted=isDeletedEvent(null);
       var hasChanged=isChangedEvent(null,null);
-      s+="<a class='tep' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-add-db-90.png' width='20px' alt='#{AddNew}'></a>";
+      s+="<a class='tep' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-add-db-90.png' width='"+actionIconSize+"' alt='#{AddNew}'><tt class='tep'>#{AddNew}</tt></a>";
       if(hasAdded || hasChanged || hasDeleted) {
           if(hasDeleted) {
-            s+="<a class='tep' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{UndeleteAll}'></a>";
+            s+="<a class='tep' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{UndeleteAll}'><tt class='tep'>#{UndeleteAll}</tt></a>";
           }
-          s+="<a class='tep' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
+          s+="<a class='tep' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='"+actionIconSize+"' alt='#{SaveAll}'><tt class='tep'>#{SaveAll}</tt></a>";
           if(hasChanged || hasAdded) {
-            s+="<a class='tep' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{UndoAll}'></a>";
+            s+="<a class='tep' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{UndoAll}'><tt class='tep'>#{UndoAll}</tt></a>";
           }
       }
     }
@@ -249,8 +266,8 @@ function renderFilter() {
     //s+="<th class='tep'></th>";
     s+="<th class='tep'>";
     s+="<table class='tep' border='1' width='100%'><tr>";
-    for(var wd in weekDayNames.all) {
-       s+="<td>"+weekDayNames[weekDayNames.all[wd]]+"</td>";
+    for(var wd in weekDaysOrder) {
+       s+="<td>"+weekDayNames[weekDaysOrder[wd]]+"</td>";
     }
     s+="</tr></table>";
     s+="</th>";
@@ -276,12 +293,12 @@ function renderFilter() {
           s+="<td class='tep'>";
           if(edit) {
             if(isDeleted) {
-              s+="<a class='tep' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{Undelete}'></a>";
+              s+="<a class='tep' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{Undelete}'><tt class='tep'>#{Undelete} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
             }else {
-              s+="<a class='tep' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='20px' alt='#{Delete}'></a>";
+              s+="<a class='tep' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='"+actionIconSize+"' alt='#{Delete}'><tt class='tep'>#{Delete} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
               if(isChanged) {
-                s+="<a class='teå' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
-                s+="<a class='tep' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
+                s+="<a class='tep' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='"+actionIconSize+"' alt='#{Save}'><tt class='tep'>#{Save} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
+                s+="<a class='tep' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{Undo}'><tt class='tep'>#{Undo} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
               }
             }
           }
@@ -298,9 +315,9 @@ function renderFilter() {
                wds+=tep.weekDays[di];
             }
 
-          for(var wd in weekDayNames.all) {
+          for(var wd in weekDaysOrder) {
             s+="<td>";
-            wd=weekDayNames.all[wd];
+            wd=weekDaysOrder[wd];
             var found=false;
             for(var di in tep.weekDays) {
                if(wd==tep.weekDays[di]) {
@@ -318,21 +335,21 @@ function renderFilter() {
                  }
                  s+="<a class='tep' onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
                }
-               s+="<img src='images/icons8-ok-90.png' width='15px'>";
+               s+="<img src='images/icons8-ok-90.png' width='"+wdIconSize+"'>";
                if(edit) {
                  s+="</a>";
                }
-               //s+="<img src='images/transparent1x1.png'  width='15px'>";
+               //s+="<img src='images/transparent1x1.png'  width='"+wdIconSize+"'>";
             }else {
                if(edit) {
                  var v=wds;
                  if(v) v+=",";
                  v+=wd;
                  s+="<a class='tep' onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
-                 s+="<img src='images/icons8-circle-90.png' width='15px'>";
+                 s+="<img src='images/icons8-circle-90.png' width='"+wdIconSize+"'>";
                  s+="</a>";
                }else
-               s+="<img src='images/transparent1x1.png' width='15px'>";
+               s+="<img src='images/transparent1x1.png' width='"+wdIconSize+"'>";
             }
             s+="</td>";
           }
@@ -390,13 +407,13 @@ function renderFilter() {
             for(var i in eventsMeta.groups) {
                var v=eventsMeta.groups[i];
                if(tep.name==i && v && v.length>1 && v[1]) {
-                  s+="<img src='images/"+v[1]+"' width='15px'>&nbsp;";
+                  s+="<img src='images/"+v[1]+"' width='"+wdIconSize+"'>&nbsp;";
                   found=true;
                   break;
                }
             }
             if(!found) {
-               s+="<img src='images/icons8-circle-90.png' width='15px'>&nbsp;";
+               s+="<img src='images/icons8-circle-90.png' width='"+wdIconSize+"'>&nbsp;";
             }
           }
           if(edit) {

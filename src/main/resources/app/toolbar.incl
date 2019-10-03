@@ -1,0 +1,4 @@
+<table width='100%' class='toolbar'><tr class='toolbar'>
+<td width='70%' class='toolbar'><div id='toolbar_1' class='toolbar'></div></td>
+<td width='*' class='toolbar'><div id='toolbar_2' class='toolbar'></div></td>
+</tr></table>
