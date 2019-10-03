@@ -8,18 +8,32 @@
   <div id="pane_top"></div>
 </td></tr>
 <tr class='pane_2'>
-<td width="0px" class='pane_na'>
-  <!-- navigation area: left -->
-  <div id="pane_left"></div>
-</td>
-<td class='pane_ca'>
-  <!-- content area -->
-  <div id="pane_content"></div>
-</td>
-<td width="0px" class='pane_xa'>
-  <!-- extra navigation area -->
-  <div id="pane_right"></div>
-</td>
+  <td width="0px" class='pane_na'>
+    <!-- navigation area: left -->
+    <div id="pane_left"></div>
+  </td>
+  <td class='pane_ca'>
+    <!-- content area -->
+    <div id="pane_content"></div>
+  </td>
+  <td width="0px" class='pane_xa'>
+    <!-- extra navigation area -->
+    <div id="pane_right"></div>
+  </td>
+</tr>
+<tr class='pane_2'>
+  <td width="0px" class='pane_na'>
+    <!-- navigation area: left -->
+    <div id="pane_left2"></div>
+  </td>
+  <td class='pane_ca'>
+    <!-- content area -->
+    <div id="pane_content2"></div>
+  </td>
+  <td width="0px" class='pane_xa'>
+    <!-- extra navigation area -->
+    <div id="pane_right2"></div>
+  </td>
 </tr>
 <tr class='pane_bottom'><td colspan="3">
   ${include /app/tail.incl}

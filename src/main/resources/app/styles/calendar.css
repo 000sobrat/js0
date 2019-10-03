@@ -74,7 +74,6 @@ div.calendar_cell_full {
 	background-color: rgba(250,200,200,50);
 }
 
-
 fieldset.calendar_cell {
 	position: absolute; 
 	border: solid black 0.5px;
@@ -89,6 +88,14 @@ fieldset.calendar_cell_participant {
 
 fieldset.calendar_cell_full {
 	background-color: rgba(250,200,200,250);
+}
+
+fieldset.calendar_cell_hidden {
+	background-color: rgba(200,200,200,0.7);
+}
+
+fieldset.calendar_cell_deleted {
+	background-color: rgba(200,200,200,0.1);
 }
 
 legend.calendar_cell {

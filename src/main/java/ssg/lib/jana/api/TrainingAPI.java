@@ -312,8 +312,8 @@ public class TrainingAPI implements AppItem, Exportable {
         List<Group> r = new ArrayList<>();
         for (Group gr : groups.values()) {
             if (name == null || name.equals(gr.name)) {
+                boolean found = false;
                 if (courses != null && courses.length > 0) {
-                    boolean found = false;
                     for (String cn : courses) {
                         if (cn != null && cn.equals(gr.course)) {
                             found = true;
@@ -323,9 +323,11 @@ public class TrainingAPI implements AppItem, Exportable {
                     if (!found) {
                         continue;
                     }
+                }else {
+                    found=true;
                 }
                 if (trainerEmail == null || trainerEmail.equals(gr.trainer)) {
-                    r.add(gr);
+                    if(found) r.add(gr);
                 }
             }
         }

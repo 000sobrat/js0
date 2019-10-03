@@ -467,6 +467,48 @@ public class ScheduleAPI implements AppItem, Exportable {
         return tes.size();
     }
     
+    
+    @XMethod(name = "addEvent")
+    public TimeEventPlanner addEventPlanner(
+            @XParameter(name = "room") String room,
+            @XParameter(name = "name") String name,
+            @XParameter(name = "from") long from,
+            @XParameter(name = "to") long to,
+            @XParameter(name = "start") long start,
+            @XParameter(name = "duration") long duration,
+            @XParameter(name = "weekDays", optional = true) int[] weekDays
+    ) {
+        String r=null;
+        
+        List<TimeEventPlanner> es = findEventPlanners(room, from, to, name);
+        if(!es.isEmpty()) {
+            Iterator<TimeEventPlanner> it=es.iterator();
+            while(it.hasNext()) {
+                TimeEventPlanner te=it.next();
+                if(te.start!=start) it.remove();
+            }
+        }
+        if (es.isEmpty()) {
+            // add
+            TimeEventPlanner e = new TimeEventPlanner();
+            e.setRoom(room);
+            e.setFrom(from);
+            e.setTo(to);
+            e.setDuration(duration);
+            e.setStart(start);
+            e.setName(name);
+            e.weekDays=weekDays;
+            eventPlanners.put(e.getId(), e);
+            return e;
+        } else if(es.size()==1) {
+            // modify: not...
+            TimeEventPlanner te=es.get(0);
+        }else{
+            // inconsistency: more than 1 item start same time at same place...
+        }
+        return null;
+    }
+    
     public List<TimeEventPlanner> findEventPlanners(
             @XParameter(name = "room", optional = true) String room,
             @XParameter(name = "from", optional = true) Long from,
@@ -483,12 +525,12 @@ public class ScheduleAPI implements AppItem, Exportable {
             if (room != null && !room.equals(e.room)) {
                 continue;
             }
-//            if (from != null && e.start < from) {
-//                continue;
-//            }
-//            if (to != null && (e.start + e.duration) > to) {
-//                continue;
-//            }
+            if (from != null && e.from < from) {
+                continue;
+            }
+            if (to != null && (e.to) > to) {
+                continue;
+            }
             if (room != null && !room.equals(e.getRoom())) {
                 continue;
             }

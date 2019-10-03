@@ -367,20 +367,26 @@ table.tep {
 tr.tep {
     
 }
+tr.tep_deleted {
+    background-color: rgba(200,200,200,20);
+}
 
 th.tep {
+    white-space: nowrap;
     text-align: center;
     vertical-align: middle;
     border: solid 1 var(--menu-bg-color);
 }
 
 td.tep {
+    white-space: nowrap;
     padding-left: 2px;
     padding-right: 2px;
     border: solid 1 var(--menu-bg-color);
 }
 
 td.tep_modified {
+    white-space: nowrap;
     padding-left: 2px;
     padding-right: 2px;
     border: solid 1 var(--menu-bg-color);

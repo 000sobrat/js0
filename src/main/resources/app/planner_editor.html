@@ -6,13 +6,15 @@ ${include /app/head.incl}
 <script type="text/javascript" src="/app/scripts/filter.js"></script>
 
 
-<script>
+<script type="text/javascript">
 var events;
 var modifiedEvents={};
+var deletedEvents={};
+var addedEvents={};
 var eventsFilter;
 var eventsInBasket; // planned/selected events
 var eventsMeta;
-var seasonNames=["#{Winter}","#{Spring}","#{Summer}","#{Autumn}"];
+var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
 var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
 var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}", "all": [2,3,4,5,6,7,1]};
 
@@ -29,6 +31,7 @@ function buildFilters(asTable) {
   /*
   if(asTable)s+="</td><td valign='top'>";
   s+=buildDayOfWeekFilter("#{DayOfWeek}", "#{ALL}", weekDayNames);
+  */
   if(asTable)s+="</td><td valign='top'>";
   s+=buildGroupsFilter("#{Groups}","#{ALL}");
   if(asTable)s+="</td><td valign='top'>";
@@ -39,7 +42,7 @@ function buildFilters(asTable) {
   s+=buildCoursesFilter("#{Courses}","#{ALL}");
   if(asTable)s+="</td><td valign='top'>";
   s+=buildCategoriesFilter("#{Categories}","#{ALL}");
-  */
+  /* */
   if(asTable)s+="<tr></tr></table>";
   return s;
 }
@@ -193,31 +196,48 @@ function renderFilter() {
   }
 
   function renderEvents() {
+    var edit=eventsFilter.edit==true || userHasRole('admin');
     var s="";
     
-    s+="<table class='tep'>";
+    s+="<div style='overflow: scroll; height: 200px; width: 100%;'><table class='tep'>";
     s+="<caption class='tep'>";
+    s+=""+toDateYMD(eventsFilter.from)+" - "+toDateYMD(eventsFilter.to);
     s+="</caption>";
     
     s+="<tr class='tep'>";
-    s+="<th class='tep'>#{TEP_Action}</th>";
-    s+="<th class='tep'>#{TEP_From}</th>";
-    s+="<th class='tep'>#{TEP_To}</th>";
+    s+="<th class='tep'>";
+    if(edit) s+="#{TEP_Action}";
+    s+="</th>";
+    //s+="<th class='tep'>#{TEP_From}</th>";
+    //s+="<th class='tep'>#{TEP_To}</th>";
     s+="<th class='tep'>#{TEP_Weekday}</th>";
     s+="<th class='tep'>#{TEP_Start}</th>";
     s+="<th class='tep'>#{TEP_Duration}</th>";
-    s+="<th class='tep'>#{TEP_End}</th>";
+    //s+="<th class='tep'>#{TEP_End}</th>";
+    s+="<th class='tep'>#{TEP_Room}</th>";
     s+="<th class='tep'>#{TEP_Group}</th>";
     s+="</tr>";
 
     s+="<tr class='tep'>";
-    s+="<th class='tep'>";
-    if(isChangedEvent(null,null)) {
-        s+="<a class='appRef' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
+    s+="<th class='tep' style='text-align: left'>";
+    if(edit) {
+      var hasAdded=isAddedEvent(null);
+      var hasDeleted=isDeletedEvent(null);
+      var hasChanged=isChangedEvent(null,null);
+      s+="<a class='appRef' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-plus-144.png' width='20px' alt='#{AddNew}'></a>";
+      if(hasAdded || hasChanged || hasDeleted) {
+          if(hasDeleted) {
+            s+="<a class='appRef' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{UndeleteAll}'></a>";
+          }
+          s+="<a class='appRef' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='20px' alt='#{SaveAll}'></a>";
+          if(hasChanged || hasAdded) {
+            s+="<a class='appRef' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{UndoAll}'></a>";
+          }
+      }
     }
     s+="</th>";
-    s+="<th class='tep'></th>";
-    s+="<th class='tep'></th>";
+    //s+="<th class='tep'></th>";
+    //s+="<th class='tep'></th>";
     s+="<th class='tep'>";
     s+="<table class='tep' border='1' width='100%'><tr>";
     for(var wd in weekDayNames.all) {
@@ -227,29 +247,36 @@ function renderFilter() {
     s+="</th>";
     s+="<th class='tep'></th>";
     s+="<th class='tep'></th>";
+    //s+="<th class='tep'></th>";
     s+="<th class='tep'></th>";
     s+="<th class='tep'></th>";
     s+="</tr>";
 
-    
-    var edit=eventsFilter.edit==true || userHasRole('admin');
-    
     // ad "new item" row if in edit mode...
     if(edit) {
     }
     
     if(events) for(var ei in events) {
        var tep=events[ei];
-       if(tep) {
-          s+="<tr class='tep'>";
+       if(tep && !tep.hidden) {
+          var isDeleted=isDeletedEvent(tep.id);
+          var isChanged=isChangedEvent(tep.id,null);
+          s+="<tr class='tep"+((isDeleted) ? "_deleted" : "")+"'>";
           s+="<td class='tep'>";
-          if(isChangedEvent(tep.id,null)) {
-            s+="<a class='appRef' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
-            s+="<a class='appRef' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
+          if(edit) {
+            if(isDeleted) {
+              s+="<a class='appRef' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='20px' alt='#{Undelete}'></a>";
+            }else {
+              s+="<a class='appRef' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='20px' alt='#{Delete}'></a>";
+              if(isChanged) {
+                s+="<a class='appRef' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='20px' alt='#{Save}'></a>";
+                s+="<a class='appRef' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='20px' alt='#{Undo}'></a>";
+              }
+            }
           }
           s+="</td>";
-          s+="<td class='tep'>"+toDateYMD(tep.from)+"</td>";
-          s+="<td class='tep'>"+toDateYMD(tep.to)+"</td>";
+          //s+="<td class='tep'>"+toDateYMD(tep.from)+"</td>";
+          //s+="<td class='tep'>"+toDateYMD(tep.to)+"</td>";
           
           // weekDay
           s+="<td class='tep"+(isChangedEvent(tep.id,'weekDays') ? "_modified" : "")+"'>";
@@ -280,21 +307,21 @@ function renderFilter() {
                  }
                  s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
                }
-               s+="<img style='position: absolute;' src='images/icons8-ok-90.png' width='15px'>";
+               s+="<img src='images/icons8-ok-90.png' width='15px'>";
                if(edit) {
                  s+="</a>";
                }
-               s+="&nbsp;";
+               //s+="<img src='images/transparent1x1.png'  width='15px'>";
             }else {
                if(edit) {
                  var v=wds;
                  if(v) v+=",";
                  v+=wd;
                  s+="<a onclick='if(modifyEvent(\""+tep.id+"\",\"weekDays\",["+v+"])) renderEvents();'>";
-                 s+="<img style='position: absolute;' src='images/icons8-circle-90.png' width='15px'>";
+                 s+="<img src='images/icons8-circle-90.png' width='15px'>";
                  s+="</a>";
-               }
-               s+="&nbsp;";
+               }else
+               s+="<img src='images/transparent1x1.png' width='15px'>";
             }
             s+="</td>";
           }
@@ -320,10 +347,47 @@ function renderFilter() {
           s+="</td>";
           
           // end
-          s+="<td class='tep'>"+asTimeHM(tep.end)+"</td>";
+          //s+="<td class='tep'>"+asTimeHM(tep.end)+"</td>";
+          
+          // room
+          //s+="<td class='tep'>"+tep.room+"</td>";
+          s+="<td class='tep"+(isChangedEvent(tep.id,'room') ? "_modified" : "")+"'>";
+          if(edit) {
+            var found=false;
+            s+="<select class='tep' onchange='if(modifyEvent(\""+tep.id+"\",\"room\",event.currentTarget.value)) renderEvents();'>";
+            for(var i in eventsMeta.rooms) {
+               var v=eventsMeta.rooms[i];
+               if(tep.room && tep.room==i) found=true;
+               s+="<option"+((tep.room==i) ? " selected" : "")+" value=\""+i+"\">";
+               s+=i;
+               s+="</option>";
+            }
+            if(!found) {
+               s+="<option selected value=\""+tep.room+"\">";
+               s+=tep.room;
+               s+="</option>";
+            }
+            s+="</select>";
+          }else{
+            s+=tep.room;
+          }
           
           // group
           s+="<td class='tep"+(isChangedEvent(tep.id,'name') ? "_modified" : "")+"'>";
+          {
+            var found=false;
+            for(var i in eventsMeta.groups) {
+               var v=eventsMeta.groups[i];
+               if(tep.name==i && v && v.length>1 && v[1]) {
+                  s+="<img src='images/"+v[1]+"' width='15px'>&nbsp;";
+                  found=true;
+                  break;
+               }
+            }
+            if(!found) {
+               s+="<img src='images/icons8-circle-90.png' width='15px'>&nbsp;";
+            }
+          }
           if(edit) {
             var found=false;
             s+="<select class='tep' onchange='if(modifyEvent(\""+tep.id+"\",\"name\",event.currentTarget.value)) renderEvents();'>";
@@ -350,7 +414,7 @@ function renderFilter() {
        }
     }
     
-    s+="</table>";
+    s+="</table></div>";
     
   
     var el=document.getElementById('pane_content');
@@ -402,8 +466,100 @@ function renderFilter() {
     return r;
   }
 
+  function isDeletedEvent(id) {
+    if(!id) return Object.keys(deletedEvents).length>0;
+    var r=false;
+    var em=deletedEvents[id];
+    if(em){
+       r = true;
+    }else{
+       r = false;
+    }
+    return r;
+  }
+  function deleteEvent(id) {
+    if(!id) return false;
+    var r=false;
+    if(isAddedEvent(id)) {
+       delete addedEvents[id];
+       for(var i in events) {
+          var e=events[i];
+          if(e.id==id) {
+             delete events[i];
+             r=true;
+             break;
+          }
+       }
+    } else if(!isDeletedEvent(id)) {
+       deletedEvents[id]=id;
+       r=true;
+    }
+
+    return r;
+  }
+  function undeleteEvent(id) {
+    if(!isDeletedEvent(id)) return false;
+
+    if(!id) {
+       var done=false;
+       for(var k in deletedEvents) {
+          if(undeleteEvent(k)) done=true;
+       }
+       return done;
+    }
+
+    var r=false;
+    if(isDeletedEvent(id)) {
+       delete deletedEvents[id];
+       r=true;
+    }
+    return r;
+  }
+
+    function addEvent(id) {
+     if(!addedEvents[id]) {
+        var e={
+          id:id,
+          from: eventsFilter.from,
+          to: eventsFilter.to,
+          start: fromTimeHM("8:00"),
+          duration: fromTimeHM("1:00"),
+          end: fromTimeHM("9:00"),
+          room: eventsMeta.rooms[0],
+          name: eventsMeta.groups[0]
+        };
+        addedEvents[id]=e;
+        //events[events.length]=e;
+        events.unshift(e);
+        return true;
+      }
+      return false;
+    }
+  
+  function isAddedEvent(id) {
+    if(!id) return Object.keys(addedEvents).length>0;
+    var r=false;
+    var em=addedEvents[id];
+    if(em){
+       r = true;
+    }else{
+       r = false;
+    }
+    return r;
+  }
+  
   function undoEventChanges(id,prop) {
-    if(!isChangedEvent(id,prop)) return false;
+    if(!isChangedEvent(id,prop)) {
+       return false;
+    }
+    
+    if(!id) {
+       var done=false;
+       for(var k in modifiedEvents) {
+          if(undoEventChanges(k,prop)) done=true;
+       }
+       return done;
+    }
     
     var r=false;
     var em=modifiedEvents[id];
@@ -430,7 +586,111 @@ function renderFilter() {
     return r;
   }
 
+  function applyEventChanges(id) {
+     var added;
+     var deleted;
+     var modified;
+     
+     if(id) {
+        if(isAddedEvent(id)) {
+           added=[];
+           added.push(addedEvents[id]);
+        } else if(isDeletedEvent(id)) {
+           deleted=[];
+           deleted.push(id);
+        } else if(isChangedEvent(id,null)) {
+           modified={};
+           for(var i in modifiedEvents) {
+              var te=modifiedEvents[i].item;
+              if(id==te.id) {
+                modified[i]=te;
+                break;
+              }
+           }
+        }
+     }else{
+        if(isAddedEvent(null)) {
+           added=[];
+           for(var i in addedEvents) {
+             added.push(addedEvents[i]);
+           }
+        } else if(isDeletedEvent(id)) {
+           deleted=[];
+           for(var i in deletedEvents) {
+             deleted.push(deletedEvents[i]);
+           }
+        } else if(isChangedEvent(id,null)) {
+           modified={};
+           for(var i in modifiedEvents) {
+              var te=modifiedEvents[i].item;
+              modified[i]=te;
+           }
+        }
+    }
+     
+    if(added || deleted || modified) {
+       REST_api.modifyEventPlanners(
+         added,
+         deleted,
+         modified,
+         function(url,data) {
+            // proceed data results:
+            //   clear succesfull added replacing with actuals
+            //   remove succesfull deletes
+            //   refresh modified
+            if(data.result) {
+               var rr=data.result;
+               for(var id in rr) {
+                 if(isAddedEvent(id)) {
+                   if("object"==typeof(rr[id])){
+                      if(isChangedEvent(id)) {
+                         delete modifiedEvents[id];
+                      }
+                      for(var i in events) {
+                         var e=events[i];
+                         if(id==e.id) {
+                            delete addedEvents[id];
+                            events[i]=rr[id];
+                            break;
+                         }
+                      }
+                   } else if("failed"==rr[id]) {
+                      // error message
+                      var a=0;
+                   } 
+                 } else if(isDeletedEvent(id)) {
+                      delete deletedEvents[id];
+                      for(var i in events) {
+                         var e=events[i];
+                         if(id==e.id) {
+                            delete events[i];
+                            break;
+                         }
+                      }
+                 } else if(isChangedEvent(id)) {
+                    if("object"==typeof(rr[id])) {
+                      delete modifiedEvents[id];
+                      for(var i in events) {
+                         var e=events[i];
+                         if(id==e.id) {
+                            events[i]=rr[id];
+                            break;
+                         }
+                      }
+                    }
+                 }
+               }
+            }
+            renderEvents();
+         }
+        );
+    }
+    return false;
+  }
   
+  function toJSON(val) {
+     return JSON.stringify(val);
+  }
   function jsonEqual(a1,a2) {
     return JSON.stringify(a1)==JSON.stringify(a2);
   }  
@@ -474,15 +734,72 @@ function renderFilter() {
     generatedEvents=[];
     for(var i in events) {
        var e=events[i];
-       
-       if(e.weekDays && e.weekDays.length>0) for(var i in e.weekDays) {
+       if(isDeletedEvent(e.id)) continue;
+       var wd0=(isChangedEvent(e.id,'weekDays')) ? modifiedEvents[e.id].changes.weekDays : null;
+       var wds=e.weekDays;
+       if(wds && wds.length>0) {for(var i in wds) {
          var wd=e.weekDays[i];
          var ds=eventsMeta.weekDays[wd-1];
-         ge={id:e.id,start:e.start+ds,end:e.end+ds,duration:e.duration,name:e.name, shortName:e.shortName, confSize: e.confSize, maxSize:e.maxSize};
-         if(ge)
+         ge={
+           id:e.id,
+           start:e.start+ds,
+           end:e.end+ds,
+           duration:e.duration,
+           name:e.name, 
+           shortName:e.shortName, 
+           confSize: e.confSize, 
+           maxSize:e.maxSize, 
+           icon:e.icon, 
+           room: e.room, 
+           hidden: e.hidden,
+           weekDays: e.weekDays,
+           weekDay: wd
+         };
+         if(ge) {
+           if(e.hidden){
+              var a=0;
+           }
            generatedEvents[generatedEvents.length]=ge;
-       }
-    }
+         }
+       }}
+       // add removed week days if any
+       if(wd0 && wd0.length>0) {
+         if(wd0 && wd0.length>0) for(var i in wd0) {
+           var wd=wd0[i];
+           if(wds && wds.length>0) {
+              for(var j in wds) {
+                 if(wd==wds[j]) {
+                    wd=-1;
+                    break;
+                 }
+              }
+           }
+           if(wd==-1) continue;
+           var ds=eventsMeta.weekDays[wd-1];
+           ge={
+             id:e.id,
+             start:e.start+ds,
+             end:e.end+ds,
+             duration:e.duration,
+             name:e.name, 
+             shortName:e.shortName, 
+             confSize: e.confSize, 
+             maxSize:e.maxSize, 
+             icon:e.icon, 
+             room: e.room, 
+             weekDays: e.weekDays,
+             weekDay: wd,
+             hidden: e.hidden,
+             removed: true
+           };
+           if(ge){
+             if(e.hidden){
+                var a=0;
+             }
+             generatedEvents[generatedEvents.length]=ge;
+           }
+       }}}
+    
     renderGeneratedEvents();
   }
 
@@ -514,12 +831,11 @@ function renderFilter() {
             return s;
           },
   renderCellEntry: function(id, entry, dMin, dMax) {
+    var edit=eventsFilter.edit==true || userHasRole('admin');
   var iconSize="24px";
   var actionIconSize="15px";
     var s="";
-    var trMax=entry.maxSize;//entry.group.training.maxSize;
-    var trAct=entry.size;//Object.keys(entry.trainees).length;
-    var cst=(trAct<trMax)? (trAct>0)? (trAct>=trMax) ?"calendar_cell_full" :"calendar_cell_participant":"":"calendar_cell_full";
+    var cst=(entry.removed) ? "calendar_cell_deleted" : (entry.hidden)? "calendar_cell_hidden" : "";
     s+="<fieldset  id='"+id+"' class='calendar_cell "+cst+"' tMin='"+dMin.getTime()+"' tMax='"+dMax.getTime()+"'>";
     s+="<legend class='calendar_cell'>";
     s+="<font size=-2>";
@@ -530,12 +846,22 @@ function renderFilter() {
     // build overlayed images with optional action...
     var action=null;
     var actionIcon=null;
-    if(eventsInBasket && eventsInBasket[entry.id]) {
-        action = "<a onclick='removeFromBasket(\""+entry.id+"\");' class='cell_action'>";
-        actionIcon="images/icons8-ok-90.png";
-    } else {
-        action = "<a onclick='addToBasket(\""+entry.id+"\");' class='cell_action'>";
-        actionIcon="images/icons8-circle-90.png";
+    if(edit && !entry.hidden) {
+      if(entry.removed) {
+          var rr=entry.weekDays;
+          if(!rr) rr=[];
+          rr.push(entry.weekDay);
+          action = "<a onclick='if(modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) renderEvents();' class='cell_action'>";
+          actionIcon="images/icons8-restore-90.png";
+      } else {
+          var rr0=entry.weekDays;
+          var rr=[];
+          for(var j in rr0) {
+             if(rr0[j]!=entry.weekDay) rr.push(rr0[j]);
+          }
+          action = "<a onclick='if(modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) renderEvents();' class='cell_action'>";
+          actionIcon="images/icons8-trashcan-90.png";
+      }
     }
     
     s+=(action)?action:"";
@@ -547,22 +873,9 @@ function renderFilter() {
         s+="<img class='overlay_wdm' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
       }
     }
-
-    if(entry.course) {
-      if(entry.myState) {
-        //s+="<img class='overlay_wd' src='images/icons8-minus-144.png' alt='remove' width='"+iconSize+"'>";
-      } else {
-        //s+="<img class='overlay_wd' src='images/icons8-plus-144.png' alt='add' width='"+iconSize+"'>";
-      }
-    }
     
     s+="<br/>"+((entry.shortName) ? entry.shortName: entry.name);
-    s+="&nbsp;<font size=-1>"+entry.confSize+"/"+entry.maxSize+"</font>";
-    if(entry.myState) {
-       var ss=entry.myState.split("_");
-       s+="<br/>"+ss[0];
-    }
-    //s+="  <font size=-1><br/>"+entry.trainer+"</font>";
+    if(entry.maxSize)s+="&nbsp;<font size=-1>"+entry.maxSize+"</font>";
 
     if(action && actionIcon) {
       s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
@@ -584,29 +897,9 @@ function renderFilter() {
         else if(eventsFilter && "month"==eventsFilter.mode)
         calendar.renderMonth('pane_right',generatedEvents);
         else
-        calendar.render('pane_right',generatedEvents);
+        calendar.render('pane_content2',generatedEvents);
     }
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -614,6 +907,7 @@ function renderFilter() {
   document.addEventListener('DOMContentLoaded', function() { loadEventsMeta(); loadEvents();}, false);
 </script>
     
+
 </head><body>
 
 ${include /app/pane.incl}

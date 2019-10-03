@@ -11,12 +11,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import ssg.lib.common.CommonTools;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
 import ssg.lib.http.base.HttpRequest;
@@ -656,11 +658,13 @@ public class UI_API {
 
         // year-level meta
         Calendar c = TimeTools.getCalendar(null);
-        TimeTools.toStartOfYear(c);
 
         int nowYear = c.get(Calendar.YEAR);
         int nowSeason = SEASON.seasonOf(c).order();
         int nowQuarter = c.get(Calendar.MONTH) / 3;
+
+        TimeTools.toStartOfYear(c);
+
         //c.add(Calendar.YEAR, -1);
         int year = c.get(Calendar.YEAR);
         Map y = new LinkedHashMap();
@@ -719,17 +723,17 @@ public class UI_API {
         r.put("times", t);
         t.put("starts", ts);
         t.put("durations", td);
-        long minT=1000*60*60*6; // 6:00
-        long maxT=1000*60*60*22; // 22:00
-        long stepT=1000*60*15; // 22:00
-        long maxD=1000*60*60*12; // 12:00
+        long minT = 1000 * 60 * 60 * 6; // 6:00
+        long maxT = 1000 * 60 * 60 * 22; // 22:00
+        long stepT = 1000 * 60 * 15; // 22:00
+        long maxD = 1000 * 60 * 60 * 12; // 12:00
         t.put("min", minT);
         t.put("max", maxT);
         t.put("step", stepT);
-        for(long l=minT;l<=maxT;l+=stepT) {
+        for (long l = minT; l <= maxT; l += stepT) {
             ts.add(l);
         }
-        for(long l=0;l<=maxD;l+=stepT) {
+        for (long l = 0; l <= maxD; l += stepT) {
             td.add(l);
         }
         return r;
@@ -779,6 +783,7 @@ public class UI_API {
 
         // generic filter based on event properties...
         List<TimeEventPlanner> rs = schedule.findEventPlanners(room, from, to, name);
+        Collection<TimeEventPlanner> hidden = new HashSet<>();
 
         // training-specific filtering, if needed
         if (!rs.isEmpty() && (trainer != null || participant != null || course != null || category != null || group != null)) {
@@ -791,7 +796,8 @@ public class UI_API {
             while (it.hasNext()) {
                 TimeEventPlanner t = it.next();
                 if (group != null && !group.equals(t.getName())) {
-                    it.remove();
+//                    it.remove();
+                    hidden.add(t);
                     continue;
                 }
 //                if (participant != null && !t.getParticipants().containsKey(participant)) {
@@ -805,29 +811,36 @@ public class UI_API {
                 List<Group> gs = training.findGroups(t.getName(), trainer);
                 if (trainer != null) {
                     if (gs == null || gs.size() != 1) {
-                        it.remove();
+//                        it.remove();
+                        hidden.add(t);
                         continue;
                     }
                 }
                 if (course != null) {
                     if (gs == null || gs.size() != 1) {
-                        it.remove();
+//                        it.remove();
+                        hidden.add(t);
                         continue;
                     }
                     if (!course.equals(gs.get(0).getCourse())) {
-                        it.remove();
+//                        it.remove();
+                        hidden.add(t);
                         continue;
                     }
                 }
                 if (category != null) {
                     if (gs == null || gs.size() != 1) {
-                        it.remove();
+//                        it.remove();
+                        hidden.add(t);
                         continue;
                     }
-                    Course crs = training.courses.get(gs.get(0).getCourse());
-                    if (crs == null || !category.equals(crs.getCategory())) {
-                        it.remove();
-                        continue;
+                    if (!hidden.contains(t)) {
+                        Course crs = training.courses.get(gs.get(0).getCourse());
+                        if (crs == null || !category.equals(crs.getCategory())) {
+//                        it.remove();
+                            hidden.add(t);
+                            continue;
+                        }
                     }
                 }
             }
@@ -840,12 +853,128 @@ public class UI_API {
             TEP[] t = toTEP(te, dayOfWeek);
             if (t != null) {
                 for (TEP tep : t) {
+                    tep.hidden = (hidden.contains(te));
                     r.add(tep);
                 }
             }
         }
         //r.addAll(rs);
 
+        return r;
+    }
+
+    /**
+     * Apply event planner actions: add/modify/delete
+     *
+     * @param req
+     * @param added
+     * @param modified
+     * @param deleted
+     * @return
+     * @throws IOException
+     */
+    @XMethod(name = "modifyEventPlanners")
+    public Map<String, Object> modifyTimeEventPlanners(
+            HttpRequest req,
+            @XParameter(name = "added", optional = true) Collection<Map> added,
+            @XParameter(name = "deleted", optional = true) Collection<String> deleted,
+            @XParameter(name = "modified", optional = true) Map<String, Map> modified
+    ) throws IOException {
+        Map<String, Object> r = new LinkedHashMap<>();
+        if (deleted != null) {
+            for (String id : deleted) {
+                if (schedule.eventPlanners.containsKey(id)) {
+                    TimeEventPlanner te = schedule.eventPlanners.remove(id);
+                    r.put(id, "deleted");
+                }
+            }
+        }
+        if (added != null) {
+            for (Map map : added) {
+                String id = (map != null) ? "" + map.get("id") : null;
+                if (id == null) {
+                    continue;
+                }
+                try {
+                    String room = (String) map.get("room");
+                    String name = (String) map.get("name");
+                    Long from = CommonTools.toType(map.get("from"), Long.class);
+                    Long to = CommonTools.toType(map.get("to"), Long.class);
+                    Long start = CommonTools.toType(map.get("start"), Long.class);
+                    Long duration = CommonTools.toType(map.get("duration"), Long.class);
+                    int[] weekDays = CommonTools.toType(map.get("weekDays"), int[].class);
+                    TimeEventPlanner te = schedule.addEventPlanner(
+                            room,
+                            name,
+                            from,
+                            to,
+                            start,
+                            duration,
+                            weekDays
+                    );
+                    TEP[] tt = toTEP(te, -1);
+                    if (tt != null && tt.length == 1) {
+                        r.put(id, tt[0]);
+                    } else {
+                        r.put(id, "failed");
+                    }
+                } catch (Throwable th) {
+                    r.put(id, ""+th);
+                }
+            }
+        }
+        if (modified != null) {
+            for (Entry<String, Map> entry : modified.entrySet()) {
+                String id = entry.getKey();
+                Map map = entry.getValue();
+                if (id == null || map == null) {
+                    continue;
+                }
+                TimeEventPlanner te = schedule.eventPlanners.get(id);
+                if (te != null) {
+                    try {
+                        String room = (String) map.get("room");
+                        String name = (String) map.get("name");
+                        Long from = CommonTools.toType(map.get("from"), Long.class);
+                        Long to = CommonTools.toType(map.get("to"), Long.class);
+                        Long start = CommonTools.toType(map.get("start"), Long.class);
+                        Long duration = CommonTools.toType(map.get("duration"), Long.class);
+                        int[] weekDays = CommonTools.toType(map.get("weekDays"), int[].class);
+                        if (room != null) {
+                            te.setRoom(room);
+                        }
+                        if (name != null) {
+                            te.setName(name);
+                        }
+                        if (from != null) {
+                            te.setFrom(from);
+                        }
+                        if (to != null) {
+                            te.setTo(to);
+                        }
+                        if (start != null) {
+                            te.setStart(start);
+                        }
+                        if (duration != null) {
+                            te.setDuration(duration);
+                        }
+                        if (weekDays != null) {
+                            te.setWeekDays((int[]) weekDays);
+                        }
+                    TEP[] tt = toTEP(te, -1);
+                    if (tt != null && tt.length == 1) {
+                        r.put(id, tt[0]);
+                    } else {
+                        r.put(id, "failed");
+                    }
+                    } catch (Throwable th) {
+                        r.put(id, ""+th);
+                    }
+                } else {
+                    r.put(id, null);
+                }
+            }
+        }
         return r;
     }
 
@@ -1041,6 +1170,7 @@ public class UI_API {
         public long from;
         public long to;
         public int[] weekDays;
+        public boolean hidden = false;
 
         public TEP() {
         }
