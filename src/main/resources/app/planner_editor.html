@@ -4,7 +4,11 @@ ${include /app/head.incl}
 <link rel="stylesheet" type="text/css" href="/app/styles/calendar.css" media="screen">
 <script type="text/javascript" src="/app/scripts/calendar.js"></script>
 <script type="text/javascript" src="/app/scripts/filter.js"></script>
-
+<link rel="stylesheet" type="text/css" href="/app/styles/special.css" media="screen">
+<!--
+<link rel="stylesheet" type="text/css" href="/app/styles/ttar.css" media="screen">
+<link rel="stylesheet" type="text/css" href="/app/styles/ttbr.css" media="screen">
+-->
 
 <script type="text/javascript">
 var events;
@@ -52,17 +56,19 @@ function buildListSwitch(asList, notList) {
    var active=eventsFilter.mode=="list";
    s+="<fieldset class='filter'><table><tr>";
    s+="<td>";
-   //s+=(active) ? "<a class='filter_active'>"+asList+"</a>" : "<a class='filter' onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>"+asList+"</a>";
+   s+="<span ttal='#{ListView}'>";
    s+=(active) 
-     ? "<img class='list_mode_active' src='images/icons8-list-144.png' alt=\""+asList+"\">" 
+     ? "<img class='list_mode_active' src='images/icons8-list-144.png' alt=\""+asList+"\"></span>" 
      : "<img class='list_mode' src='images/icons8-list-144.png' alt=\""+asList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=\"list\"; renderEvents(); renderFilter();'>";
+   s+="</span>";
    s+="</td>";
    s+="<td></td>";
    s+="<td>";
-   //s+=(!active) ? "<a class='filter_active'>"+notList+"</a>" : "<a class='filter' onclick='eventsFilter.mode=eventsFilter.lastMode; eventsFilter.lastMode=null; renderEvents(); renderFilter();'>"+notList+"</a>";
+   s+="<span ttal='#{CalendarView}'>";
    s+=(!active) 
      ? "<img class='list_mode_active' src='images/icons8-calendar-144.png' alt=\""+notList+"\">" 
      : "<img class='list_mode' src='images/icons8-calendar-144.png' alt=\""+notList+"\" onclick='eventsFilter.lastMode=eventsFilter.mode; eventsFilter.mode=null; renderEvents(); renderFilter();'>";
+   s+="</span>";
    s+="</td>";
    s+="</tr></table></fieldset>";
    return s;
@@ -166,7 +172,7 @@ function renderFilter() {
         }
      }
 
-     renderToolbarActions();     
+     //renderToolbarActions();     
      //toggleVisibility('filter_room');
      //toggleVisibility('filter_trainer');
      //toggleVisibility('filter_course');
@@ -175,13 +181,19 @@ function renderFilter() {
 function renderToolbarActions() {
      var s="";
      
+     s+="<a class='appRef' href='schedule.html' ttbr='#{Schedule}'><img class='toolbar' src='images/icons8-schedule-90.png' alt='#{Schedule}' width='24px'></a>";
+     s+="<a class='appRef' href='planner_editor.html' ttbr='#{Planner}'><img class='toolbar' src='images/icons8-planner-90.png' alt='#{Planner}' width='24px'></a>";
+     s+="<a class='appRef' href='contacts.html#locations' ttbr='#{Locations}'><img class='toolbar' src='images/icons8-address-90.png' alt='#{Locations}' width='24px'></a>";
+     s+="<a class='appRef' href='contacts.html#contacts' ttbr='#{Contacts}'><img class='toolbar' src='images/icons8-address-book-90.png' alt='#{Contacts}' width='24px'></a>";
+     
      if(userHasRole('admin')) {
-        s+="<span><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='24px'><tt>#{Export}</tt></span>";
-        s+="<span><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='24px'><tt>#{Import}</tt></span>";
-        s+="<span><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='24px'><tt>#{Backup}</tt></span>";
+        s+="<span ttbr='#{Export}'><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='24px'></span>";
+        s+="<span ttbr='#{Import}'><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='24px'></span>";
+        s+="<span ttbr='#{Backup}'><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='24px'></span>";
      }
      
      div=document.getElementById('toolbar_2');
+     div=document.getElementById('top_toolbar');
      div.innerHTML=s;
 }
 
@@ -222,11 +234,11 @@ function renderToolbarActions() {
     s+="<div style='overflow: scroll; height: 200px; width: 100%;'><table class='tep'>";
     s+="<caption class='tep'>";
     if(eventsFilter.prev || eventsFilter.prev==0) {
-       s+="<span><img class='tep' src='images/icons8-shevrone-left-90.png' height='15px' width='20px' onclick='toPrevPeriod(); loadEvents(); '><tt>#{Prev}</tt></span>";
+       s+="<span ttal='#{Prev}'><img class='tep' src='images/icons8-shevrone-left-90.png' height='15px' width='20px' onclick='toPrevPeriod(); loadEvents(); '></span>";
     } 
     s+=""+toDateYMD(eventsFilter.from)+" - "+toDateYMD(eventsFilter.to)+"";
     if(eventsFilter.next) {
-       s+="<span><img class='tep' src='images/icons8-shevrone-right-90.png' height='15px' width='20px' onclick='toNextPeriod(); loadEvents(); '><tt>#{Prev}</tt></span>";
+       s+="<span ttal='#{Next}'><img class='tep' src='images/icons8-shevrone-right-90.png' height='15px' width='20px' onclick='toNextPeriod(); loadEvents(); '></span>";
     } 
     s+="</caption>";
     
@@ -250,14 +262,14 @@ function renderToolbarActions() {
       var hasAdded=isAddedEvent(null);
       var hasDeleted=isDeletedEvent(null);
       var hasChanged=isChangedEvent(null,null);
-      s+="<a class='tep' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();'><img src='images/icons8-add-db-90.png' width='"+actionIconSize+"' alt='#{AddNew}'><tt class='tep'>#{AddNew}</tt></a>";
+      s+="<a class='tep' onclick='if(addEvent(\"added_"+(new Date())*1+"\")) renderEvents();' ttal='#{AddNew}'><img src='images/icons8-add-db-90.png' width='"+actionIconSize+"' alt='#{AddNew}'></a>";
       if(hasAdded || hasChanged || hasDeleted) {
           if(hasDeleted) {
-            s+="<a class='tep' onclick='if(undeleteEvent(null)) renderEvents();'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{UndeleteAll}'><tt class='tep'>#{UndeleteAll}</tt></a>";
+            s+="<a class='tep' onclick='if(undeleteEvent(null)) renderEvents();' ttal='#{UndeleteAll}'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{UndeleteAll}'></a>";
           }
-          s+="<a class='tep' onclick='if(applyEventChanges(null)) renderEvents();'><img src='images/icons8-save-all-90.png' width='"+actionIconSize+"' alt='#{SaveAll}'><tt class='tep'>#{SaveAll}</tt></a>";
+          s+="<a class='tep' onclick='if(applyEventChanges(null)) renderEvents();' ttal='#{SaveAll}'><img src='images/icons8-save-all-90.png' width='"+actionIconSize+"' alt='#{SaveAll}'></a>";
           if(hasChanged || hasAdded) {
-            s+="<a class='tep' onclick='if(undoEventChanges(null)) renderEvents();'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{UndoAll}'><tt class='tep'>#{UndoAll}</tt></a>";
+            s+="<a class='tep' onclick='if(undoEventChanges(null)) renderEvents();' ttal='#{UndoAll}'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{UndoAll}'></a>";
           }
       }
     }
@@ -293,12 +305,12 @@ function renderToolbarActions() {
           s+="<td class='tep'>";
           if(edit) {
             if(isDeleted) {
-              s+="<a class='tep' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{Undelete}'><tt class='tep'>#{Undelete} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
+              s+="<a class='tep' onclick='if(undeleteEvent(\""+tep.id+"\")) renderEvents();' ttal='#{Undelete} "+asTimeHM(tep.start)+" "+tep.name+"'><img src='images/icons8-restore-90.png' width='"+actionIconSize+"' alt='#{Undelete}'></a>";
             }else {
-              s+="<a class='tep' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-trashcan-90.png' width='"+actionIconSize+"' alt='#{Delete}'><tt class='tep'>#{Delete} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
+              s+="<a class='tep' onclick='if(deleteEvent(\""+tep.id+"\")) renderEvents();' ttal='#{Delete} "+asTimeHM(tep.start)+" "+tep.name+"'><img src='images/icons8-trashcan-90.png' width='"+actionIconSize+"' alt='#{Delete}'></a>";
               if(isChanged) {
-                s+="<a class='tep' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();'><img src='images/icons8-save-90.png' width='"+actionIconSize+"' alt='#{Save}'><tt class='tep'>#{Save} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
-                s+="<a class='tep' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{Undo}'><tt class='tep'>#{Undo} "+asTimeHM(tep.start)+" "+tep.name+"</tt></a>";
+                s+="<a class='tep' onclick='if(applyEventChanges(\""+tep.id+"\")) renderEvents();' ttal='#{Save} "+asTimeHM(tep.start)+" "+tep.name+"'><img src='images/icons8-save-90.png' width='"+actionIconSize+"' alt='#{Save}'></a>";
+                s+="<a class='tep' onclick='if(undoEventChanges(\""+tep.id+"\",null)) renderEvents();' ttal='#{Undo} "+asTimeHM(tep.start)+" "+tep.name+"'><img src='images/icons8-undo-90.png' width='"+actionIconSize+"' alt='#{Undo}'></a>";
               }
             }
           }

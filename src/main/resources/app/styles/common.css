@@ -6,6 +6,19 @@
 }
 
 
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+header,
+.tooltip,
+.tooltip p {
+  margin: 4em 0;
+  text-align: center;
+}
+
+
 body {
     background-color: rgba(187,45,141,25);
     background-color: rgb(234,182,134);
@@ -15,6 +28,21 @@ body {
     vertical-align: top;
 }
 table { border-collapse: collapse; border-color: rgba(200,200,200,0);}
+
+div.toolbar {
+    white-space: nowrap;
+}
+a.toolbar_item {
+    padding-left: 5px;
+    padding-left: 5px;
+}
+a.toolbar_item:hover {
+    color: white;
+    font-weight: 900;
+    background-color: rgba(200,200,200,0);
+    border-bottom-color: var(--menu-bg-color);
+}
+
 
 /* tooltip: insert inside <a> tag <span> element with tooltip text */
 a tt {display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: #fff; text-align: right; padding-right: 10px;}
@@ -442,3 +470,4 @@ img.toolbar:hover {
     border-bottom-width: 2px;
     border-bottom-color: var(--menu-bg-color);
 }
+

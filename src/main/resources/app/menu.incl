@@ -4,7 +4,7 @@
        var s="";
        s+="<table border='0' style='border-collapse: collapse;'><tr>";
        s+="<td>";
-       s+="<a onclick='showLoginForm();' class='login'>";
+       s+="<a onclick='showLoginForm();' class='login' ttar='#{Login}...'>";
        s+="<img src='images/icons8-login-90.png' alt='#{Login}...' width='20'>"
        s+="<tt>#{Login}</tt>";
        s+="</a>";
@@ -14,7 +14,7 @@
              var ll=loginLinks[l];
              if(l && ll && ll[0]) {
                 s+="<td nowrap>";
-                s+="<a href='"+l+"' class='login'>";
+                s+="<a href='"+l+"' class='login' ttar='"+ll[1]+"'>";
                 s+="<img src='images/"+ll[0]+"' width='20px' alt='"+ll[1]+"'>";
                 s+="<tt>"+ll[1]+"</tt>";
                 s+="</a>";
@@ -80,15 +80,35 @@
     );
   }
 
+function renderToolbarActions() {
+     var s="";
+     var toolIconSize='36px';
+     
+     s+="<a class='toolbar_item' href='schedule.html' ttbr='#{Schedule}'><img class='toolbar' src='images/icons8-schedule-90.png' alt='#{Schedule}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' href='planner_editor.html' ttbr='#{Planner}'><img class='toolbar' src='images/icons8-planner-90.png' alt='#{Planner}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' href='contacts.html#locations' ttbr='#{Locations}'><img class='toolbar' src='images/icons8-address-90.png' alt='#{Locations}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' href='contacts.html#contacts' ttbr='#{Contacts}'><img class='toolbar' src='images/icons8-address-book-90.png' alt='#{Contacts}' width='"+toolIconSize+"'></a>";
+     
+     if(userHasRole('admin')) {
+        s+="<span ttbr='#{Export}'><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Import}'><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Backup}'><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='"+toolIconSize+"'></span>";
+     }
+     
+     div=document.getElementById('toolbar_2');
+     div=document.getElementById('top_toolbar');
+     div.innerHTML=s;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if(isValidUser()) {
        var el=document.getElementById('userInfo');
        var un=userDisplayName();
        var ud=userDomainName();
-       el.innerHTML=un+"&nbsp;("+ud+")&nbsp;<a onclick='doLogout();' class='login'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'><tt>#{Logout}</tt></a>";
+       el.innerHTML=un+"&nbsp;("+ud+")&nbsp;<a onclick='doLogout();' class='login' ttar='#{Logout}'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'><tt>#{Logout}</tt></a>";
     } else {
        var el=document.getElementById('userInfo');
-       el.innerHTML="<a onclick='showLoginForm();' class='login'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'><tt>#{Login}</tt></a>";
+       el.innerHTML="<a onclick='showLoginForm();' class='login' ttar='#{Login}'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'><tt>#{Login}</tt></a>";
        REST_api.loginVariants(
          function(url,data) { 
            if(data.result) {
@@ -110,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
        }
     }
+    renderToolbarActions();
 }, false);
   
 </script>
@@ -123,19 +144,21 @@ document.addEventListener('DOMContentLoaded', function() {
            <a class='appRef'><img src='images/icons8-facebook-144.png' width='24px' class='appRef'></a>
            <a class='appRef'><img src='images/icons8-instagram-144.png' width='24px' class='appRef'></a>
            <a class='appRef'><img src='images/icons8-vk.com-144.png' width='24px' class='appRef'></a>
-        </td><div id='loginForm' class='loginForm' align='center'>.</div><td>
+        </td><div id='loginForm' class='loginForm' align='center'>.</div>
+        <td>
+           <div id='top_toolbar' class='toolbar'></div>
         </td><td width='40%' align='right'>
            <div class='localeSelector'>
-             <span><img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'><tt>#{SwitchTo} #{Finnish}</tt></span>
-             <span><img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'><tt>#{SwitchTo} #{Russian}</tt></span>
-             <span><img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'><tt>#{SwitchTo} #{English}</tt></span>
+             <span ttbr='#{SwitchTo} #{Finnish}'><img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'><tt>#{SwitchTo} #{Finnish}</tt></span>
+             <span ttbr='#{SwitchTo} #{Russian}'><img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'><tt>#{SwitchTo} #{Russian}</tt></span>
+             <span ttbr='#{SwitchTo} #{English}'><img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'><tt>#{SwitchTo} #{English}</tt></span>
            </div>
            <div id='userInfo' class='userInfo'></div>
         </td></tr>
       </table>
     <td>
   </tr>
-  <tr class='menu'>
+  <!-- tr class='menu'>
     <td class='menu-item'>
       <a class='menu-item' href='index.html'>#{Main}</a>
     </td>
@@ -148,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <td class='menu-item'>
       <a class='menu-item' href='contacts.html'>#{Contacts}</a>
     </td>
-  </tr>
+  </tr  -->
  <tr class='menu-toolbar'>
    <td class='menu-toolbar' colspan='4'>
      ${include /app/toolbar.incl}
