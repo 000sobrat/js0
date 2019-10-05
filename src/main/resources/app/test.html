@@ -29,6 +29,8 @@ var docW;
 var docH;
 var pageW;
 var pageH;
+var bestW;
+var bestH;
 
 function evalSizes() {
   screenW=window.screen.width;
@@ -39,14 +41,36 @@ function evalSizes() {
   docH=document.documentElement.clientHeight;
   pageW=document.getElementsByTagName('body')[0].clientWidth;
   pageH=document.getElementsByTagName('body')[0].clientHeight;
+  pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
+  
+  if(screenW<windowW && screenH<windowH) {
+    bestW=screenW;
+  } else {
+    bestW=pageW-pageLM-pageLM;
+  }
+  
+  {
+     var el=document.getElementById('pane_all');
+     el=document.getElementsByTagName('body')[0];
+     el.style.minWidth=bestW;
+     el.style.maxWidth=bestW;
+  }
+  
   renderSizes();
 }
+
+  function toNumeric(val) {
+     if("number"==typeof(val)) return val;
+     val=""+val;
+     if(val.endsWith("px")) val=val.substring(0,val.length-2);
+     return new Number(val);
+  }
 
 function renderSizes() {
    var s="";
 
-   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
-   s+="<table border='1' class='a'>";
+   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
+   s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
    s+="<tr><th>Scope</th><th>Width</th><th>Height</th></tr>";
    s+="<tr>";
    s+="  <td class='title'>Screen</td>";
@@ -69,8 +93,8 @@ function renderSizes() {
    s+="  <td class='value'>"+pageH+"</td>";
    s+="</tr>";
    s+="</table>";
-   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
-   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
+   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
+   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
 
    var el=document.getElementById('sizes');
    el.innerHTML=s;
@@ -89,8 +113,19 @@ document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false)
 </head><body>
 
 <div id='sizes'></div>
+<br/>
+<div id="pane_all" style="border: solid black 1px; padding: 0px;">
+    <table width='100%' border='1'><tr>
+            <td>A</td>
+            <td>B</td>
+            <td>C</td>
+            <td>D</td>
+            <td>E</td>
+            
+        </tr></table>
 <div>
     ${request}
+</div>
 </div>
 
 </body></html>
