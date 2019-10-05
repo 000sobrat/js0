@@ -24,11 +24,13 @@ import ssg.lib.http.HttpApplication;
 import ssg.lib.http.HttpMatcher;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
+import ssg.lib.http.base.Head;
 import ssg.lib.http.base.HttpData;
 import ssg.lib.http.base.HttpRequest;
 import ssg.lib.http.dp.HttpResourceBytes;
 import ssg.lib.http.dp.HttpResourceCollection;
 import ssg.lib.http.dp.HttpStaticDataProcessor;
+import ssg.lib.http.dp.HttpStaticDataProcessor.ParameterResolver;
 import ssg.lib.http.rest.MethodsProvider;
 import ssg.lib.http.rest.RESTHttpDataProcessor;
 import ssg.lib.http.rest.XMethodsProvider;
@@ -209,7 +211,39 @@ public class App extends CS {
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/app/manifest.json", "application/json"))
                                 .add(new HttpResourceCollection("/app/*", "resource:app"))
                                 .resourceBundle("i18n.jana")
-                        .noCacheing()
+                                .addParameterResolvers(new ParameterResolver() {
+                                    @Override
+                                    public boolean canResolveParameter(HttpData hd, String string) {
+                                        return hd instanceof HttpRequest && string != null && string.startsWith("request");
+                                    }
+
+                                    @Override
+                                    public String resolveParameter(HttpData hd, String string) {
+                                        StringBuilder sb = new StringBuilder();
+                                        if (this.canResolveParameter(hd, string)) {
+                                            HttpRequest req = (HttpRequest) hd;
+                                            Head h = hd.getHead();
+                                            Map<String, String[]> m = h.getHeaders();
+                                            for (String key : m.keySet()) {
+                                                String[] vv = m.get(key);
+                                                if (sb.length() > 0) {
+                                                    sb.append('\n');
+                                                }
+                                                sb.append(key);
+                                                sb.append(": ");
+                                                if (vv != null && vv.length > 1) {
+                                                    for (String v : vv) {
+                                                        sb.append("\n  " + v);
+                                                    }
+                                                } else if (vv.length == 1) {
+                                                    sb.append(vv[0]);
+                                                }
+                                            }
+                                        }
+                                        return sb.toString();
+                                    }
+                                })
+                                .noCacheing()
                         ),
                 um.getDomain()
         );

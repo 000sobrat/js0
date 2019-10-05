@@ -45,6 +45,7 @@ function evalSizes() {
 function renderSizes() {
    var s="";
 
+   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
    s+="<table border='1' class='a'>";
    s+="<tr><th>Scope</th><th>Width</th><th>Height</th></tr>";
    s+="<tr>";
@@ -68,6 +69,8 @@ function renderSizes() {
    s+="  <td class='value'>"+pageH+"</td>";
    s+="</tr>";
    s+="</table>";
+   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
+   s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
 
    var el=document.getElementById('sizes');
    el.innerHTML=s;
@@ -86,6 +89,8 @@ document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false)
 </head><body>
 
 <div id='sizes'></div>
-
+<div>
+    ${request}
+</div>
 
 </body></html>
