@@ -1,5 +1,5 @@
 <html><head>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     * {
         font-family: Monospace;
@@ -43,6 +43,7 @@ function evalSizes() {
   pageH=document.getElementsByTagName('body')[0].clientHeight;
   pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
   
+  /*
   if(screenW<windowW && screenH<windowH) {
     bestW=screenW;
   } else {
@@ -55,7 +56,7 @@ function evalSizes() {
      el.style.minWidth=bestW;
      el.style.maxWidth=bestW;
   }
-  
+  */
   renderSizes();
 }
 
@@ -70,7 +71,8 @@ function renderSizes() {
    var s="";
 
    //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
-   s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
+   //s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
+   s+="<table border='1' class='a' width='100%'>";
    s+="<tr><th>Scope</th><th>Width</th><th>Height</th></tr>";
    s+="<tr>";
    s+="  <td class='title'>Screen</td>";
