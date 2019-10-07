@@ -29,20 +29,60 @@
             img.a {
                 width: 50px;
             }
+            
+            img.b {
+                min-width: 50px;
+                max-width: 100px;
+                width: 10vw;
+            }
 
-            @media screen and (max-width: 500px) {
+            
+            
+            @media screen and (max-width: 1000px) {
                 th.a {
-                    font-size: 2vw;
-                }
-                th.b {
                     font-size: 1.5vw;
                 }
+                th.b {
+                    font-size: 1.3vw;
+                }
                 th.c {
-                    font-size: 1.7vw;
+                    font-size: 1.4vw;
+                }
+
+                img.a {
+                    width: 75px;
+                }
+            }
+            
+            @media screen and (max-width: 500px) {
+                th.a {
+                    font-size: 3.5vw;
+                }
+                th.b {
+                    font-size: 2.5vw;
+                }
+                th.c {
+                    font-size: 3.0vw;
                 }
 
                 img.a {
                     width: 36px;
+                }
+            }
+            
+            @media screen and (max-width: 300px) {
+                th.a {
+                    font-size: 4.5vw;
+                }
+                th.b {
+                    font-size: 3.5vw;
+                }
+                th.c {
+                    font-size: 4.0vw;
+                }
+
+                img.a {
+                    width: 24px;
                 }
             }
 
@@ -62,6 +102,13 @@
             var bestW;
             var bestH;
 
+            
+            function updateOrientation() {
+              var viewport = document.querySelector("meta[name=viewport]");
+              viewport.setAttribute('content', 'width=' + window.screen.width + ', initial-scale=1.0, minimum-scale=0.7, maximum-scale=1.0;');
+            }
+            
+            
             function evalSizes() {
             screenW=window.screen.width;
             screenH=window.screen.height;
@@ -74,23 +121,6 @@
             pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
 
 
-            var viewport = document.querySelector('meta[name=viewport]')
-            viewport.setAttribute("initial-scale","1.0");
-
-            /*
-            if(screenW<windowW && screenH<windowH) {
-            bestW=screenW;
-            } else {
-            bestW=pageW-pageLM-pageLM;
-            }
-
-            {
-            var el=document.getElementById('pane_all');
-            el=document.getElementsByTagName('body')[0];
-            el.style.minWidth=bestW;
-            el.style.maxWidth=bestW;
-            }
-            */
             renderSizes();
             }
 
@@ -107,23 +137,31 @@
             //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
             //s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
             s+="<table border='1' class='a' width='100%'>";
-            s+="<tr><th class='a'><img class='a' src='images/kuntajana.png'>Scope</th><th class='b'>Width</th><th class='c'>Height</th></tr>";
             s+="<tr>";
+            s+="  <th><img class='b' src='images/kuntajana.png'></th>";
+            s+="  <th class='a'>Scope</th>";
+            s+="  <th class='b'>Width</th>";
+            s+="  <th class='c'>Height</th></tr>";
+            s+="<tr>";
+            s+="  <td/>";
             s+="  <td class='title'>Screen</td>";
             s+="  <td class='value'>"+screenW+"</td>";
             s+="  <td class='value'>"+screenH+"</td>";
             s+="</tr>";
             s+="<tr>";
+            s+="  <td/>";
             s+="  <td class='title'>Window</td>";
             s+="  <td class='value'>"+windowW+"</td>";
             s+="  <td class='value'>"+windowH+"</td>";
             s+="</tr>";
             s+="<tr>";
+            s+="  <td/>";
             s+="  <td class='title'>Document</td>";
             s+="  <td class='value'>"+docW+"</td>";
             s+="  <td class='value'>"+docH+"</td>";
             s+="</tr>";
             s+="<tr>";
+            s+="  <td/>";
             s+="  <td class='title'>Page</td>";
             s+="  <td class='value'>"+pageW+"</td>";
             s+="  <td class='value'>"+pageH+"</td>";
@@ -142,6 +180,7 @@
             })
 
             document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false);
+            window.addEventListener('orientationchange', updateOrientation, false);
 
         </script>
 
@@ -162,6 +201,7 @@
             <div>
                 ${request}
             </div>
+            <div><img class='a' src='images/kuntajana.png'></div>
         </div>
 
     </body></html>
