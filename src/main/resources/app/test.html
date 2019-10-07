@@ -1,133 +1,167 @@
 <html><head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    * {
-        font-family: Monospace;
-    }
-table.a {
-    border-collapse:collapse;
-}
-th {
-}
-td.title {
-    text-align: left;
-}
-td.value {
-    text-align: center;
-}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * {
+                font-family: Monospace;
+            }
+            table.a {
+                border-collapse:collapse;
+            }
+            th.a {
+                font-size: 3vw;
+                vertical-align: middle;
+            }
+            th.b {
+                font-size: 2vw;
+                vertical-align: middle;
+            }
+            th.c {
+                font-size: 2.5vw;
+                vertical-align: middle;
+            }
+            td.title {
+                text-align: left;
+            }
+            td.value {
+                text-align: center;
+            }
 
-</style>
+            img.a {
+                width: 50px;
+            }
 
+            @media screen and (max-width: 700px) {
+                th.a {
+                    font-size: 2vw;
+                }
+                th.b {
+                    font-size: 1.5vw;
+                }
+                th.c {
+                    font-size: 1.7vw;
+                }
 
-<script>
+                img.a {
+                    width: 36px;
+                }
+            }
 
-var screenW;
-var screenH;
-var windowW;
-var windowH;
-var docW;
-var docH;
-var pageW;
-var pageH;
-var bestW;
-var bestH;
-
-function evalSizes() {
-  screenW=window.screen.width;
-  screenH=window.screen.height;
-  windowW=window.innerWidth;
-  windowH=window.innerHeight;
-  docW=document.documentElement.clientWidth;
-  docH=document.documentElement.clientHeight;
-  pageW=document.getElementsByTagName('body')[0].clientWidth;
-  pageH=document.getElementsByTagName('body')[0].clientHeight;
-  pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
-  
-  /*
-  if(screenW<windowW && screenH<windowH) {
-    bestW=screenW;
-  } else {
-    bestW=pageW-pageLM-pageLM;
-  }
-  
-  {
-     var el=document.getElementById('pane_all');
-     el=document.getElementsByTagName('body')[0];
-     el.style.minWidth=bestW;
-     el.style.maxWidth=bestW;
-  }
-  */
-  renderSizes();
-}
-
-  function toNumeric(val) {
-     if("number"==typeof(val)) return val;
-     val=""+val;
-     if(val.endsWith("px")) val=val.substring(0,val.length-2);
-     return new Number(val);
-  }
-
-function renderSizes() {
-   var s="";
-
-   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
-   //s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
-   s+="<table border='1' class='a' width='100%'>";
-   s+="<tr><th>Scope</th><th>Width</th><th>Height</th></tr>";
-   s+="<tr>";
-   s+="  <td class='title'>Screen</td>";
-   s+="  <td class='value'>"+screenW+"</td>";
-   s+="  <td class='value'>"+screenH+"</td>";
-   s+="</tr>";
-   s+="<tr>";
-   s+="  <td class='title'>Window</td>";
-   s+="  <td class='value'>"+windowW+"</td>";
-   s+="  <td class='value'>"+windowH+"</td>";
-   s+="</tr>";
-   s+="<tr>";
-   s+="  <td class='title'>Document</td>";
-   s+="  <td class='value'>"+docW+"</td>";
-   s+="  <td class='value'>"+docH+"</td>";
-   s+="</tr>";
-   s+="<tr>";
-   s+="  <td class='title'>Page</td>";
-   s+="  <td class='value'>"+pageW+"</td>";
-   s+="  <td class='value'>"+pageH+"</td>";
-   s+="</tr>";
-   s+="</table>";
-   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
-   //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
-
-   var el=document.getElementById('sizes');
-   el.innerHTML=s;
-}
-
-window.addEventListener("resize", function(event) {
-    //console.log(document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
-    evalSizes();
-})
-
-document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false);
-
-</script>
+        </style>
 
 
-</head><body>
+        <script>
 
-<div id='sizes'></div>
-<br/>
-<div id="pane_all" style="border: solid black 1px; padding: 0px;">
-    <table width='100%' border='1'><tr>
-            <td>A</td>
-            <td>B</td>
-            <td>C</td>
-            <td>D</td>
-            <td>E</td>
-            
-        </tr></table>
-<div>
-    ${request}
-</div>
-</div>
+            var screenW;
+            var screenH;
+            var windowW;
+            var windowH;
+            var docW;
+            var docH;
+            var pageW;
+            var pageH;
+            var bestW;
+            var bestH;
 
-</body></html>
+            function evalSizes() {
+            screenW=window.screen.width;
+            screenH=window.screen.height;
+            windowW=window.innerWidth;
+            windowH=window.innerHeight;
+            docW=document.documentElement.clientWidth;
+            docH=document.documentElement.clientHeight;
+            pageW=document.getElementsByTagName('body')[0].clientWidth;
+            pageH=document.getElementsByTagName('body')[0].clientHeight;
+            pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
+
+
+            var viewport = document.querySelector('meta[name=viewport]')
+            viewport.setAttribute("initial-scale","1.0");
+
+            /*
+            if(screenW<windowW && screenH<windowH) {
+            bestW=screenW;
+            } else {
+            bestW=pageW-pageLM-pageLM;
+            }
+
+            {
+            var el=document.getElementById('pane_all');
+            el=document.getElementsByTagName('body')[0];
+            el.style.minWidth=bestW;
+            el.style.maxWidth=bestW;
+            }
+            */
+            renderSizes();
+            }
+
+            function toNumeric(val) {
+            if("number"==typeof(val)) return val;
+            val=""+val;
+            if(val.endsWith("px")) val=val.substring(0,val.length-2);
+            return new Number(val);
+            }
+
+            function renderSizes() {
+            var s="";
+
+            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
+            //s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
+            s+="<table border='1' class='a' width='100%'>";
+            s+="<tr><th class='a'><img class='a' src='images/kuntajana.png'>Scope</th><th class='b'>Width</th><th class='c'>Height</th></tr>";
+            s+="<tr>";
+            s+="  <td class='title'>Screen</td>";
+            s+="  <td class='value'>"+screenW+"</td>";
+            s+="  <td class='value'>"+screenH+"</td>";
+            s+="</tr>";
+            s+="<tr>";
+            s+="  <td class='title'>Window</td>";
+            s+="  <td class='value'>"+windowW+"</td>";
+            s+="  <td class='value'>"+windowH+"</td>";
+            s+="</tr>";
+            s+="<tr>";
+            s+="  <td class='title'>Document</td>";
+            s+="  <td class='value'>"+docW+"</td>";
+            s+="  <td class='value'>"+docH+"</td>";
+            s+="</tr>";
+            s+="<tr>";
+            s+="  <td class='title'>Page</td>";
+            s+="  <td class='value'>"+pageW+"</td>";
+            s+="  <td class='value'>"+pageH+"</td>";
+            s+="</tr>";
+            s+="</table>";
+            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
+            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
+
+            var el=document.getElementById('sizes');
+            el.innerHTML=s;
+            }
+
+            window.addEventListener("resize", function(event) {
+            //console.log(document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
+            evalSizes();
+            })
+
+            document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false);
+
+        </script>
+
+
+    </head><body>
+
+        <div id='sizes'></div>
+        <br/>
+        <div id="pane_all" style="border: solid black 1px; padding: 0px;">
+            <table width='100%' border='1'><tr>
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td>D</td>
+                    <td>E</td>
+
+                </tr></table>
+            <div>
+                ${request}
+            </div>
+        </div>
+
+    </body></html>
