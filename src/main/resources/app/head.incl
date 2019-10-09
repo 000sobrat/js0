@@ -65,7 +65,35 @@ function userHasRole(role) {
 //////////////////////////////////////////////////////// shared helper functions
 ////////////////////////////////////////////////////////////////////////////////
 
+function doLanguageSet(locale) {
+    REST_api.setLanguage(locale, null, function(url,data) { 
+        location.reload(); 
+    });
+}
+            
+function renderToolbarActions(toolbarElementId) {
+     var s="";
+     var toolIconSize='36px';
+     
+     s+="<a class='toolbar_item' onclick='toolbarToSchedule();' ttbr='#{Schedule}'><img class='toolbar' src='images/icons8-schedule-90.png' alt='#{Schedule}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToPlanner();' ttbr='#{Planner}'><img class='toolbar' src='images/icons8-planner-90.png' alt='#{Planner}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToContactsMap();' ttbr='#{Locations}'><img class='toolbar' src='images/icons8-address-90.png' alt='#{Locations}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToContacts();' ttbr='#{Contacts}'><img class='toolbar' src='images/icons8-address-book-90.png' alt='#{Contacts}' width='"+toolIconSize+"'></a>";
+     
+     if(userHasRole('admin')) {
+        s+="<span ttbr='#{Export}'><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Import}'><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Backup}'><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='"+toolIconSize+"'></span>";
+     }
+     
+     var el=document.getElementById(toolbarElementId);
+     el.innerHTML=s;
+}
 
+function toolbarToSchedule(){ window.location='schedule.html';}
+function toolbarToPlanner(){window.location='planner_editor.html';}
+function toolbarToContactsMap(){window.location='contacts.html#map';}
+function toolbarToContacts(){window.location='contacts.html';}
 
 // -->
 </script>

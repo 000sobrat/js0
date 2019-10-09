@@ -1,207 +1,193 @@
 <html><head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"  charset="UTF-8">
+
+${include /app/head.incl}        
+        
+        <link rel="stylesheet" type="text/css" href="/app/styles/special.css" media="screen">
+        <script type="text/javascript" src="/app/scripts/um.js"></script>
+        <script type="text/javascript" src="/app/scripts/df.js"></script>
+
         <style>
             * {
                 font-family: Monospace;
             }
-            table.a {
+            table {
                 border-collapse:collapse;
             }
-            th.a {
-                font-size: 3vw;
-                vertical-align: middle;
+            td.icon {
+                padding: 0px;
+                width: 1%;
             }
-            th.b {
-                font-size: 2vw;
-                vertical-align: middle;
-            }
-            th.c {
-                font-size: 2.5vw;
-                vertical-align: middle;
-            }
-            td.title {
-                text-align: left;
-            }
-            td.value {
-                text-align: center;
-            }
-
-            img.a {
-                width: 50px;
-            }
-            
-            img.b {
+            img.icon {
                 min-width: 50px;
-                max-width: 100px;
+                max-width: 75px;
                 width: 10vw;
             }
-
-            
             
             @media screen and (max-width: 1000px) {
-                th.a {
-                    font-size: 1.5vw;
-                }
-                th.b {
-                    font-size: 1.3vw;
-                }
-                th.c {
-                    font-size: 1.4vw;
-                }
-
-                img.a {
-                    width: 75px;
-                }
             }
             
             @media screen and (max-width: 500px) {
-                th.a {
-                    font-size: 3.5vw;
-                }
-                th.b {
-                    font-size: 2.5vw;
-                }
-                th.c {
-                    font-size: 3.0vw;
-                }
-
-                img.a {
-                    width: 36px;
-                }
             }
             
             @media screen and (max-width: 300px) {
-                th.a {
-                    font-size: 4.5vw;
-                }
-                th.b {
-                    font-size: 3.5vw;
-                }
-                th.c {
-                    font-size: 4.0vw;
-                }
-
-                img.a {
-                    width: 24px;
-                }
             }
-
         </style>
 
+        
+<link rel="stylesheet" type="text/css" href="/app/styles/calendar.css" media="screen">
+<script type="text/javascript" src="/app/scripts/calendar.js"></script>
+        
+        <script type="text/javascript" src="/app/scripts/eventsHandler.js"></script>
+        <script type="text/javascript" src="/app/scripts/eventPlannersHandler.js"></script>
+        
+        <script type="text/javascript">
 
-        <script>
-
-            var screenW;
-            var screenH;
-            var windowW;
-            var windowH;
-            var docW;
-            var docH;
-            var pageW;
-            var pageH;
-            var bestW;
-            var bestH;
-
-            
-            function updateOrientation() {
-              var viewport = document.querySelector("meta[name=viewport]");
-              viewport.setAttribute('content', 'width=' + window.screen.width + ', initial-scale=1.0, minimum-scale=0.7, maximum-scale=1.0;');
-            }
-            
-            
-            function evalSizes() {
-            screenW=window.screen.width;
-            screenH=window.screen.height;
-            windowW=window.innerWidth;
-            windowH=window.innerHeight;
-            docW=document.documentElement.clientWidth;
-            docH=document.documentElement.clientHeight;
-            pageW=document.getElementsByTagName('body')[0].clientWidth;
-            pageH=document.getElementsByTagName('body')[0].clientHeight;
-            pageLM=toNumeric(window.getComputedStyle(document.getElementsByTagName('body')[0], null).getPropertyValue('margin-left'));
+var events=eventsHandler('evs');
+var eventPlanners=eventPlannersHandler('eps');
+var handler=events;
+var minScale=0.8;
+var maxScale=1.5;
 
 
-            renderSizes();
-            }
 
-            function toNumeric(val) {
-            if("number"==typeof(val)) return val;
-            val=""+val;
-            if(val.endsWith("px")) val=val.substring(0,val.length-2);
-            return new Number(val);
-            }
+function toolbarToSchedule(){ clearViewAreas(); handler=events; handler.loadMeta();}
+function toolbarToPlanner(){clearViewAreas(); handler=eventPlanners; handler.loadMeta();}
+function toolbarToContactsMap(){clearViewAreas();}
+function toolbarToContacts(){clearViewAreas();}
+function clearViewAreas() {
+    var elIds=['v_filter','h_filter','data_view','data_view2'];
+    for(var i in elIds) {
+        var elId=elIds[i];
+        var el=document.getElementById(elId);
+        if(el) el.innerHTML="";
+    }
+}
 
-            function renderSizes() {
-            var s="";
 
-            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: blue'>top</div>";
-            //s+="<table border='1' class='a' style='left: 0px; min-width:"+bestW+"px; max-width:"+bestW+"px;'>";
-            s+="<table border='1' class='a' width='100%'>";
-            s+="<tr>";
-            s+="  <th><img class='b' src='images/kuntajana.png'></th>";
-            s+="  <th class='a'>Scope</th>";
-            s+="  <th class='b'>Width</th>";
-            s+="  <th class='c'>Height</th></tr>";
-            s+="<tr>";
-            s+="  <td/>";
-            s+="  <td class='title'>Screen</td>";
-            s+="  <td class='value'>"+screenW+"</td>";
-            s+="  <td class='value'>"+screenH+"</td>";
-            s+="</tr>";
-            s+="<tr>";
-            s+="  <td/>";
-            s+="  <td class='title'>Window</td>";
-            s+="  <td class='value'>"+windowW+"</td>";
-            s+="  <td class='value'>"+windowH+"</td>";
-            s+="</tr>";
-            s+="<tr>";
-            s+="  <td/>";
-            s+="  <td class='title'>Document</td>";
-            s+="  <td class='value'>"+docW+"</td>";
-            s+="  <td class='value'>"+docH+"</td>";
-            s+="</tr>";
-            s+="<tr>";
-            s+="  <td/>";
-            s+="  <td class='title'>Page</td>";
-            s+="  <td class='value'>"+pageW+"</td>";
-            s+="  <td class='value'>"+pageH+"</td>";
-            s+="</tr>";
-            s+="</table>";
-            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: red'>middle</div>";
-            //s+="<div border='1' class='a' style='min-width:"+screenW+"; max-width: "+screenW+"; background-color: green'>bottom</div>";
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////// redraw on resize/orientation
+////////////////////////////////////////////////////////////////////////////////
+function updateOrientation() {
+    var viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content', 'width=' + window.screen.width + ', initial-scale=1.0, minimum-scale='+minScale+', maximum-scale='+maxScale);
+}
+window.addEventListener('resize', function(event) { updateOrientation(); handler.renderFilter();}, false);
+window.addEventListener('orientationchange', updateOrientation(), false);
 
-            var el=document.getElementById('sizes');
-            el.innerHTML=s;
-            }
 
-            window.addEventListener("resize", function(event) {
-            //console.log(document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
-            evalSizes();
-            })
 
-            document.addEventListener('DOMContentLoaded', function() { evalSizes();}, false);
-            window.addEventListener('orientationchange', updateOrientation, false);
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////// initialize on load
+////////////////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', function() {
+    if(isValidUser()) {
+       var el=document.getElementById('userInfo');
+       var un=userDisplayName();
+       var ud=userDomainName();
+       el.innerHTML=""
+         +"<a onclick='showUserForm();'>"
+         +un
+         +"</a>"
+         +"&nbsp;("
+         +"<a onclick='showUserChangePwdForm();'>"
+         +ud
+         +"</a>"
+         +")&nbsp;"
+         +"<a onclick='doLogout();' class='login' ttar='#{Logout}'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'><tt>#{Logout}</tt></a>";
+    } else {
+       var el=document.getElementById('userInfo');
+       el.innerHTML="<a onclick='showLoginForm();' class='login' ttar='#{Login}'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'><tt>#{Login}</tt></a>";
+       REST_api.loginVariants(
+         function(url,data) { 
+           if(data.result) {
+              var loginLinks=data.result;
+              showLoginLinks(loginLinks);
+           } 
+         }
+       );
+    }
+    if(userLocale) {
+       var locs=["en","ru","fi"];
+       for(var loci in locs) {
+          var loc=locs[loci];
+          if(loc) {
+             var locEl=document.getElementById('locale_'+loc);
+             if(locEl) {
+               if(userLocale==loc) locEl.style.display='none';
+             }
+          }
+       }
+    }
+    renderToolbarActions('top_toolbar');
+    handler.init();
+}, false);
 
         </script>
 
 
-    </head><body>
+</head><body>
+    <!-- site header: icon, view, login/logout, language selection -->
+    <table border='0' width='100%'>
+        <tr>
+            <!-- logo -->
+            <td class='icon'><img id='icon_img' class='icon' src='images/kuntajana_a.png' width='100%'></td>
+            <!-- login form -->
+            <td>
+                <div id='loginForm' class='loginForm' align='center'></div>
+            </td>
+            <td>
+                <table border='0' width='100%'>
+                    <tr>
+                        <td align='center'>
+                            <div id='top_toolbar' class='toolbar'></div>                                
+                        </td>
+                        <td align='right'>
+                            <div class='localeSelector'>
+                                <span ttbr='#{SwitchTo} #{Finnish}'><img id='locale_fi' class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'><tt>#{SwitchTo} #{Finnish}</tt></span>
+                                <span ttbr='#{SwitchTo} #{Russian}'><img id='locale_ru' class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'><tt>#{SwitchTo} #{Russian}</tt></span>
+                                <span ttbr='#{SwitchTo} #{English}'><img id='locale_en' class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'><tt>#{SwitchTo} #{English}</tt></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2' align='right'>
+                            <div id='userInfo' class='userInfo'></div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <div id='sizes'></div>
-        <br/>
-        <div id="pane_all" style="border: solid black 1px; padding: 0px;">
-            <table width='100%' border='1'><tr>
-                    <td>A</td>
-                    <td>B</td>
-                    <td>C</td>
-                    <td>D</td>
-                    <td>E</td>
-
-                </tr></table>
-            <div>
-                ${request}
-            </div>
-            <div><img class='a' src='images/kuntajana.png'></div>
+    <table border='0' width='100%'>
+        <tr>
+            <td width='0%' rowspan='2' valign='top'>
+                <div id="v_filter"></div>
+            </td>
+            <td valign='top'>
+                <div id="h_filter"></div>
+            </td>
+        </tr>
+        <tr>
+            <td valign='top'>
+                <div id="data_view"></div>            
+            </td>
+        </tr>
+    </table>
+    <div id="data_view2"></div>
+    <br/>
+    <div id='info_1'></div>
+    <div id="pane_all" style="border: solid black 1px; padding: 0px;">
+        <table width='100%' border='1'><tr>
+                <td>A</td>
+                <td>B</td>
+                <td>C</td>
+                <td>D</td>
+                <td>E</td>
+            </tr></table>
+        <div>
+            ${request}
         </div>
-
-    </body></html>
+    </div>
+</body></html>

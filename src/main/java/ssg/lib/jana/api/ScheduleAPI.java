@@ -485,7 +485,7 @@ public class ScheduleAPI implements AppItem, Exportable {
             Iterator<TimeEventPlanner> it=es.iterator();
             while(it.hasNext()) {
                 TimeEventPlanner te=it.next();
-                if(te.start!=start) it.remove();
+                if(te.start!=start || te.duration!=duration) it.remove();
             }
         }
         if (es.isEmpty()) {

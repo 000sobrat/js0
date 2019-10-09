@@ -41,6 +41,11 @@ th.calendar_time_30 {
 }
 
 tr.calendar_time { 
+	height: 12px; 
+	min-height: 12px; 
+	max-height: 12px; 
+}
+tr.calendar_time_ { 
 	height: 25px; 
 	min-height: 22px; 
 	max-height: 22px; 

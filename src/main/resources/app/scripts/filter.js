@@ -1,64 +1,64 @@
-/*
- * conf(id,title,columns,isActive(v),setFilter(v),keys(),valueOf(k))
- */
-function buildFilterGroup(conf) {
-   var s="";
-   var cl="filter";
-   var a=false;
-   var si="";
+    /*
+     * conf(id,title,columns,isActive(v),setFilter(v),keys(),valueOf(k))
+     */
+    function buildFilterGroup(conf) {
+       var s="";
+       var cl="filter";
+       var a=false;
+       var si="";
 
-   // build self/no self selector
-   si="<div class='filter_sel' id='min_filter_"+conf.id+"'>";
-   s+="<fieldset class='filter'><legend class='filter' onclick='toggleVisibility(\"filter_"+conf.id+"\")'>"+conf.title+"</legend>";
-   s+="<table class='filter' id='filter_"+conf.id+"'>";
-       
-       if(conf.valueOf(null)) {
-         a=conf.isActive(null);
-         s+="<tr class='filter'><td class='"+cl+(a ? "_active": "")+"'";
-         s+=" onclick='"+conf.setFilter(null)+" loadEvents(); renderFilter();'";
-         if(conf.columns) s+=" colspan='"+conf.columns+"'";
-         s+=">";
-         s+=conf.valueOf(null);
-         s+="</td></tr>";
-         if(a) si+=conf.valueOf(null)+" ";
-       }
+       // build self/no self selector
+       si="<div class='filter_sel' id='min_filter_"+conf.id+"'>";
+       s+="<fieldset class='filter'><legend class='filter' onclick='toggleVisibility(\"filter_"+conf.id+"\")'>"+conf.title+"</legend>";
+       s+="<table class='filter' id='filter_"+conf.id+"'>";
 
-       if(conf.columns)
-           s+="<tr class='filter'>";
-       
-       var ac=0;
-       for(var k in conf.keys()) {
-         a=conf.isActive(k);
-         
-         if(conf.columns) {
-           var n=new Number(k);
-           if(n>0 && (n % conf.columns) == 0){
-             s+="</tr><tr class='filter'>";
+           if(conf.valueOf(null)) {
+             a=conf.isActive(null);
+             s+="<tr class='filter'><td class='"+cl+(a ? "_active": "")+"'";
+             s+=" onclick='"+conf.setFilter(null)+" loadEvents(); renderFilter();'";
+             if(conf.columns) s+=" colspan='"+conf.columns+"'";
+             s+=">";
+             s+=conf.valueOf(null);
+             s+="</td></tr>";
+             if(a) si+=conf.valueOf(null)+" ";
            }
-         } else {
-           s+="<tr class='filter'>";
-         }
-         
-         s+="<td class='"+cl+((a) ? "_active": "")+"'";
-         s+=" onclick='"+conf.setFilter(k)+"; loadEvents(); renderFilter();'>";
-         s+=conf.valueOf(k);
-         if(conf.columns)
-           s+="</td>";
-         else
-           s+="</td></tr>";
-         if(a) {
-           if(ac>0) si+=' ';
-           si+=conf.valueOf(k);
-           ac++;
-         }
-       }
-       if(conf.columns) s+="</tr>";
-       
-       s+="</table>";
-       s+=si+"</div>";
-       s+="</fieldset>\n";
-       return s;
-}
+
+           if(conf.columns)
+               s+="<tr class='filter'>";
+
+           var ac=0;
+           for(var k in conf.keys()) {
+             a=conf.isActive(k);
+
+             if(conf.columns) {
+               var n=new Number(k);
+               if(n>0 && (n % conf.columns) == 0){
+                 s+="</tr><tr class='filter'>";
+               }
+             } else {
+               s+="<tr class='filter'>";
+             }
+
+             s+="<td class='"+cl+((a) ? "_active": "")+"'";
+             s+=" onclick='"+conf.setFilter(k)+"; loadEvents(); renderFilter();'>";
+             s+=conf.valueOf(k);
+             if(conf.columns)
+               s+="</td>";
+             else
+               s+="</td></tr>";
+             if(a) {
+               if(ac>0) si+=' ';
+               si+=conf.valueOf(k);
+               ac++;
+             }
+           }
+           if(conf.columns) s+="</tr>";
+
+           s+="</table>";
+           s+=si+"</div>";
+           s+="</fieldset>\n";
+           return s;
+    }
 
 
 /* Toggle filter-like component visibility: if visible - hide "min_", otherwise hide element and show "min_" one.
