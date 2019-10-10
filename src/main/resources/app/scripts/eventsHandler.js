@@ -130,13 +130,13 @@ var eh = DataHandler({
             return (document.documentElement.clientWidth>this.viewSwithWidth) ? "" : "<table border='0' width='100%'><tr><td valign='top'>";
         },
         doColumn: function(index,item,params) {
-            console.info("doColumn: "+index+", "+item.id);
+            //console.info("doColumn: "+index+", "+item.id);
             return (document.documentElement.clientWidth>this.viewSwithWidth) 
             ? "" 
             : "</td></tr><tr><td valign='top'>";
         },
         doDelimiter: function(index,item,params) {
-            console.info("doDelim: "+index+", "+item.id);
+            //console.info("doDelim: "+index+", "+item.id);
             return (document.documentElement.clientWidth>this.viewSwithWidth) 
             ? "" 
             : "</td><td valign='top'>";
@@ -292,13 +292,13 @@ function configureFilterRendering1(dh) {
             return (document.documentElement.clientWidth>this.viewSwithWidth) ? "" : "<table border='0' width='100%'><tr><td valign='top'>";
         },
         doColumn: function(index,item,params) {
-            console.info("doColumn: "+index+", "+item.id);
+            //console.info("doColumn: "+index+", "+item.id);
             return (document.documentElement.clientWidth>this.viewSwithWidth) 
             ? "" 
             : "</td></tr><tr><td valign='top'>";
         },
         doDelimiter: function(index,item,params) {
-            console.info("doDelim: "+index+", "+item.id);
+            //console.info("doDelim: "+index+", "+item.id);
             return (document.documentElement.clientWidth>this.viewSwithWidth) 
             ? "" 
             : "</td><td valign='top'>";
@@ -508,4 +508,5 @@ function configureFilterRendering2(dh) {
         }
     });
 }
+
 // -->

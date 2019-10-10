@@ -183,7 +183,7 @@ function DataRenderer(conf) {
             if(items) for(var i in items) {
                 if(!items[i] || !items[i].visible) continue;
                 if(""!=si) {
-                    console.info("render: "+column+"/"+this.columnSize);
+                    //console.info("render: "+column+"/"+this.columnSize);
                     if(this.columnSize==column) {
                         si+=this.doColumn(i,items[i],params);
                         column=0;
