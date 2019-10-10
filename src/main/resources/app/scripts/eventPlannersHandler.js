@@ -1,12 +1,24 @@
 // <!--
-var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
-var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
-var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"};
-var weekDaysOrder=[2,3,4,5,6,7,1]
+//var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
+//var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
+//weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"};
+//weekDaysOrder=[2,3,4,5,6,7,1]
 
 
 function eventPlannersHandler(id,conf) {
 var eh = eventsHandler(id, {
+    weekDayNames: {"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"},
+    weekDaysOrder: [2,3,4,5,6,7,1],
+    i18n: {
+        TEP_From: "#{TEP_From}",
+        TEP_To: "#{TEP_To}",
+        TEP_Weekday: "#{TEP_Weekday}",
+        TEP_Start: "#{TEP_Start}",
+        TEP_Duration: "#{TEP_Duration}",
+        TEP_End: "#{TEP_End}",
+        TEP_Room: "#{TEP_Room}",
+        TEP_Group: "#{TEP_Group}"
+    },
     generatedData: null,
     editor: createDataHandlerEditor(),
     loadMeta: function() {
@@ -99,14 +111,14 @@ var eh = eventsHandler(id, {
         s+="<th class='tep'>";
         if(edit) s+="#{TEP_Action}";
         s+="</th>";
-        //s+="<th class='tep'>#{TEP_From}</th>";
-        //s+="<th class='tep'>#{TEP_To}</th>";
-        s+="<th class='tep'>#{TEP_Weekday}</th>";
-        s+="<th class='tep'>#{TEP_Start}</th>";
-        s+="<th class='tep'>#{TEP_Duration}</th>";
-        //s+="<th class='tep'>#{TEP_End}</th>";
-        s+="<th class='tep'>#{TEP_Room}</th>";
-        s+="<th class='tep'>#{TEP_Group}</th>";
+        //s+="<th class='tep'>"+this.i18n.TEP_From+"</th>";
+        //s+="<th class='tep'>"+this.i18n.TEP_To+"</th>";
+        s+="<th class='tep'>"+this.i18n.TEP_Weekday+"</th>";
+        s+="<th class='tep'>"+this.i18n.TEP_Start+"</th>";
+        s+="<th class='tep'>"+this.i18n.TEP_Duration+"</th>";
+        //s+="<th class='tep'>"+this.i18n.TEP_End+"</th>";
+        s+="<th class='tep'>"+this.i18n.TEP_Room+"</th>";
+        s+="<th class='tep'>"+this.i18n.TEP_Group+"</th>";
         s+="</tr>";
 
         s+="<tr class='tep'>";
@@ -131,8 +143,8 @@ var eh = eventsHandler(id, {
         //s+="<th class='tep'></th>";
         s+="<th class='tep'>";
         s+="<table class='tep' border='1' width='100%'><tr>";
-        for(var wd in weekDaysOrder) {
-            s+="<td>"+weekDayNames[weekDaysOrder[wd]]+"</td>";
+        for(var wd in this.weekDaysOrder) {
+            s+="<td>"+this.weekDayNames[this.weekDaysOrder[wd]]+"</td>";
         }
         s+="</tr></table>";
         s+="</th>";
@@ -180,9 +192,9 @@ var eh = eventsHandler(id, {
                     wds+=tep.weekDays[di];
                 }
 
-                for(var wd in weekDaysOrder) {
+                for(var wd in this.weekDaysOrder) {
                     s+="<td>";
-                    wd=weekDaysOrder[wd];
+                    wd=this.weekDaysOrder[wd];
                     var found=false;
                     for(var di in tep.weekDays) {
                         if(wd==tep.weekDays[di]) {
@@ -422,7 +434,7 @@ var eh = eventsHandler(id, {
                     var rr=entry.weekDays;
                     if(!rr) rr=[];
                     rr.push(entry.weekDay);
-                    action = "<a onclick='if(modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) renderEvents();' class='cell_action'>";
+                    action = "<a onclick='var de=getDataHandler(\""+current.id+"\").editor; if(de && de.modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) de.dh.renderData();' class='cell_action'>";
                     actionIcon="images/icons8-restore-90.png";
                 } else {
                     var rr0=entry.weekDays;
@@ -430,7 +442,7 @@ var eh = eventsHandler(id, {
                     for(var j in rr0) {
                         if(rr0[j]!=entry.weekDay) rr.push(rr0[j]);
                     }
-                    action = "<a onclick='if(modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) renderEvents();' class='cell_action'>";
+                    action = "<a onclick='var de=getDataHandler(\""+current.id+"\").editor; if(de && de.modifyEvent(\""+entry.id+"\",\"weekDays\","+toJSON(rr)+")) de.dh.renderData();' class='cell_action'>";
                     actionIcon="images/icons8-trashcan-90.png";
                 }
             }
@@ -585,38 +597,9 @@ var eh = eventsHandler(id, {
         }
     });
 })
-.addDataFilter(TimeRangeDataFilter(
-    'season',
-    '#{Season}', 
-    'this.meta.yearSeasons', 
-    {
-        columns:2, 
-        nullValue:'#{Now}', 
-        nullData: 'this.meta.yearSeason', 
-        valueOf: function(key) {
-            if(!key) return null;
-            var v=this.data[key];
-            return (v[0] >> 16)+"/"+((seasonNames) ? seasonNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
-        }
-    }),0)
-/*
-.addDataFilter(TimeRangeDataFilter(
-    'quarter',
-    '#{Quarter}', 
-    'this.meta.yearQuarters', 
-    {
-        columns:2, 
-        nullValue:'#{Now}', 
-        nullData: 'this.meta.yearQuarter',
-        valueOf: function(key) {
-            if(!key) return null;
-            var v=this.data[key];
-            return (v[0] >> 16)+"/"+((quarterNames) ? quarterNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
-        }
-    })) */
-.removeDataFilter('week')
-.removeDataFilter('month')
-.removeDataFilter('my')
+//.removeDataFilter('week')
+//.removeDataFilter('month')
+//.removeDataFilter('my')
 ;
 
 eh.editor.dh=eh;
