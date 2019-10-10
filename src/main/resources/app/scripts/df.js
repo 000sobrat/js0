@@ -92,19 +92,46 @@ function DataHandler(conf) {
         },
         renderData: function() {
         },
-        addDataFilter: function(df) {
+        addDataFilter: function(df, order) {
             if(df) {
                 df.dhId=this.id;
                 df.filter=this.filter;
-                this.dataFilters[df.id]=df;
+                if(order || order==0) {
+                    var sz=Object.keys(this.dataFilters).length;
+                    if(order>=sz) {
+                        this.dataFilters[df.id]=df;
+                    } else {
+                        // order items in a[]
+                        var a=new Array();
+                        var c=0;
+                        for(var i in this.dataFilters) {
+                            if(order==c) {
+                                a.push(df);
+                            }
+                            a.push(this.dataFilters[i]);
+                            c++;
+                        }
+                        // delete all current fiters...
+                        for(var i in this.dataFilters) {
+                            delete this.dataFilters[i];
+                        }
+                        // add items in new order
+                        for(var i in a) {
+                            var aa=a[i];
+                            this.dataFilters[aa.id]=aa;
+                        }
+                    }
+                } else {
+                    this.dataFilters[df.id]=df;
+                }
             }
             return this;
         },
         removeDataFilter: function(id) {
-            if(this.filter) for(var i in this.filter) {
-                var df=this.filter[i];
+            if(this.dataFilters) for(var i in this.dataFilters) {
+                var df=this.dataFilters[i];
                 if(df && df.id==id) {
-                    delete this.filter[i];
+                    delete this.dataFilters[i];
                     break;
                 }
             }

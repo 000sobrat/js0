@@ -253,6 +253,50 @@ a.menu_c {font-size: 14pt; font-weight: 700; text-decoration: none; background-i
 a.menu_d {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(100,200,100,150),rgba(200,200,200,0))}
 a.menu_e {font-size: 14pt; font-weight: 700; text-decoration: none; background-image: radial-gradient(circle, rgba(200,100,100,150),rgba(200,200,200,0))}
 
+
+
+table.filter_cell {
+    border-collapse:separate;
+    border: 4px rgba(0,0,0,0);
+}
+tr.filter_cell {
+}
+td.filter_cell {
+    margin-left: 1px;
+    margin-right: 1px;
+    background-color: rgb(200,100,100);
+    vertical-align: top;
+}
+div.filter_exp {
+    position: absolute;
+    background-color: rgba(200,100,100,0.8);
+}
+
+span.filter_main {
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-bottom: 1px;
+    color: rgb(250,240,250);
+    /*background-color: rgb(200,100,200);*/
+}
+span.filter {
+    padding-left: 2px;
+    padding-right: 1px;
+    padding-bottom: 1px;
+    color: rgb(250,240,250);
+    background-color: rgb(200,100,100);
+    text-shadow: 2px -2px var(--menu-bg-color);
+    width: 100%;
+}
+span.filter_sel {
+    padding-left: 2px;
+    padding-right: 1px;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    background-color: rgb(100,100,100);
+}
+
 table.filter {    
     width: 100%;
 }
@@ -265,6 +309,9 @@ td.filter {
 }
 td.filter:hover {
     cursor: pointer;
+    color: white;
+    font-weight: 900;
+    background-color: rgb(75,75,75);
 }
 td.filter_active {
     white-space: nowrap;

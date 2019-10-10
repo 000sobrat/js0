@@ -46,8 +46,8 @@ ${include /app/head.incl}
 var events=eventsHandler('evs');
 var eventPlanners=eventPlannersHandler('eps');
 var handler=events;
-var minScale=0.8;
-var maxScale=1.5;
+var minScale=1.0;
+var maxScale=1.0;
 
 
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td width='0%' rowspan='2' valign='top'>
                 <div id="v_filter"></div>
             </td>
-            <td valign='top'>
+            <td width='100%' valign='top'>
                 <div id="h_filter"></div>
             </td>
         </tr>
@@ -187,7 +187,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>E</td>
             </tr></table>
         <div>
+            <a onclick='var el=document.getElementById("request_info"); if(el && el.style.display!="block") el.style.display="block"; else el.style.display="none";'>INFO ON/OFF</a>
+            <div id='request_info' style='display: none;'>
             ${request}
+            </div>
         </div>
     </div>
 </body></html>
