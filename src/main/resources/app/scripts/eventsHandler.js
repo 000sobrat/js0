@@ -3,6 +3,16 @@
 function eventsHandler(id,conf) {
 var eh = DataHandler({
     id: id,
+    cellIconSize: 20,
+    cellActionIconSize: 12,
+    basket: {},
+    basketView: 'data_view2',
+    basketActions: {
+        apply: "#{Apply}",
+        remove: "#{Remove}",
+        confirm: "#{Confirm}",
+        clear: "#{Clear_basket}"
+    },
     loadMeta: function() {
         var caller=this;
         REST_api.eventsMeta(null,null,function (url, data) {
@@ -11,6 +21,7 @@ var eh = DataHandler({
                 caller.filter.from=caller.meta.ranges.default[1];
                 caller.filter.to=caller.meta.ranges.default[2];
 		caller.onLoadedMeta(data.result);
+                caller.loadBasket();
             }
         });
     },
@@ -47,6 +58,9 @@ var eh = DataHandler({
                 return s;
             },
             renderCellEntry: function(id, entry, dMin, dMax) {
+                var iconSize=""+caller.cellIconSize+"px";
+                var actionIconSize=""+caller.cellActionIconSize+"px";
+
                 var s="";
                 var cst="";
                 s+="<fieldset  id='"+id+"' class='calendar_cell "+cst+"' tMin='"+dMin.getTime()+"' tMax='"+dMax.getTime()+"'>";
@@ -55,7 +69,37 @@ var eh = DataHandler({
                 s+=""+this.toTimeHM(entry.start);//+" - "+this.toTimeHM(entry.end);
                 s+="</font>";
                 s+="</legend>";
-                s+=""+((entry.shortName) ? entry.shortName: entry.name);
+
+                if(1==1) {
+                    // build overlayed images with optional action...
+                    var action=null;
+                    var actionIcon=null;
+                    if(this.basket && this.basket[entry.id]) {
+                        action = "<a onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.removeFromBasket(\""+entry.id+"\");' class='cell_action'>";
+                        actionIcon="images/icons8-ok-90.png";
+                    } else {
+                        action = "<a onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.addToBasket(\""+entry.id+"\");' class='cell_action'>";
+                        actionIcon="images/icons8-circle-90.png";
+                    }
+    
+                    s+=(action)?action:"";
+                    if(entry.icon) {
+                        var cIcon=entry.icon;
+                        s+="<img class='overlay_wd' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+                        if(entry.myState) {
+                            cIcon=cIcon.replace('90','144');
+                            s+="<img class='overlay_wdm' src='images/"+cIcon+"' alt='remove' width='"+iconSize+"'>";
+                        }
+                    }
+                    s+=""+((entry.shortName) ? entry.shortName: entry.name);
+                    if(action && actionIcon) {
+                        s+="<img class='overlay_wda' src='"+actionIcon+"' alt='add' width='"+actionIconSize+"'>";
+                        s+="</a>";
+                    }
+                } else {
+                    s+=""+((entry.shortName) ? entry.shortName: entry.name);
+                }
+
                 s+="</fieldset>";
                 return s;
             },
@@ -64,6 +108,119 @@ var eh = DataHandler({
             }
         });
         calendar.render('data_view',this.data);
+    },
+    loadBasket: function() {
+        var current=this;
+        REST_api.getEventsInBasket(function (url, data) {
+            if (data.result) {
+                current.basket=data.result;
+                current.renderBasket();
+                current.renderData();
+            }
+        });
+    },
+    addToBasket: function (tsId) {
+        var current=this;
+        REST_api.addEventsToBasket(tsId,function (url, data) {
+            if (data.result) {
+                current.loadBasket();
+            }
+        });
+    },
+    removeFromBasket: function (tsId) {
+        var current=this;
+        REST_api.removeEventsFromBasket(tsId,function (url, data) {
+            //debugRR(url, data);
+
+            if (data.result) {
+                current.loadBasket();
+            }
+        });
+    },
+    applyForBasket: function(tsId, action) {
+        var current=this;
+        var email=userId;
+        if(!email) {
+            var el=document.getElementById('temp_email');
+            if(!el) {
+                var s="";
+                s+="<table align='center'><tr><td align='right'>#{User_name}</td><td align='left'><input id='temp_email' type='text' value=''></td><td><input type='button' value='#{Apply}' onclick='applyForBasket("+((tsId) ? "\""+tsId+"\"": "null")+",\""+action+"\");'></td></tr></table>";
+                el=document.getElementById("pane_top");
+                if(el) {
+                    el.innerHTML+=s;
+                }
+                return;
+            } else {
+                email=el.value;
+            }
+        }
+        REST_api.applyForGroups(email, action, function (url, data) {
+            if (data.result) {
+                current.loadBasket();
+                for(var i in data.result) {
+                    if('added'==data.result[i] || 
+                    'cancelled'==data.result[i] ||
+                    'confirmed'==data.result[i]) {
+                        current.loadData();
+                        break;
+                    }
+                }
+            }
+        });
+    },
+    renderBasket: function() {
+        var caller=this;
+        if(this.basket && Object.keys(this.basket).length>0) {
+            var s="<fieldset class='calendar_basket'><legend class='calendar_basket'>#{Basket}</legend><table class='calendar_basket'>";
+            if(1==1) {
+                s+="<caption class='basket_action'><table width='100%'><tr class='basket_action'><td class='basket_action'>";
+                s+="<a class='basket_action' onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.applyForBasket(null,\"apply\");'>"+this.basketActions.apply+"</a>";
+                //s+="</td></tr><tr class='basket_action'><td class='basket_action'>";
+                s+="</td><td class='basket_action'>";
+                s+="<a class='basket_action' onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.applyForBasket(null,\"remove\");'>"+this.basketActions.remove+"</a>";
+                if(userHasRole('admin')) {
+                    //s+="</td></tr><tr class='basket_action'><td class='basket_action'>";
+                    s+="</td><td class='basket_action'>";
+                    s+="<a class='basket_action' onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.applyForBasket(null,\"confirm\");'>"+this.basketActions.confirm+"</a>";
+                }
+                //s+="</td></tr><tr><td>";
+                s+="</td><td class='basket_action'>";
+                s+="<a class='basket_action' onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh) dh.removeFromBasket(-1);'>"+this.basketActions.clear+"</a>";
+                s+="</td></tr></table></caption>";
+            }
+            var c=0;
+            s+="\n<tr class='calendar_basket'>";
+            for(var i in this.basket) {
+                var entry=this.basket[i];
+                if(entry){
+                    c++;
+                    var cst="";
+                    s+="<td>";
+                    s+="<fieldset class='calendar_cell "+cst+"' style='position: relative;'>";
+                    s+="<legend class='calendar_cell'>";
+                    s+="<font size=-2>";
+                    s+=""+this.toDateYMD(entry.start)+" "+this.toTimeHM(entry.start)+" - "+this.toTimeHM(entry.end);
+                    s+="</font>";
+                    s+="</legend>";
+                    s+="<a onclick='var dh=getDataHandler(\""+caller.id+"\"); if(dh && dh.removeFromBasket(\""+entry.id+"\")) dh.loadBasket();'><img src='images/icons8-del-90.png' alt='remove' width='12px'></a>";
+                    s+="&nbsp;"+entry.name+"  <font size=-1><br/>"+entry.trainer+"</font>";
+                    s+="</fieldset>";
+
+                    if((c % 3) ==0)
+                        s+="</td></tr><tr class='calendar_basket'>";
+                    else
+                        s+="</td>";
+                }
+            }
+            s+="</tr>";
+            s+="</table></fieldset>";
+     
+            var div=document.getElementById(this.basketView);
+            if(div) { div.innerHTML=s; }
+        } else {
+            var div=document.getElementById(this.basketView);
+            if(div) { div.innerHTML=""; }
+        }
     },
     toPrevPeriod: function() {
         if(this.filter.prev || this.filter.prev==0) {

@@ -3,6 +3,7 @@
 
 
 <link rel="stylesheet" type="text/css" href="/app/styles/common.css" media="screen">
+<link rel="stylesheet" type="text/css" href="/app/styles/filter.css" media="screen">
 
 <script type="text/javascript" src="/app/scripts/jquery.js"></script>
 <script type="text/javascript" src="/app/api?js"></script>
@@ -75,6 +76,7 @@ function renderToolbarActions(toolbarElementId) {
      var s="";
      var toolIconSize='36px';
      
+     s+="<a class='toolbar_item' onclick='toolbarToHome();' ttbr='#{HomePage}'><img class='toolbar' src='images/icons8-home-90.png' alt='#{HomePage}' width='"+toolIconSize+"'></a>";
      s+="<a class='toolbar_item' onclick='toolbarToSchedule();' ttbr='#{Schedule}'><img class='toolbar' src='images/icons8-schedule-90.png' alt='#{Schedule}' width='"+toolIconSize+"'></a>";
      s+="<a class='toolbar_item' onclick='toolbarToPlanner();' ttbr='#{Planner}'><img class='toolbar' src='images/icons8-planner-90.png' alt='#{Planner}' width='"+toolIconSize+"'></a>";
      s+="<a class='toolbar_item' onclick='toolbarToContactsMap();' ttbr='#{Locations}'><img class='toolbar' src='images/icons8-address-90.png' alt='#{Locations}' width='"+toolIconSize+"'></a>";

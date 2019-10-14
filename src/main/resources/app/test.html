@@ -2,6 +2,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"  charset="UTF-8">
 
 ${include /app/head.incl}        
+
         
         <link rel="stylesheet" type="text/css" href="/app/styles/special.css" media="screen">
         <script type="text/javascript" src="/app/scripts/um.js"></script>
@@ -46,14 +47,105 @@ var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
 var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
 //var weekDayNames={"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"};
 
-            
-            
+
+var homeHandler={
+    meta: {
+        "/app/adv/rooms/*": "#{Rooms}",
+        "/app/adv/pilates/*": "#{Pilates}",
+        "/app/adv/yoga/*": "#{Yoga}",
+        "/app/adv/fly-yoga/*": "#{Fly-Yoga}",
+        "/app/adv/dance/*": "#{Dance}",
+        "/app/adv/break-dance/*": "#{BreakDance}"
+    },
+    data: null,
+    view: null,
+    loadMeta: function(){
+        var caller=this;
+        REST_api.getAdvResources(
+            Object.keys(this.meta),
+            function (url, data) {
+            if (data.result) {
+                caller.data=data.result; 
+		caller.onLoadedMeta(data.result);
+            }
+        });
+    },
+    onLoadedMeta: function(){
+        this.renderFilter();
+    },
+    renderFilter: function() {
+        var s="";
+        
+        s+="<table width='100%'><tr><td>";
+        for(var k in this.meta) {
+            if(this.view!=k) {
+                s+="<span class='filter' style='margin-right: 5px;'>";
+                s+="<a onclick='handler.view=\""+k+"\"; handler.renderFilter();'>";
+                s+=this.meta[k];
+                s+="</a>";
+                s+="</span>";
+            }else{
+                s+="<span class='filter_sel'>";
+                s+=this.meta[k];
+                s+="</span>";
+            }
+        }
+        s+="</td></tr></table>";
+        
+        var el=document.getElementById('h_filter');
+        if(el) el.innerHTML=s;
+        
+        this.renderData();
+    },
+    renderData: function(){
+        var s="";
+
+        s+="<table width='100%'><tr><td>";
+        
+        var w=Math.min(300,window.screen.width);
+        var vd=(this.data) ? this.data[this.view] : null;
+        if(vd) {
+            for(var vi in vd) {
+                var v=vd[vi];
+                if(v) {
+                    s+="<img class='adv' src='/"+v+"?w="+w+"&h="+w+"' width='"+w+"px'>";
+                    //s+="<img src='/"+v+"?w="+w+"' width='"+w+"px'>";
+                    //s+="<img src='/"+v+"' width='"+w+"px'>";
+                }
+            }
+        }
+
+        s+="</td></tr></table>";
+        
+        var el=document.getElementById('data_view');
+        if(el) el.innerHTML=s;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function evalCascaded(el,name) {
     var offset=el[name];
     return el[name]+((el.parentElement) ? evalCascaded(el.parentElement,name) : 0);
 }
             
-var events=eventsHandler('evs')
+var events=eventsHandler('evs', {
+    basketActions: {
+        apply: "#{Apply}",
+        remove: "#{Remove}",
+        confirm: "#{Confirm}",
+        clear: "#{Clear_basket}"
+    }
+})
 .addDataFilter(SimpleDataFilter('my','#{My}', { add:function(id,val) {this[id]=val; return this;}}.add(""+userId,"#{my}").add("!"+userId,"#{not_my}"), 'participant', {nullValue:'#{ALL}', keyIndex: -1, valueIndex: 0, visible: isValidUser()}))
 .addDataFilter(
     TimeRangeDataFilter(
@@ -136,6 +228,7 @@ var maxScale=1.4;
 
 
 
+function toolbarToHome(){ clearViewAreas(); handler=homeHandler; handler.loadMeta();}
 function toolbarToSchedule(){ clearViewAreas(); handler=events; handler.loadMeta();}
 function toolbarToPlanner(){clearViewAreas(); handler=eventPlanners; handler.loadMeta();}
 function toolbarToContactsMap(){clearViewAreas();}

@@ -18,6 +18,7 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import ssg.lib.common.ImagingTools;
 import ssg.lib.common.TaskExecutor;
 import ssg.lib.di.DI;
 import ssg.lib.http.HttpApplication;
@@ -111,6 +112,10 @@ public class App extends CS {
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
         final UI_API ui = new UI_API(schedule, training, um);
+        
+        ImagingTools.MAX_IMAGE_WIDTH=1080*2;
+        ImagingTools.MAX_IMAGE_HEIGHT=720*2;
+        
 
         try (InputStream is = new FileInputStream("target/jana.json");) {
             Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -209,7 +214,11 @@ public class App extends CS {
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.png"), "/app/logo.png", "image/png"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.html"), "/app/index.html", "text/html"))
                                 //                                .add(new HttpResourceBytes(classLoader.getResourceAsStream("scheduler.json"), "/app/manifest.json", "application/json"))
-                                .add(new HttpResourceCollection("/app/*", "resource:app"))
+                                .add(new HttpResourceCollection("/app/*", "resource:app") {
+                                    {
+                                        ui.addScannables(this);
+                                    }
+                                })
                                 .resourceBundle("i18n.jana")
                                 .addParameterResolvers(new ParameterResolver() {
                                     @Override
@@ -243,7 +252,7 @@ public class App extends CS {
                                         return sb.toString();
                                     }
                                 })
-                                .noCacheing()
+                                //.noCacheing()
                         ),
                 um.getDomain()
         );

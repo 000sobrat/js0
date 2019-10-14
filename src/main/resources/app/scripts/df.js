@@ -136,7 +136,30 @@ function DataHandler(conf) {
                 }
             }
             return this;
-        }        
+        },
+        toDateYMD: function(val) {
+            if("number"==typeof(val))
+                val=new Date(val);
+            else if("string"==typeof(val))
+                 val=new Date(val);
+            
+            return ""
+                +val.getFullYear()
+                +"-"
+                +((val.getMonth()<9) ? "0" : "")+(val.getMonth()+1)
+                +"-"
+                +((val.getDate()<10) ? "0"+val.getDate() : val.getDate());
+        },
+        toTimeHM: function(val) {
+            if("number"==typeof(val)) 
+                val=new Date(val);
+            else if("string"==typeof(val)) 
+                val=new Date(val);
+            return ""
+                +((val.getHours()<10) ? "0"+val.getHours() : val.getHours())
+                +":"
+                +((val.getMinutes()<10) ? "0"+val.getMinutes() : val.getMinutes());
+        }
     };
 
     dh.configure(conf);

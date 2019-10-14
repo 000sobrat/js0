@@ -97,12 +97,17 @@ var calendar = {
          s+="<th align='center' valign='middle'>";
          if(this.toPrev) s+="<img src='images/icons8-shevrone-left-90.png' width='20px' onclick='"+this.toPrev+"'>";
          //s+="-";
-         if(this.compact) {
-           s+="<img src='images/icons8-expand-96.png' width='20px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=false; c.conf.render(c.id,c.data);'>";
-         } else {
-           s+="<img src='images/icons8-compactify-90.png' width='20px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=true; c.conf.render(c.id,c.data);'>";
-         }
          if(this.toNext) s+="<img src='images/icons8-shevrone-right-90.png' width='20px' onclick='"+this.toNext+"'>";
+
+         s+="<div style='padding-top: 3px;'>";
+         if(this.compact) {
+           s+="<img src='images/icons8-expand-96.png' width='20px' height='15px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=false; c.conf.render(c.id,c.data);'>";
+         } else {
+           s+="<img src='images/icons8-compactify-90.png' width='20px' height='15px' onclick='var c=document.getElementById(\""+element+"\"); c.conf.compact=true; c.conf.render(c.id,c.data);'>";
+         }
+         s+="</div>";
+         
+
          s+="</th>";
          var d=new Date(minD);
          while(d<=maxD) {
@@ -199,7 +204,7 @@ var calendar = {
            s+="<td class='calendar_cell'>";
            var dMin=new Date(d);
            var dMax=new Date(d);
-           dMax.setMinutes(dMax.getMinutes()+30);
+           dMax.setHours(dMax.getHours()+1); //dMax.setMinutes(dMax.getMinutes()+30);
            d.setDate(d.getDate()+1);
            var es=this.find(events,dMin,dMax);
            if(es && es.length>0) {
@@ -212,7 +217,7 @@ var calendar = {
            s+="</td>";
         }
         s+="</tr>";
-        t.setMinutes(t.getMinutes()+30);
+        t.setHours(t.getHours()+1); // t.setMinutes(t.getMinutes()+30);
       }
 
 

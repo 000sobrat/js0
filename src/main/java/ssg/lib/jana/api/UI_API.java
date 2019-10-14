@@ -19,6 +19,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import ssg.lib.common.CommonTools;
+import ssg.lib.common.MatchScanner;
+import ssg.lib.common.Matcher;
+import ssg.lib.http.HttpMatcher;
 import ssg.lib.http.HttpSession;
 import ssg.lib.http.HttpUser;
 import ssg.lib.http.base.HttpRequest;
@@ -66,6 +69,7 @@ public class UI_API {
     ScheduleAPI schedule = new ScheduleAPI();
     TrainingAPI training = new TrainingAPI();
     UM_API um = new UM_API();
+    List<MatchScanner<String, String>> scannables = new ArrayList<>();
 
     public UI_API() {
     }
@@ -78,6 +82,67 @@ public class UI_API {
         this.schedule = schedule;
         this.training = training;
         this.um = um;
+    }
+
+    public void addScannables(MatchScanner<String, String>... scannables) {
+        if (scannables != null) {
+            for (MatchScanner<String, String> scannable : scannables) {
+                if (scannable != null && !this.scannables.contains(scannable)) {
+                    this.scannables.add(scannable);
+                }
+            }
+        }
+    }
+
+    @XMethod(name = "getAdvResources")
+    public Map<String, List<String>> getAdvResources(
+            HttpRequest req,
+            final @XParameter(name = "masks", optional = true) String... masks
+    ) throws IOException {
+        Map<String, List<String>> r = new LinkedHashMap<>();
+
+        if (masks != null) {
+            for (final String mask : masks) {
+                if (!mask.contains("adv/")) {
+                    continue;
+                }
+                Matcher<String> matcher = new Matcher<String>() {
+                    HttpMatcher hm = new HttpMatcher(mask);
+
+                    @Override
+                    public float match(String t) {
+                        float f = hm.match(new HttpMatcher(t));
+                        return f;
+                    }
+
+                    @Override
+                    public float weight() {
+                        return 1f;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "{mask="+mask+", " + "hm=" + hm + '}';
+                    }
+                };
+                List<String> lst = new ArrayList<>();
+                r.put(mask, lst);
+                for (MatchScanner<String, String> sc : scannables) {
+                    if (sc != null) {
+                        Collection<String> m = sc.scan(matcher);
+                        if (m != null) {
+                            for (String s : m) {
+                                if (!r.containsKey(s)) {
+                                    lst.add(s);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return r;
     }
 
     @XMethod(name = "setLanguage")
@@ -715,8 +780,8 @@ public class UI_API {
             wd.add(c.getTimeInMillis());
             c.add(Calendar.DAY_OF_YEAR, 1);
         }
-        wd.set(0, wd.get(wd.size()-1));
-        wd.remove(wd.size()-1);
+        wd.set(0, wd.get(wd.size() - 1));
+        wd.remove(wd.size() - 1);
 
         // start times: 6:00
         Map t = new LinkedHashMap();
@@ -921,7 +986,7 @@ public class UI_API {
                         r.put(id, "failed");
                     }
                 } catch (Throwable th) {
-                    r.put(id, ""+th);
+                    r.put(id, "" + th);
                 }
             }
         }
@@ -963,14 +1028,14 @@ public class UI_API {
                         if (weekDays != null) {
                             te.setWeekDays((int[]) weekDays);
                         }
-                    TEP[] tt = toTEP(te, -1);
-                    if (tt != null && tt.length == 1) {
-                        r.put(id, tt[0]);
-                    } else {
-                        r.put(id, "failed");
-                    }
+                        TEP[] tt = toTEP(te, -1);
+                        if (tt != null && tt.length == 1) {
+                            r.put(id, tt[0]);
+                        } else {
+                            r.put(id, "failed");
+                        }
                     } catch (Throwable th) {
-                        r.put(id, ""+th);
+                        r.put(id, "" + th);
                     }
                 } else {
                     r.put(id, null);

@@ -40,15 +40,15 @@ th.calendar_time_30 {
 	font-size: 10pt;
 }
 
-tr.calendar_time { 
+tr.calendar_time_ { 
 	height: 12px; 
 	min-height: 12px; 
 	max-height: 12px; 
 }
-tr.calendar_time_ { 
-	height: 25px; 
-	min-height: 22px; 
-	max-height: 22px; 
+tr.calendar_time { 
+	height: 30px; 
+	min-height: 30px; 
+	max-height: 30px; 
 }
 
 tr.calendar_time_00 { 
