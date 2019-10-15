@@ -39,6 +39,8 @@ import ssg.lib.jana.api.TrainingAPI.Trainer;
 import ssg.lib.jana.api.UM_API.UM_STATE;
 import ssg.lib.jana.tools.TimeTools;
 import ssg.lib.jana.tools.TimeTools.SEASON;
+import ssg.lib.service.DF_Service.DF_ServiceListener;
+import ssg.lib.service.DF_Service.DebuggingDF_ServiceListener;
 
 /**
  *
@@ -70,6 +72,7 @@ public class UI_API {
     TrainingAPI training = new TrainingAPI();
     UM_API um = new UM_API();
     List<MatchScanner<String, String>> scannables = new ArrayList<>();
+    DF_ServiceListener serviceListener;
 
     public UI_API() {
     }
@@ -84,6 +87,18 @@ public class UI_API {
         this.um = um;
     }
 
+    public UI_API(
+            ScheduleAPI schedule,
+            TrainingAPI training,
+            UM_API um,
+            DF_ServiceListener serviceListener
+    ) {
+        this.schedule = schedule;
+        this.training = training;
+        this.um = um;
+        this.serviceListener = serviceListener;
+    }
+
     public void addScannables(MatchScanner<String, String>... scannables) {
         if (scannables != null) {
             for (MatchScanner<String, String> scannable : scannables) {
@@ -92,6 +107,43 @@ public class UI_API {
                 }
             }
         }
+    }
+
+    @XMethod(name = "debug")
+    public void debug(
+            HttpRequest req,
+            @XParameter(name = "enable", optional = true) boolean enable,
+            @XParameter(name = "events", optional = true) DF_ServiceListener.SERVICE_EVENT... events) {
+        if (serviceListener == null || !(serviceListener instanceof DebuggingDF_ServiceListener)) {
+            return;
+        }
+        if (events == null || events.length == 0 || events[0] == null) {
+            events = DF_ServiceListener.SERVICE_EVENT.values();
+        }
+        if (enable) {
+            ((DebuggingDF_ServiceListener) serviceListener).includeEvents(events);
+        } else {
+            ((DebuggingDF_ServiceListener) serviceListener).excludeEvents(events);
+            if (((DebuggingDF_ServiceListener) serviceListener).debuggingEvents().isEmpty()) {
+                ((DebuggingDF_ServiceListener) serviceListener).includeEvents(
+                        DF_ServiceListener.SERVICE_EVENT.no_event
+                );
+            }
+        }
+    }
+
+    @XMethod(name = "listDebug")
+    public Collection<DF_ServiceListener.SERVICE_EVENT> listDebug() {
+        return (serviceListener instanceof DebuggingDF_ServiceListener)
+                ? ((DebuggingDF_ServiceListener) serviceListener).debuggingEvents()
+                : null;
+    }
+
+    @XMethod(name = "canDebug")
+    public DF_ServiceListener.SERVICE_EVENT[] canDebug() {
+        return (serviceListener != null)
+                ? DF_ServiceListener.SERVICE_EVENT.values()
+                : null;
     }
 
     @XMethod(name = "getAdvResources")
@@ -122,7 +174,7 @@ public class UI_API {
 
                     @Override
                     public String toString() {
-                        return "{mask="+mask+", " + "hm=" + hm + '}';
+                        return "{mask=" + mask + ", " + "hm=" + hm + '}';
                     }
                 };
                 List<String> lst = new ArrayList<>();

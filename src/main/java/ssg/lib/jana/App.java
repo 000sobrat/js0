@@ -50,6 +50,8 @@ import ssg.lib.oauth.impl.OAuthClientVK;
 import ssg.lib.oauth.impl.OAuthHttpDataProcessor;
 import ssg.lib.oauth.impl.UserOAuthVerifier;
 import ssg.lib.service.DF_Service;
+import ssg.lib.service.DF_Service.DF_ServiceListener;
+import ssg.lib.service.DF_Service.DebuggingDF_ServiceListener;
 import ssg.lib.service.DataProcessor;
 import ssg.lib.service.Repository;
 import ssg.lib.ssl.SSLTools;
@@ -65,6 +67,7 @@ public class App extends CS {
     SSLSupport sslSupport;
     // service handlers support
     DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorSimple());
+    DebuggingDF_ServiceListener serviceDebug = new DebuggingDF_ServiceListener();
 
     public App(String... args) throws IOException {
         System.out.println("init App for String[]");
@@ -89,6 +92,15 @@ public class App extends CS {
             service.filter(sslSupport.ssl_df_server);
         }
         addCSListener(new CSListener.DebuggingCSListener(System.out, CSListener.DebuggingCSListener.DO_STRUCTURAL));
+        if (serviceDebug != null) {
+            serviceDebug.excludeEvents(DF_ServiceListener.SERVICE_EVENT.values());
+            serviceDebug.includeEvents(
+                    DF_ServiceListener.SERVICE_EVENT.init_service_processor,
+                    DF_ServiceListener.SERVICE_EVENT.keep_service_processor,
+                    DF_ServiceListener.SERVICE_EVENT.done_service_processor
+            );
+        }
+        service.addServiceListener(serviceDebug);
     }
 
     public DF_Service<SocketChannel> getDefaultService() {
@@ -111,11 +123,10 @@ public class App extends CS {
         final ScheduleAPI schedule = new ScheduleAPI();
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
-        final UI_API ui = new UI_API(schedule, training, um);
-        
-        ImagingTools.MAX_IMAGE_WIDTH=1080*2;
-        ImagingTools.MAX_IMAGE_HEIGHT=720*2;
-        
+        final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug);
+
+        ImagingTools.MAX_IMAGE_WIDTH = 1080 * 2;
+        ImagingTools.MAX_IMAGE_HEIGHT = 720 * 2;
 
         try (InputStream is = new FileInputStream("target/jana.json");) {
             Reader rdr = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -252,7 +263,7 @@ public class App extends CS {
                                         return sb.toString();
                                     }
                                 })
-                                //.noCacheing()
+                        //.noCacheing()
                         ),
                 um.getDomain()
         );
