@@ -270,7 +270,7 @@ function updateOrientation() {
     var viewport = document.querySelector("meta[name=viewport]");
     viewport.setAttribute('content', 'width=' + window.screen.width + ', initial-scale=1.0, minimum-scale='+minScale+', maximum-scale='+maxScale);
 }
-window.addEventListener('resize', function(event) { updateOrientation(); handler.renderFilter();}, false);
+window.addEventListener('resize', function(event) { updateOrientation(); if(handler)handler.renderFilter();}, false);
 window.addEventListener('orientationchange', updateOrientation(), false);
 
 
