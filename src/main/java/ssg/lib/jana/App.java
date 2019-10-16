@@ -95,9 +95,7 @@ public class App extends CS {
         if (serviceDebug != null) {
             serviceDebug.excludeEvents(DF_ServiceListener.SERVICE_EVENT.values());
             serviceDebug.includeEvents(
-                    DF_ServiceListener.SERVICE_EVENT.init_service_processor,
-                    DF_ServiceListener.SERVICE_EVENT.keep_service_processor,
-                    DF_ServiceListener.SERVICE_EVENT.done_service_processor
+                    DF_ServiceListener.SERVICE_EVENT.no_event
             );
         }
         service.addServiceListener(serviceDebug);
