@@ -66,7 +66,7 @@ public class App extends CS {
     // SSL support
     SSLSupport sslSupport;
     // service handlers support
-    DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorSimple());
+    DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorPool());
     DebuggingDF_ServiceListener serviceDebug = new DebuggingDF_ServiceListener();
 
     public App(String... args) throws IOException {
