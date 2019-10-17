@@ -30,6 +30,7 @@ import ssg.lib.http.base.HttpData;
 import ssg.lib.http.base.HttpRequest;
 import ssg.lib.http.dp.HttpResourceBytes;
 import ssg.lib.http.dp.HttpResourceCollection;
+import ssg.lib.http.dp.HttpResourceURL;
 import ssg.lib.http.dp.HttpStaticDataProcessor;
 import ssg.lib.http.dp.HttpStaticDataProcessor.ParameterResolver;
 import ssg.lib.http.rest.MethodsProvider;
@@ -66,7 +67,7 @@ public class App extends CS {
     // SSL support
     SSLSupport sslSupport;
     // service handlers support
-    DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorPool());
+    DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorPool(10, 15));
     DebuggingDF_ServiceListener serviceDebug = new DebuggingDF_ServiceListener();
 
     public App(String... args) throws IOException {
@@ -123,6 +124,7 @@ public class App extends CS {
         final UM_API um = new UM_API();
         final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug);
 
+        HttpResourceURL.scaledImagesCache = null;
         ImagingTools.MAX_IMAGE_WIDTH = 1080 * 2;
         ImagingTools.MAX_IMAGE_HEIGHT = 720 * 2;
 

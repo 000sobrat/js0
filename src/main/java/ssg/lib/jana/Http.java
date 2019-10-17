@@ -19,6 +19,8 @@ import ssg.lib.http.HttpApplication;
 import ssg.lib.http.HttpAuthenticator;
 import ssg.lib.http.HttpService;
 import ssg.lib.http.base.HttpData;
+import ssg.lib.http.base.HttpRequest;
+import ssg.lib.http.di.DIHttpData;
 import ssg.lib.service.DF_Service;
 
 public class Http {
@@ -35,42 +37,47 @@ public class Http {
         init();
     }
 
+    public void dumpStat(String text) {
+        StringBuilder sb = new StringBuilder();
+        Runtime rt = Runtime.getRuntime();
+        sb.append("[" + System.currentTimeMillis() + "]");
+        sb.append(" CPUs: " + rt.availableProcessors());
+        sb.append(", RAM (f/t/m, MB): " + (rt.freeMemory() / 1024 / 1024f) + "/" + (rt.totalMemory() / 1024 / 1024f) + "/" + (rt.maxMemory() / 1024 / 1024f));
+        sb.append("\n  "+("" + text).replace("\n", "\n  "));
+        System.out.println(sb);
+        rt.gc();
+    }
+
     public void init() {
         httpService = new HttpService(httpAuth) {
             @Override
             public void onHttpDataCreated(Channel provider, HttpData http) {
                 super.onHttpDataCreated(provider, http);
-//                    if (http instanceof HttpRequest) {
-//                        HttpRequest req = (HttpRequest) http;
-//                        if (DEBUG_SVC[0]) {
-//                            System.out.println("REQUEST CREATE   : " + req.getQuery());
-//                        }
-//                    }
+                if (http instanceof HttpRequest) {
+                    HttpRequest req = (HttpRequest) http;
+                    dumpStat("REQUEST CREATE   : " + req.getQuery());
+                }
             }
 
             @Override
             public void onHttpDataCompleted(Channel provider, HttpData http) {
                 super.onHttpDataCompleted(provider, http);
-//                    if (http instanceof HttpRequest) {
-//                        HttpRequest req = (HttpRequest) http;
-//                        if (DEBUG_SVC[1]) {
-//                            System.out.println("REQUEST DONE[" + req.getResponse().getHead().getProtocolInfo()[1] + "]: " + req.getQuery());
-//                        }
-//                    }
+                    if (http instanceof HttpRequest) {
+                        HttpRequest req = (HttpRequest) http;
+                        dumpStat("REQUEST DONE[" + req.getResponse().getHead().getProtocolInfo()[1] + "]: " + req.getQuery());
+                    }
             }
 
             @Override
             public void onServiceError(Channel provider, DI pd, Throwable error) throws IOException {
-//                    if (pd instanceof DIHttpData) {
-//                        DIHttpData hdi = (DIHttpData) pd;
-//                        HttpData http = hdi.http(provider);
-//                        if (http instanceof HttpRequest) {
-//                            HttpRequest req = (HttpRequest) http;
-//                            if (DEBUG_SVC[2]) {
-//                                System.out.println("REQUEST ERROR    : " + req.getQuery() + "\n  " + error);
-//                            }
-//                        }
-//                    }
+                    if (pd instanceof DIHttpData) {
+                        DIHttpData hdi = (DIHttpData) pd;
+                        HttpData http = hdi.http(provider);
+                        if (http instanceof HttpRequest) {
+                            HttpRequest req = (HttpRequest) http;
+                            dumpStat("REQUEST ERROR    : " + req.getQuery() + "\n  " + error);
+                        }
+                    }
                 super.onServiceError(provider, pd, error);
             }
         };
