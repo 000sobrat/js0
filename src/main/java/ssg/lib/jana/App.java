@@ -96,6 +96,14 @@ public class App extends CS {
         if (serviceDebug != null) {
             serviceDebug.excludeEvents(DF_ServiceListener.SERVICE_EVENT.values());
             serviceDebug.includeEvents(
+                    //DF_ServiceListener.SERVICE_EVENT.read_ext,
+//                    DF_ServiceListener.SERVICE_EVENT.write_ext,
+//                    DF_ServiceListener.SERVICE_EVENT.write_int,
+//                    DF_ServiceListener.SERVICE_EVENT.read_int,
+//                    DF_ServiceListener.SERVICE_EVENT.read_int,
+//                    DF_ServiceListener.SERVICE_EVENT.init_service_processor,
+//                    DF_ServiceListener.SERVICE_EVENT.keep_service_processor,
+//                    DF_ServiceListener.SERVICE_EVENT.done_service_processor,
                     DF_ServiceListener.SERVICE_EVENT.no_event
             );
         }
@@ -122,7 +130,7 @@ public class App extends CS {
         final ScheduleAPI schedule = new ScheduleAPI();
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
-        final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug);
+        final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug,server.service);
 
         HttpResourceURL.scaledImagesCache = null;
         ImagingTools.MAX_IMAGE_WIDTH = 1080 * 2;

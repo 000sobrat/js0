@@ -39,8 +39,10 @@ import ssg.lib.jana.api.TrainingAPI.Trainer;
 import ssg.lib.jana.api.UM_API.UM_STATE;
 import ssg.lib.jana.tools.TimeTools;
 import ssg.lib.jana.tools.TimeTools.SEASON;
+import ssg.lib.service.DF_Service;
 import ssg.lib.service.DF_Service.DF_ServiceListener;
 import ssg.lib.service.DF_Service.DebuggingDF_ServiceListener;
+import ssg.lib.service.ProviderStatistics;
 
 /**
  *
@@ -73,6 +75,7 @@ public class UI_API {
     UM_API um = new UM_API();
     List<MatchScanner<String, String>> scannables = new ArrayList<>();
     DF_ServiceListener serviceListener;
+    DF_Service dfs;
 
     public UI_API() {
     }
@@ -91,12 +94,14 @@ public class UI_API {
             ScheduleAPI schedule,
             TrainingAPI training,
             UM_API um,
-            DF_ServiceListener serviceListener
+            DF_ServiceListener serviceListener,
+            DF_Service dfs
     ) {
         this.schedule = schedule;
         this.training = training;
         this.um = um;
         this.serviceListener = serviceListener;
+        this.dfs=dfs;
     }
 
     public void addScannables(MatchScanner<String, String>... scannables) {
@@ -107,6 +112,24 @@ public class UI_API {
                 }
             }
         }
+    }
+
+    @XMethod(name = "providerStatistics")
+    public Collection<String> providerStatistics() {
+        List<String> r = new ArrayList<>();
+        if (dfs != null) {
+            List<ProviderStatistics> pss = dfs.getStatistics();
+            if (pss != null) {
+                System.out.println("PSS["+pss.size()+"]");
+                for (ProviderStatistics ps : pss) {
+                    if (ps != null) {
+                        r.add(ps.toString());
+                        System.out.println("  ------------------------------\n    "+ps.toString().replace("\n", "\n    "));
+                    }
+                }
+            }
+        }
+        return r;
     }
 
     @XMethod(name = "debug")
