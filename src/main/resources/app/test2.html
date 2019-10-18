@@ -248,27 +248,29 @@ window.eventPlanners=eventPlannersHandler('eps')
                   var loader=this;
                   var ld=this.steps[this.step];
                   if(ld.scripts) {
+                     this.log("need scripts["+ld.scripts.length+"]: "+(""+ld.scripts).replace(",","  "));
+                     this.stepLoadables+=ld.scripts.length;
                      for(var si in ld.scripts) {
                          var script = document.createElement('script');
                          script.onload = function () {
-                             loader.onLoaded(this.src);
+                            loader.onLoaded(this.src);
                          };
                          script.src = ld.scripts[si];
-                         this.stepLoadables++;
                          document.body.appendChild(script);
                      }
                   }
                   if(ld.styles) {
+                     this.log("need styles["+ld.styles.length+"]: "+(""+ld.styles).replace(",","  "));
+                     this.stepLoadables+=ld.styles.length;
                      for(var si in ld.styles) {
                          var style = document.createElement('link');
                          style.onload = function () {
-                             loader.onLoaded(this.src);
+                            loader.onLoaded(this.href);
                          };
                          style.rel="stylesheet";
                          style.type="text/css";
                          style.href = ld.styles[si];
                          style.media="screen";
-                         this.stepLoadables++;
                          document.body.appendChild(style);
                      }
                   }
