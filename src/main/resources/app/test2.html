@@ -1,0 +1,495 @@
+<html><head>
+
+<link rel="manifest" href="/app/manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+
+${include /app/headUser.incl}        
+
+<script>
+   var loadables= {
+          done: false,
+          step: 0, // wip: current step
+          stepLoadables: 0, // wip: increase on added scripts, decreased on loaded
+          steps: [
+             {
+                "title":"jQuery and API",
+                "scripts":["scripts/jquery.js","api?js","scripts/um.js"],
+                "styles":["styles/common.css","styles/filter.css"], 
+                "onLoaded": function(){
+                    if(isValidUser()) {
+                      var el=document.getElementById('userInfo');
+                      var un=userDisplayName();
+                      var ud=userDomainName();
+                      el.innerHTML=""
+                         +"<a onclick='showUserForm();'>"
+                         +un
+                         +"</a>"
+                         +"&nbsp;("
+                         +"<a onclick='showUserChangePwdForm();'>"
+                         +ud
+                         +"</a>"
+                         +")&nbsp;"
+                         +"<a onclick='doLogout();' class='login' ttar='#{Logout}'><img src='images/icons8-logout-90.png' alt='#{Logout}...' width='20'><tt>#{Logout}</tt></a>";
+                      } else {
+                         var el=document.getElementById('userInfo');
+                         el.innerHTML="<a onclick='showLoginForm();' class='login' ttar='#{Login}'><img src='images/icons8-login-90.png' alt='#{Login}...' width='20'><tt>#{Login}</tt></a>";
+                         REST_api.loginVariants(
+                           function(url,data) { 
+                              if(data.result) {
+                                 var loginLinks=data.result;
+                                 showLoginLinks(loginLinks);
+                              } 
+                           }
+                         );
+                      }
+                      if(userLocale) {
+                          var locs=["en","ru","fi"];
+                          for(var loci in locs) {
+                            var loc=locs[loci];
+                            if(loc) {
+                                var locEl=document.getElementById('locale_'+loc);
+                                if(locEl) {
+                                   if(userLocale==loc) locEl.style.display='none';
+                                }
+                            }
+                          }
+                      }
+                      renderToolbarActions('top_toolbar');
+                  }
+             },
+	     {
+                  "title":"scheduler",
+                  "scripts":["scripts/df.js","scripts/eventsHandler.js","scripts/eventPlannersHandler.js","scripts/calendar.js"],
+                  "styles":["styles/calendar.css","styles/filter.css", "styles/special.css"], 
+                  onLoaded: function(){
+window.homeHandler={
+    meta: {
+        "/app/adv/rooms/*": "#{Rooms}",
+        "/app/adv/pilates/*": "#{Pilates}",
+        "/app/adv/yoga/*": "#{Yoga}",
+        "/app/adv/fly-yoga/*": "#{Fly-Yoga}",
+        "/app/adv/dance/*": "#{Dance}",
+        "/app/adv/break-dance/*": "#{BreakDance}"
+    },
+    data: null,
+    view: null,
+    loadMeta: function(){
+        var caller=this;
+        REST_api.getAdvResources(
+            Object.keys(this.meta),
+            function (url, data) {
+            if (data.result) {
+                caller.data=data.result; 
+		caller.onLoadedMeta(data.result);
+            }
+        });
+    },
+    onLoadedMeta: function(){
+        this.renderFilter();
+    },
+    renderFilter: function() {
+        var s="";
+        
+        s+="<table width='100%'><tr><td>";
+        for(var k in this.meta) {
+            if(this.view!=k) {
+                s+="<span class='filter' style='margin-right: 5px;'>";
+                s+="<a onclick='handler.view=\""+k+"\"; handler.renderFilter();'>";
+                s+=this.meta[k];
+                s+="</a>";
+                s+="</span>";
+            }else{
+                s+="<span class='filter_sel'>";
+                s+=this.meta[k];
+                s+="</span>";
+            }
+        }
+        s+="</td></tr></table>";
+        
+        var el=document.getElementById('h_filter');
+        if(el) el.innerHTML=s;
+        
+        this.renderData();
+    },
+    renderData: function(){
+        var s="";
+
+        s+="<table><tr><td valign='top' style='white-space: pre-line'>";
+        
+        var w=Math.min(300,window.screen.width);
+        var vd=(this.data) ? this.data[this.view] : null;
+        if(vd) {
+            for(var vi in vd) {
+                var v=vd[vi];
+                if(v) {
+                    s+="<img class='adv' src='/"+v+"?w="+w+"&h="+w+"' width='"+w+"px'> ";
+                    //s+="<img src='/"+v+"?w="+w+"' width='"+w+"px'>";
+                    //s+="<img src='/"+v+"' width='"+w+"px'>";
+                }
+            }
+        }
+
+        s+="</td></tr></table>";
+        
+        var el=document.getElementById('data_view');
+        if(el) el.innerHTML=s;
+    }
+}
+
+window.events=eventsHandler('evs')
+.addDataFilter(SimpleDataFilter('my','#{My}', { add:function(id,val) {this[id]=val; return this;}}.add(""+userId,"#{my}").add("!"+userId,"#{not_my}"), 'participant', {nullValue:'#{ALL}', keyIndex: -1, valueIndex: 0, visible: isValidUser()}))
+.addDataFilter(
+    TimeRangeDataFilter(
+        'month',
+        '#{Month}', 
+        'this.meta.ranges.months', 
+        {
+            columns:4, 
+            nullValue:'#{NOW}',
+            locale: userLocale,
+            valueOf: function(key) {
+                var v=(key) ? this.data[key] : null; 
+                return (v) 
+                    ? new Date(v[1]).toLocaleDateString(this.locale, { month: 'short' }) 
+                    : null;
+            }
+        }
+    )
+)
+.addDataFilter(TimeRangeDataFilter('week','#{Week}', 'this.meta.ranges.weeks', {columns:4, nullValue:'#{Now}', nullData: 'this.meta.ranges.default'}))
+.addDataFilter(SimpleDataFilter('room','#{Rooms}', 'this.meta.rooms', 'room', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('group','#{Groups}', 'this.meta.groups', 'group', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('trainer','#{Trainers}', 'this.meta.trainers', 'trainer', {nullValue:'#{ALL}', keyIndex: -1, valueIndex: 0}))
+.addDataFilter(SimpleDataFilter('course','#{Courses}', 'this.meta.courses', 'course', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('category','#{Categories}', 'this.meta.categories', 'category', {nullValue:'#{ALL}', valueIndex: -1}))
+;
+
+window.eventPlanners=eventPlannersHandler('eps')
+.configure(null, function(dh){
+    dh.filterRenderer.configure({
+        viewSwithWidth: 900
+        });
+})        
+.addDataFilter(TimeRangeDataFilter(
+    'season',
+    '#{Season}', 
+    'this.meta.yearSeasons', 
+    {
+        columns:2, 
+        nullValue:'#{Now}', 
+        nullData: 'this.meta.yearSeason', 
+        valueOf: function(key) {
+            if(!key) return null;
+            var v=this.data[key];
+            return (v[0] >> 16)+"/"+((seasonNames) ? seasonNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
+        }
+    }),0)
+.addDataFilter(TimeRangeDataFilter(
+    'quarter',
+    '#{Quarter}', 
+    'this.meta.yearQuarters', 
+    {
+        columns:2, 
+        nullValue:'#{Now}', 
+        nullData: 'this.meta.yearQuarter',
+        valueOf: function(key) {
+            if(!key) return null;
+            var v=this.data[key];
+            return (v[0] >> 16)+"/"+((quarterNames) ? quarterNames[(v[0] & 0xFF)] : (v[0] & 0xFF));
+        }
+    }))
+.addDataFilter(SimpleDataFilter('room','#{Rooms}', 'this.meta.rooms', 'room', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('group','#{Groups}', 'this.meta.groups', 'group', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('trainer','#{Trainers}', 'this.meta.trainers', 'trainer', {nullValue:'#{ALL}', keyIndex: -1, valueIndex: 0}))
+.addDataFilter(SimpleDataFilter('course','#{Courses}', 'this.meta.courses', 'course', {nullValue:'#{ALL}', valueIndex: -1}))
+.addDataFilter(SimpleDataFilter('category','#{Categories}', 'this.meta.categories', 'category', {nullValue:'#{ALL}', valueIndex: -1}))
+.configure(
+    {
+        weekDayNames: {"2":"#{Mon}","3":"#{Tue}","4":"#{Wed}","5":"#{Thu}","6":"#{Fri}","7":"#{Sat}","1":"#{Sun}"},
+        i18n: {
+            TEP_From: "#{TEP_From}",
+            TEP_To: "#{TEP_To}",
+            TEP_Weekday: "#{TEP_Weekday}",
+            TEP_Start: "#{TEP_Start}",
+            TEP_Duration: "#{TEP_Duration}",
+            TEP_End: "#{TEP_End}",
+            TEP_Room: "#{TEP_Room}",
+            TEP_Group: "#{TEP_Group}"
+        }
+    }
+);
+                  }
+             },
+	     {"title":"","scripts":[],"styles":[], onLoaded: function(){}}
+          ],
+          log: function(text) {
+             var el=document.getElementById('loadables');
+             if(el) {
+                el.innerHTML+="</br>"+(new Date().getTime())+": "+text;
+             }
+          },
+          onLoaded: function(src) {
+              this.stepLoadables--;
+              this.log("loaded: "+src);
+              if(this.stepLoadables==0) {
+                 if("function"==typeof(this.steps[this.step].onLoaded)) {
+                    this.steps[this.step].onLoaded();
+                 }
+                 this.step++;
+                 if(this.steps.length>this.step) {
+                    this.load();
+                 } else {
+                    this.done=true;
+                 }
+              }
+          },
+          load: function() {
+              try {
+                  var loader=this;
+                  var ld=this.steps[this.step];
+                  if(ld.scripts) {
+                     for(var si in ld.scripts) {
+                         var script = document.createElement('script');
+                         script.onload = function () {
+                             loader.onLoaded(this.src);
+                         };
+                         script.src = ld.scripts[si];
+                         this.stepLoadables++;
+                         document.body.appendChild(script);
+                     }
+                  }
+                  if(ld.styles) {
+                     for(var si in ld.styles) {
+                         var style = document.createElement('link');
+                         style.onload = function () {
+                             loader.onLoaded(this.src);
+                         };
+                         style.rel="stylesheet";
+                         style.type="text/css";
+                         style.href = ld.styles[si];
+                         style.media="screen";
+                         this.stepLoadables++;
+                         document.body.appendChild(style);
+                     }
+                  }
+              }catch(e) {
+                  this.log("ERROR: "+e);
+              } 
+          }
+   }
+
+</script>
+
+
+<style>
+div.localeSelector {
+    white-space: nowrap;
+}
+img.localeSelector {
+    width: 25px;
+    border-right: solid 1px var(--menu-bg-color);
+    border-bottom: solid 1px var(--menu-bg-color);
+    border-bottom-right-radius: 7px;
+}
+img.localeSelector:hover {
+    cursor: pointer;
+}
+
+
+
+  body { 
+      background-image: url('images/transparent1x1.png'); 
+      background-color: rgb(255,255,255);
+  }
+  table {
+    border-collapse: collapse;
+  }
+  img.icon {
+	min-width: 50px;
+        max-width: 75px;
+  }
+  
+  img.adv {
+      margin: 2px;
+      padding: 2px;
+      border: 1px black solid;
+  }
+</style>
+
+
+<script>
+
+function doLanguageSet(locale) {
+    REST_api.setLanguage(locale, null, function(url,data) { 
+        location.reload(); 
+    });
+}
+            
+function renderToolbarActions(toolbarElementId) {
+     var s="";
+     var toolIconSize='36px';
+     
+     s+="<a class='toolbar_item' onclick='toolbarToHome();' ttbr='#{HomePage}'><img class='toolbar' src='images/icons8-home-90.png' alt='#{HomePage}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToSchedule();' ttbr='#{Schedule}'><img class='toolbar' src='images/icons8-schedule-90.png' alt='#{Schedule}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToPlanner();' ttbr='#{Planner}'><img class='toolbar' src='images/icons8-planner-90.png' alt='#{Planner}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToContactsMap();' ttbr='#{Locations}'><img class='toolbar' src='images/icons8-address-90.png' alt='#{Locations}' width='"+toolIconSize+"'></a>";
+     s+="<a class='toolbar_item' onclick='toolbarToContacts();' ttbr='#{Contacts}'><img class='toolbar' src='images/icons8-address-book-90.png' alt='#{Contacts}' width='"+toolIconSize+"'></a>";
+     
+     if(userHasRole('admin')) {
+        s+="<span ttbr='#{Export}'><img class='toolbar' src='images/icons8-export-db-90.png' alt='#{Export}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Import}'><img class='toolbar' src='images/icons8-import-db-90.png' alt='#{Import}' width='"+toolIconSize+"'></span>";
+        s+="<span ttbr='#{Backup}'><img class='toolbar' src='images/icons8-db-90.png' alt='#{Backup}' width='"+toolIconSize+"'></span>";
+     }
+     
+     var el=document.getElementById(toolbarElementId);
+     el.innerHTML=s;
+}
+
+var seasonNames=["#{Spring}","#{Summer}","#{Autumn}","#{Winter}"];
+var quarterNames=["#{Q1}","#{Q2}","#{Q3}","#{Q4}"];
+var handler=null;
+
+function toolbarToHome(){ clearViewAreas(); handler=homeHandler; handler.loadMeta();}
+function toolbarToSchedule(){ clearViewAreas(); handler=events; handler.loadMeta();}
+function toolbarToPlanner(){clearViewAreas(); handler=eventPlanners; handler.loadMeta();}
+function toolbarToContactsMap(){clearViewAreas();}
+function toolbarToContacts(){clearViewAreas();}
+function clearViewAreas() {
+    var elIds=['v_filter','h_filter','data_view','data_view2'];
+    for(var i in elIds) {
+        var elId=elIds[i];
+        var el=document.getElementById(elId);
+        if(el) el.innerHTML="";
+    }
+}
+
+function evalCascaded(el,name) {
+    var offset=el[name];
+    return el[name]+((el.parentElement) ? evalCascaded(el.parentElement,name) : 0);
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////// redraw on resize/orientation
+////////////////////////////////////////////////////////////////////////////////
+function updateOrientation() {
+    var minScale=(window.screen.width<700) 
+	? (window.screen.width<500) 
+		? 500/window.screen.width
+		: 1.0
+	: 1.0;
+    var maxScale=(minScale<1) ? 1 : 1.3;
+    minScale=1.0;
+    maxScale=1.0;
+
+    var viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content', 'width=' + window.screen.width + ', initial-scale=1.0, minimum-scale='+minScale+', maximum-scale='+maxScale);
+}
+window.addEventListener('resize', function(event) { updateOrientation(); if(handler)handler.renderFilter();}, false);
+window.addEventListener('orientationchange', updateOrientation(), false);
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+   loadables.load();
+});
+</script>
+
+
+</head><body>
+
+<table width='100%' border='1' style='border-collapse: collapse; margin: 0; padding: 0;'>
+  <tr><td width='100%'>
+    <table border='1' width='100%'>
+        <!-- site header: icon, view, login/logout, language selection -->
+        <tr>
+            <!-- logo -->
+            <td class='icon' rowspan='3' width='1%'><img id='icon_img' class='icon' src='images/kuntajana_a150.png' width='100%'></td>
+            <!-- login form -->
+            <td width='98%' align='center'>
+                <div id='top_toolbar' class='toolbar'>#top_toolbar#</div>                                
+                <div id='loginForm' class='loginForm' align='center'>#login_form#</div>
+            </td>
+            <td width='1%' align='left'>
+                <div class='localeSelector'>
+                    <span ttbr='#{SwitchTo} #{Finnish}' id='locale_fi'><img class='localeSelector' src='images/icons8-fi-144.png' alt='#{Finnish}' onclick='doLanguageSet("fi");'><tt>#{SwitchTo} #{Finnish}</tt></span>
+                    <span ttbr='#{SwitchTo} #{Russian}' id='locale_ru'><img class='localeSelector' src='images/icons8-ru-144.png' alt='#{Russian}' onclick='doLanguageSet("ru");'><tt>#{SwitchTo} #{Russian}</tt></span>
+                    <span ttbr='#{SwitchTo} #{English}' id='locale_en'><img class='localeSelector' src='images/icons8-en-144.png' alt='#{English}' onclick='doLanguageSet("en");'><tt>#{SwitchTo} #{English}</tt></span>
+                </div>
+            </td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <td colspan='2' align='right'>
+                <div id='userInfo' class='userInfo'>#userInfo#</div>
+            </td>
+        </tr>
+      </table>
+  </td></tr>
+  <tr><td>
+
+
+    <table width='100%' border='1' style='border-collapse: collapse;'>
+        <tr>
+            <td colspan='3'>
+                <table border='0' width='100%'>
+                    <tr>
+                        <td width='0%' rowspan='2' valign='top'>
+                            <div id="v_filter">#VF#</div>
+                        </td>
+                        <td width='100%' valign='top'>
+                            <div id="h_filter">#HF#</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign='top'>
+                            <div id="data_view">#data_view#</div>            
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+
+
+                <div id="data_view2">#data_view2#</div>
+                <br/>
+                <div id='info_1'></div>
+                <div id="pane_all" style="border: solid black 1px; padding: 0px;">
+                    <table width='100%' border='1'><tr>
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                            <td>D</td>
+                            <td>E</td>
+                        </tr></table>
+                    <div>
+                        <a onclick='var el=document.getElementById("request_info"); if(el && el.style.display!="block") el.style.display="block"; else el.style.display="none";'>INFO ON/OFF</a>
+                        <div id='request_info' style='display: none;'>
+                            ${request}
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+    </table>
+
+  </td></tr>
+  <tr><td width='100%'><div id='top' width='100%'></div></td></tr>
+  <tr><td width='100%'><div id='main' width='100%'></div></td></tr>
+  <tr><td width='100%'><div id='bottom' width='100%'></div></td></tr>
+  <tr><td>
+     <div id='loadables'></div>
+  </td></tr>
+</table>
+
+</body></html>
