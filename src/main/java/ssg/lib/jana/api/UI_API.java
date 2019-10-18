@@ -132,6 +132,14 @@ public class UI_API {
         return r;
     }
 
+    @XMethod(name = "clearStatistics")
+    public void clearStatistics() {
+        List<String> r = new ArrayList<>();
+        if (dfs != null) {
+            dfs.clearStatistics(System.currentTimeMillis());
+        }
+    }
+
     @XMethod(name = "debug")
     public void debug(
             HttpRequest req,

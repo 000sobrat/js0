@@ -14,13 +14,19 @@ import java.io.Reader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.SocketChannel;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import ssg.lib.common.ImagingTools;
 import ssg.lib.common.TaskExecutor;
+import ssg.lib.common.TaskProvider;
+import ssg.lib.common.buffers.BufferTools;
 import ssg.lib.di.DI;
+import ssg.lib.di.DM;
 import ssg.lib.http.HttpApplication;
 import ssg.lib.http.HttpMatcher;
 import ssg.lib.http.HttpSession;
@@ -55,6 +61,9 @@ import ssg.lib.service.DF_Service.DF_ServiceListener;
 import ssg.lib.service.DF_Service.DebuggingDF_ServiceListener;
 import ssg.lib.service.DataProcessor;
 import ssg.lib.service.Repository;
+import ssg.lib.service.SERVICE_FLOW_STATE;
+import ssg.lib.service.SERVICE_MODE;
+import ssg.lib.service.ServiceProcessor;
 import ssg.lib.ssl.SSLTools;
 import ssg.lib.ssl.SSLTools.PrivateKeyCertificateInfo;
 
@@ -67,7 +76,23 @@ public class App extends CS {
     // SSL support
     SSLSupport sslSupport;
     // service handlers support
-    DF_Service<SocketChannel> service = new DF_Service<>(new TaskExecutor.TaskExecutorPool(10, 15));
+    DF_Service<SocketChannel> service = new DF_Service<SocketChannel>(new TaskExecutor.TaskExecutorPool(10, 15)) {
+        @Override
+        public void onDeleteNoStatistics(SocketChannel provider, Long opened) {
+            System.out.println("DELETE for unhandled provider " + provider + " opened at " + opened);
+            super.onDeleteNoStatistics(provider, opened);
+        }
+
+        @Override
+        public void onProviderEvent(SocketChannel provider, String event, Object... params) {
+            if (DM.PN_OPENED.equals(event)) {
+                long po = (params != null && params.length > 0 && params[0] instanceof Number) ? ((Number) params[0]).longValue() : System.currentTimeMillis();
+                System.out.println("OPENED provider " + provider + " at " + po);
+            }
+            super.onProviderEvent(provider, event, params);
+        }
+
+    };
     DebuggingDF_ServiceListener serviceDebug = new DebuggingDF_ServiceListener();
 
     public App(String... args) throws IOException {
@@ -97,13 +122,13 @@ public class App extends CS {
             serviceDebug.excludeEvents(DF_ServiceListener.SERVICE_EVENT.values());
             serviceDebug.includeEvents(
                     //DF_ServiceListener.SERVICE_EVENT.read_ext,
-//                    DF_ServiceListener.SERVICE_EVENT.write_ext,
-//                    DF_ServiceListener.SERVICE_EVENT.write_int,
-//                    DF_ServiceListener.SERVICE_EVENT.read_int,
-//                    DF_ServiceListener.SERVICE_EVENT.read_int,
-//                    DF_ServiceListener.SERVICE_EVENT.init_service_processor,
-//                    DF_ServiceListener.SERVICE_EVENT.keep_service_processor,
-//                    DF_ServiceListener.SERVICE_EVENT.done_service_processor,
+                    //                    DF_ServiceListener.SERVICE_EVENT.write_ext,
+                    //                    DF_ServiceListener.SERVICE_EVENT.write_int,
+                    //                    DF_ServiceListener.SERVICE_EVENT.read_int,
+                    //                    DF_ServiceListener.SERVICE_EVENT.read_int,
+                    //                    DF_ServiceListener.SERVICE_EVENT.init_service_processor,
+                    //                    DF_ServiceListener.SERVICE_EVENT.keep_service_processor,
+                    //                    DF_ServiceListener.SERVICE_EVENT.done_service_processor,
                     DF_ServiceListener.SERVICE_EVENT.no_event
             );
         }
@@ -130,7 +155,7 @@ public class App extends CS {
         final ScheduleAPI schedule = new ScheduleAPI();
         final TrainingAPI training = new TrainingAPI();
         final UM_API um = new UM_API();
-        final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug,server.service);
+        final UI_API ui = new UI_API(schedule, training, um, server.serviceDebug, server.service);
 
         HttpResourceURL.scaledImagesCache = null;
         ImagingTools.MAX_IMAGE_WIDTH = 1080 * 2;
@@ -286,6 +311,60 @@ public class App extends CS {
         );
 
         DI<ByteBuffer, SocketChannel> httpDI = http.buildHandler(server.getDefaultService());
+
+        if (1 == 0) {
+            server.getDefaultService().getServices().addItem(new ServiceProcessor<Channel>() {
+                @Override
+                public String getName() {
+                    return "noname";
+                }
+
+                @Override
+                public boolean hasOptions(long l) {
+                    return false;
+                }
+
+                @Override
+                public boolean hasOption(long l) {
+                    return false;
+                }
+
+                @Override
+                public SERVICE_MODE probe(ServiceProcessor.ServiceProviderMeta<Channel> spm, Collection<ByteBuffer> clctn) {
+                    try {
+                        long sz = BufferTools.getRemaining(clctn);
+                        String s = BufferTools.dump(clctn);
+                        System.out.println("Connection data[" + sz + "] for " + spm.getProvider() + "\n  " + s.replace("\n", "\n  "));
+                    } catch (Throwable th) {
+                    }
+                    return SERVICE_MODE.unknown;
+                }
+
+                @Override
+                public DI<ByteBuffer, Channel> initPD(ServiceProcessor.ServiceProviderMeta<Channel> spm, SERVICE_MODE srvcmd, Collection<ByteBuffer>... clctns) throws IOException {
+                    return null;
+                }
+
+                @Override
+                public SERVICE_FLOW_STATE test(Channel p, DI<ByteBuffer, Channel> di) throws IOException {
+                    return null;
+                }
+
+                @Override
+                public void onServiceError(Channel p, DI<ByteBuffer, Channel> di, Throwable thrwbl) throws IOException {
+                }
+
+                @Override
+                public Repository<DataProcessor> getDataProcessors(Channel p, DI<ByteBuffer, Channel> di) {
+                    return null;
+                }
+
+                @Override
+                public List<TaskProvider.Task> getTasks(TaskProvider.TaskPhase... tps) {
+                    return Collections.emptyList();
+                }
+            });
+        }
 
         int httpPort = 18123;
         try {
