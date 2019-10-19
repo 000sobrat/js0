@@ -79,8 +79,14 @@ public class App extends CS {
     DF_Service<SocketChannel> service = new DF_Service<SocketChannel>(new TaskExecutor.TaskExecutorPool(10, 15)) {
         @Override
         public void onDeleteNoStatistics(SocketChannel provider, Long opened) {
-            System.out.println("DELETE for unhandled provider " + provider + " opened at " + opened);
+            System.out.println("DELETED unhandled provider " + provider + " opened at " + opened);
             super.onDeleteNoStatistics(provider, opened);
+        }
+
+        @Override
+        public void delete(SocketChannel provider) throws IOException {
+            System.out.println("DELETE provider " + provider);
+            super.delete(provider);
         }
 
         @Override

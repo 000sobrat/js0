@@ -101,7 +101,7 @@ public class UI_API {
         this.training = training;
         this.um = um;
         this.serviceListener = serviceListener;
-        this.dfs=dfs;
+        this.dfs = dfs;
     }
 
     public void addScannables(MatchScanner<String, String>... scannables) {
@@ -114,18 +114,47 @@ public class UI_API {
         }
     }
 
-    @XMethod(name = "providerStatistics")
-    public Collection<String> providerStatistics() {
-        List<String> r = new ArrayList<>();
+    long nextCleanUp = System.currentTimeMillis();
+
+    public void doMaintenance() {
         if (dfs != null) {
-            List<ProviderStatistics> pss = dfs.getStatistics();
+            dfs.clearStatistics(nextCleanUp - 1000 * 60 * 2);
+        }
+        nextCleanUp = System.currentTimeMillis() + 1000 * 60 * 30;
+    }
+
+    @XMethod(name = "providerStatistics")
+    public Map providerStatistics() {
+        doMaintenance();
+        Map r = new LinkedHashMap<>();
+        List<String> r1 = new ArrayList<>();
+        List<String> r2 = new ArrayList<>();
+        if (dfs != null) {
+            Map pss = dfs.getStatistics();
+            List<ProviderStatistics> p1 = (List<ProviderStatistics>) pss.get("WIP");
+            List<ProviderStatistics> p2 = (List<ProviderStatistics>) pss.get("DONE");
             if (pss != null) {
-                System.out.println("PSS["+pss.size()+"]");
-                for (ProviderStatistics ps : pss) {
+                System.out.println("PSS[" + pss.size() + "]");
+                for (ProviderStatistics ps : p1) {
                     if (ps != null) {
-                        r.add(ps.toString());
-                        System.out.println("  ------------------------------\n    "+ps.toString().replace("\n", "\n    "));
+                        r1.add(ps.toString());
+                        //System.out.println("  ------------------------------\n    "+ps.toString().replace("\n", "\n    "));
                     }
+                }
+                for (ProviderStatistics ps : p2) {
+                    if (ps != null) {
+                        r2.add(ps.toString());
+                        //System.out.println("  ------------------------------\n    "+ps.toString().replace("\n", "\n    "));
+                    }
+                }
+            }
+            for (Object key : pss.keySet()) {
+                if ("WIP".equals(key)) {
+                    r.put(key, r1);
+                } else if ("DONE".equals(key)) {
+                    r.put(key, r2);
+                } else {
+                    r.put(key, pss.get(key));
                 }
             }
         }
@@ -145,6 +174,7 @@ public class UI_API {
             HttpRequest req,
             @XParameter(name = "enable", optional = true) boolean enable,
             @XParameter(name = "events", optional = true) DF_ServiceListener.SERVICE_EVENT... events) {
+        doMaintenance();
         if (serviceListener == null || !(serviceListener instanceof DebuggingDF_ServiceListener)) {
             return;
         }
@@ -165,6 +195,7 @@ public class UI_API {
 
     @XMethod(name = "listDebug")
     public Collection<DF_ServiceListener.SERVICE_EVENT> listDebug() {
+        doMaintenance();
         return (serviceListener instanceof DebuggingDF_ServiceListener)
                 ? ((DebuggingDF_ServiceListener) serviceListener).debuggingEvents()
                 : null;
@@ -172,6 +203,7 @@ public class UI_API {
 
     @XMethod(name = "canDebug")
     public DF_ServiceListener.SERVICE_EVENT[] canDebug() {
+        doMaintenance();
         return (serviceListener != null)
                 ? DF_ServiceListener.SERVICE_EVENT.values()
                 : null;
@@ -182,6 +214,7 @@ public class UI_API {
             HttpRequest req,
             final @XParameter(name = "masks", optional = true) String... masks
     ) throws IOException {
+        doMaintenance();
         Map<String, List<String>> r = new LinkedHashMap<>();
 
         if (masks != null) {
@@ -234,6 +267,7 @@ public class UI_API {
             @XParameter(name = "localeLanguage", optional = true) String localeLanguage,
             @XParameter(name = "localeCountry", optional = true) String localeCountry
     ) throws IOException {
+        doMaintenance();
         if (localeLanguage == null || localeLanguage.isEmpty()) {
             // nothing to do, will return current setting...
         } else {
@@ -257,6 +291,7 @@ public class UI_API {
             @XParameter(name = "from", optional = true) Long from,
             @XParameter(name = "to", optional = true) Long to
     ) throws IOException {
+        doMaintenance();
         Map<String, Object> r = new LinkedHashMap<>();
         Map<String, String[]> rg = new LinkedHashMap<>();
         Map<String, String[]> rc = new LinkedHashMap<>();
@@ -363,6 +398,7 @@ public class UI_API {
             @XParameter(name = "group", optional = true) String group,
             @XParameter(name = "dayOfWeek", optional = true) Integer[] dayOfWeek
     ) throws IOException {
+        doMaintenance();
         List<TE> r = new ArrayList<>();
 
         if (room != null && room.isEmpty()) {
@@ -477,6 +513,7 @@ public class UI_API {
     public boolean addEventsToBasket(HttpRequest req,
             @XParameter(name = "eventIDs") String... eventIDs
     ) throws IOException {
+        doMaintenance();
         boolean r = false;
         if (eventIDs != null) {
             Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
@@ -501,6 +538,7 @@ public class UI_API {
     public boolean removeEventsFromBasket(HttpRequest req,
             @XParameter(name = "eventIDs") String... eventIDs
     ) throws IOException {
+        doMaintenance();
         boolean r = false;
         if (eventIDs != null) {
             Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
@@ -524,6 +562,7 @@ public class UI_API {
 
     @XMethod(name = "getEventsInBasket")
     public Map<String, TE> getEventsInBasket(HttpRequest req) throws IOException {
+        doMaintenance();
         Map<String, TimeEvent> tes = (Map) req.getHttpSession().getProperties().get("eventsBasket");
         if (tes != null) {
             HttpUser user = (req != null && req.getHttpSession() != null) ? req.getHttpSession().getUser() : null;
@@ -547,6 +586,7 @@ public class UI_API {
             @XParameter(name = "email", optional = true) String email,
             @XParameter(name = "action", optional = true) ACTION action
     ) throws IOException {
+        doMaintenance();
 
         Map<String, TimeEvent> basket = (Map) req.getHttpSession().getProperties().get("eventsBasket");
 
@@ -656,6 +696,7 @@ public class UI_API {
     public TRAINEE_STATUS applyForGroup(HttpRequest req,
             @XParameter(name = "eventId") String eventId,
             @XParameter(name = "email", optional = true) String email) throws IOException {
+        doMaintenance();
         TRAINEE_STATUS r = TRAINEE_STATUS.no_target;
 
         TimeEvent ts = schedule.getEvent(eventId, null, null, null);
@@ -690,6 +731,7 @@ public class UI_API {
     }
 
     public String checkUser(HttpRequest req, String email) throws IOException {
+        doMaintenance();
         HttpSession sess = (req != null) ? req.getHttpSession() : null;
         HttpUser user = (sess != null) ? sess.getUser() : null;
         if (user != null) {
@@ -747,6 +789,7 @@ public class UI_API {
     }
 
     public HttpUser checkAuthentication(HttpRequest req, boolean required) throws IOException {
+        doMaintenance();
         // verify if need authentication
         HttpSession sess = req.getHttpSession();
         HttpUser user = sess.getUser();
@@ -767,6 +810,7 @@ public class UI_API {
             @XParameter(name = "anywhere", optional = true) String anywhere,
             @XParameter(name = "suffix", optional = true) String suffix
     ) throws IOException {
+        doMaintenance();
         if (prefix != null && prefix.isEmpty()) {
             prefix = null;
         }
@@ -802,6 +846,7 @@ public class UI_API {
     public Map getEventPlannersMeta(
             HttpRequest req
     ) throws IOException {
+        doMaintenance();
         Map r = new LinkedHashMap<>();
 
         // year-level meta
@@ -904,6 +949,7 @@ public class UI_API {
             @XParameter(name = "group", optional = true) String group,
             @XParameter(name = "dayOfWeek", optional = true) Integer[] dayOfWeek
     ) throws IOException {
+        doMaintenance();
         List<TE> r = new ArrayList<>();
 
         if (room != null && room.isEmpty()) {
@@ -1030,6 +1076,7 @@ public class UI_API {
             @XParameter(name = "deleted", optional = true) Collection<String> deleted,
             @XParameter(name = "modified", optional = true) Map<String, Map> modified
     ) throws IOException {
+        doMaintenance();
         Map<String, Object> r = new LinkedHashMap<>();
         if (deleted != null) {
             for (String id : deleted) {

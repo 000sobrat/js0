@@ -114,7 +114,7 @@ window.homeHandler={
     renderData: function(){
         var s="";
 
-        s+="<table><tr><td valign='top' style='white-space: pre-line'>";
+        s+="<table><tr><td valign='top' style='white-space: normal'>";
         
         var w=Math.min(300,window.screen.width);
         var vd=(this.data) ? this.data[this.view] : null;
@@ -256,7 +256,7 @@ window.eventPlanners=eventPlannersHandler('eps')
                             loader.onLoaded(this.src);
                          };
                          script.src = ld.scripts[si];
-                         document.body.appendChild(script);
+                         document.head.appendChild(script);
                      }
                   }
                   if(ld.styles) {
@@ -271,7 +271,7 @@ window.eventPlanners=eventPlannersHandler('eps')
                          style.type="text/css";
                          style.href = ld.styles[si];
                          style.media="screen";
-                         document.body.appendChild(style);
+                         document.head.appendChild(style);
                      }
                   }
               }catch(e) {
