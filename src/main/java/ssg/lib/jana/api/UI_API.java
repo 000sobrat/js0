@@ -117,10 +117,12 @@ public class UI_API {
     long nextCleanUp = System.currentTimeMillis();
 
     public void doMaintenance() {
-        if (dfs != null) {
-            dfs.clearStatistics(nextCleanUp - 1000 * 60 * 2);
+        if (System.currentTimeMillis() >= nextCleanUp) {
+            if (dfs != null) {
+                dfs.clearStatistics(nextCleanUp - 1000 * 60 * 2);
+            }
+            nextCleanUp = System.currentTimeMillis() + 1000 * 60 * 30;
         }
-        nextCleanUp = System.currentTimeMillis() + 1000 * 60 * 30;
     }
 
     @XMethod(name = "providerStatistics")
